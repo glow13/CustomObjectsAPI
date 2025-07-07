@@ -1,0 +1,24 @@
+{
+	"geode": "4.6.3",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "glow12.custom-objects-api",
+	"name": "Custom Objects API",
+	"version": "v1.0.0",
+	"developer": "glow12",
+	"description": "Add custom objects to Geometry Dash!",
+	"dependencies": {
+		"alphalaneous.editortab_api": ">=v1.0.17"
+	},
+	"resources": {
+        "spritesheets": {
+			"CustomObjects": [
+				"resources/*.png"
+			]
+		}
+    }
+}
