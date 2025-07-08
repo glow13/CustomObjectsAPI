@@ -2,16 +2,7 @@
 
 CustomGameObject* CustomGameObject::create(int id) {
     auto obj = new CustomGameObject();
-
-    auto toolbox = ObjectToolbox::sharedState();
-    auto spr = toolbox->intKeyToFrame(id);
-
-    if (obj->init(spr) && obj->customInit()) {
-        obj->m_objectID = id;
-        obj->m_parentMode = 10;
-        obj->autorelease();
-        return obj;
-    } // if
+    if (obj->init(id)) return obj;
  
     delete obj;
     return nullptr;

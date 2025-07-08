@@ -2,16 +2,7 @@
 
 CustomEffectGameObject* CustomEffectGameObject::create(int id) {
     auto obj = new CustomEffectGameObject();
-
-    auto toolbox = ObjectToolbox::sharedState();
-    auto spr = toolbox->intKeyToFrame(id);
-
-    if (obj->init(spr) && obj->customInit()) {
-        obj->m_objectID = id;
-        obj->m_parentMode = 10;
-        obj->autorelease();
-        return obj;
-    } // if
+    if (obj->init(id)) return obj;
 
     delete obj;
     return nullptr;
@@ -25,7 +16,11 @@ bool CustomEffectGameObject::customInit() {
     return true;
 } // init
 
-void CustomEffectGameObject::triggerObject(GJBaseGameLayer* p0, int p1, gd::vector<int> const* p2) {
-    log::info("wow get triggered");
-    Notification::create("This is a custom trigger!", NotificationIcon::Success, 0.5)->show();
-} // triggerObject
+void CustomEffectGameObject::setToDefault() {
+    m_bouncePower = 8;
+} // setToDefault
+
+void CustomEffectGameObject::onTrigger(GJBaseGameLayer* playLayer) {
+    playLayer->m_player1->setYVelocity(m_bouncePower, 1);
+    m_bouncePower++;
+} // onTrigger
