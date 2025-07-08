@@ -19,6 +19,7 @@ class $modify(EditorUI) {
             objects->addObject(getCreateBtn(10, 4));
             objects->addObject(getCreateBtn(5001, 4));
             objects->addObject(getCreateBtn(5002, 4));
+            objects->addObject(getCreateBtn(5003, 4));
  
             return EditorTabUtils::createEditButtonBar(objects, ui);
         });
