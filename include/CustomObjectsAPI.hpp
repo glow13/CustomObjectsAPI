@@ -1,24 +1,23 @@
 #pragma once
 #include <Geode/Geode.hpp>
-#include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/ObjectToolbox.hpp>
+#include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
-
-#include "CustomGameObject.hpp"
-#include "CustomEffectGameObject.hpp"
-#include "ContainerGameObject.hpp"
 
 using namespace geode::prelude;
 
-class $modify(GameObjectCO, GameObject) {
-    static GameObject* createWithKey(int key);
-};
-
 class $modify(CustomObjectToolbox, ObjectToolbox) {
+public:
     bool init();
 };
 
+class $modify(GameObjectCO, GameObject) {
+public:
+    static GameObject* createWithKey(int key);
+};
+
 class $modify(GJBaseGameLayerCO, GJBaseGameLayer) {
+public:
     struct Fields {
         CCSpriteBatchNode* m_customLayerT4;
         CCSpriteBatchNode* m_customLayerT3;

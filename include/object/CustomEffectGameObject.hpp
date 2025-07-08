@@ -21,10 +21,9 @@ public:
         return false;
     } // init
 
-    virtual bool customInit();
-    virtual void setToDefault();
-    virtual void onTrigger(GJBaseGameLayer* playLayer);
-    int m_bouncePower;
+    virtual bool customInit() { return true; }
+    virtual void setToDefault() { return; }
+    virtual void onTrigger(GJBaseGameLayer* playLayer) { return; }
 
 private:
     void triggerObject(GJBaseGameLayer* p0, int p1, gd::vector<int> const* p2) override {

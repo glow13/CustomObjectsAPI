@@ -20,5 +20,5 @@ public:
         return false;
     } // init
 
-    virtual bool customInit();
+    virtual bool customInit() { return true; }
 };

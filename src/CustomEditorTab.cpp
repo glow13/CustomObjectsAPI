@@ -3,6 +3,8 @@
 
 #include <alphalaneous.editortab_api/include/EditorTabs.hpp>
 
+#include "CustomObjectsManager.hpp"
+
 using namespace geode::prelude;
 
 class $modify(EditorUI) {
@@ -14,14 +16,14 @@ class $modify(EditorUI) {
             textLabel->setScale(0.5f);
             EditorTabUtils::setTabIcon(toggler, textLabel);
 
-            auto objects = CCArray::create();
-            objects->addObject(getCreateBtn(1, 4));
-            objects->addObject(getCreateBtn(10, 4));
-            objects->addObject(getCreateBtn(5001, 4));
-            objects->addObject(getCreateBtn(5002, 4));
-            objects->addObject(getCreateBtn(5003, 4));
+            auto buttons = CCArray::create();
+            auto manager = CustomObjectsManager::get();
+            for (int i = 0; i < manager->getObjectCount(); i++) {
+                auto obj = manager->getCustomObject(i);
+                buttons->addObject(getCreateBtn(obj->m_id, 4));
+            } // for
  
-            return EditorTabUtils::createEditButtonBar(objects, ui);
+            return EditorTabUtils::createEditButtonBar(buttons, ui);
         });
 
         return true;

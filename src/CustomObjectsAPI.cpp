@@ -1,4 +1,5 @@
 #include "CustomObjectsAPI.hpp"
+#include "CustomObjectsManager.hpp"
 
 /*
     For this mod to work you need to make these functions return pointers!!!!
@@ -6,27 +7,28 @@
     GameObject::getObjectTextureRect
 */
 
-GameObject* GameObjectCO::createWithKey(int key) {
-    switch (key) {
-        case 5001:
-            return CustomGameObject::create(key);
-        case 5002:
-            return CustomEffectGameObject::create(key);
-        case 5003:
-            return ContainerGameObject::create(key);
-    } // switch
-    return GameObject::createWithKey(key);
-} // createWithKey
-
 bool CustomObjectToolbox::init() {
     if (!ObjectToolbox::init()) return false;
 
-    m_allKeys.insert(std::pair(5001, "frown-block.png"_spr));
-    m_allKeys.insert(std::pair(5002, "smile-block.png"_spr));
-    m_allKeys.insert(std::pair(5003, "container.png"_spr));
+    auto manager = CustomObjectsManager::get();
+    for (int i = 0; i < manager->getObjectCount(); i++) {
+        auto obj = manager->getCustomObject(i);
+        gd::string frame = fmt::format("{}/{}", obj->m_mod, obj->m_spr);
+        m_allKeys.insert(std::pair(obj->m_id, frame));
+    } // for
+
+    manager->printModObjectCount();
 
     return true;
 } // init
+
+GameObject* GameObjectCO::createWithKey(int key) {
+    if (key >= 4600) {
+        auto manager = CustomObjectsManager::get();
+        if (auto obj = manager->getCustomObjectByID(key)) return obj->create();
+    } // if
+    return GameObject::createWithKey(key);
+} // createWithKey
 
 void GJBaseGameLayerCO::setupLayers() {
     GJBaseGameLayer::setupLayers();
