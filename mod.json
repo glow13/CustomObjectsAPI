@@ -17,7 +17,8 @@
 	"resources": {
         "spritesheets": {
 			"CustomObjects": [
-				"resources/*.png"
+				"resources/*.png",
+				"resources/sprites/*.png"
 			]
 		}
     }

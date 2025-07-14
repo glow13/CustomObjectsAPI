@@ -5,7 +5,14 @@ using namespace geode::prelude;
 
 class CustomGameObject : public GameObject {
 public:
-    static CustomGameObject* create(int id);
+    static CustomGameObject* create(int id) {
+        auto obj = new CustomGameObject();
+        if (obj->init(id)) return obj;
+
+        delete obj;
+        return nullptr;
+    } // create
+
     bool init(int id) {
         auto toolbox = ObjectToolbox::sharedState();
         auto spr = toolbox->intKeyToFrame(id);

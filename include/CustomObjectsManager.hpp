@@ -7,13 +7,15 @@ struct ModCustomObject : public CCObject {
     gd::string m_spr;
     gd::string m_mod;
     int m_id;
+    CCSize m_spriteSize;
     std::function<GameObject*(int)> m_createFunction;
 
-    ModCustomObject(gd::string spr, int offset, std::function<GameObject*(int)> create) {
+    ModCustomObject(gd::string spr, int offset, CCSize size, std::function<GameObject*(int)> create) {
         int pos = spr.find("/");
         this->m_spr = spr.substr(pos + 1);
         this->m_mod = spr.substr(0, pos);
         this->m_id =  modToID(m_mod) + offset;
+        this->m_spriteSize = size;
         this->m_createFunction = create;
         this->autorelease();
     } // ModCustomObject
@@ -59,13 +61,13 @@ public:
     static CustomObjectsManager* get() {
         if (!s_manager) {
             s_manager = new CustomObjectsManager();
-            s_manager->retain();
 
             s_manager->m_customObjectsCount = 0;
             s_manager->m_customObjects = CCArray::create();
             s_manager->m_modCustomObjectsDict = CCDictionary::create();
             s_manager->m_modCustomObjectsCount = CCDictionary::create();
 
+            s_manager->retain();
             s_manager->m_customObjects->retain();
             s_manager->m_modCustomObjectsDict->retain();
             s_manager->m_modCustomObjectsCount->retain();
@@ -80,6 +82,10 @@ public:
     void incrementObjectCount() {
         m_customObjectsCount++;
     } // incrementObjectCount
+
+    CCArray* getObjects() {
+        return m_customObjects;
+    } // getObjects
 
     int getModObjectCount(gd::string id) {
         auto count = static_cast<CCInteger*>(m_modCustomObjectsCount->objectForKey(id));
@@ -103,9 +109,9 @@ public:
         return static_cast<ModCustomObject*>(obj);
     } // getCustomObjectByID
 
-    void registerCustomObject(gd::string spr, std::function<GameObject*(int)> create) {
+    void registerCustomObject(gd::string spr, CCSize size, std::function<GameObject*(int)> create) {
         gd::string mod = spr.substr(0, spr.find("/"));
-        auto obj = new ModCustomObject(spr, getModObjectCount(mod), create);
+        auto obj = new ModCustomObject(spr, getModObjectCount(mod), size, create);
 
         m_customObjects->addObject(obj);
         m_modCustomObjectsDict->setObject(obj, obj->m_id);

@@ -3,6 +3,8 @@
 #include "object/CustomGameObject.hpp"
 #include "object/CustomEffectGameObject.hpp"
 
+#include "CustomObjectsSheet.hpp"
+
 class FrownGameObject : public CustomGameObject {
 public:
     static FrownGameObject* create(int id) {
@@ -68,7 +70,34 @@ public:
 $execute {
     auto manager = CustomObjectsManager::get();
 
-    manager->registerCustomObject("frown-block.png"_spr, FrownGameObject::create);
-    manager->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
-    manager->registerCustomObject("container.png"_spr, ContainerGameObject::create);
+    manager->registerCustomObject("frown-block.png"_spr, CCSize(30, 30), FrownGameObject::create);
+    manager->registerCustomObject("smile-block.png"_spr, CCSize(30, 30), SmileGameObject::create);
+    manager->registerCustomObject("container.png"_spr, CCSize(30, 30), ContainerGameObject::create);
+
+    manager->registerCustomObject("block-1.png"_spr, CCSize(30, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-2.png"_spr, CCSize(30, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-3.png"_spr, CCSize(30, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-4.png"_spr, CCSize(30, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-5.png"_spr, CCSize(30, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-6.png"_spr, CCSize(30, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-7.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-8.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-9.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-10.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-11.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-12.png"_spr, CCSize(60, 60), CustomGameObject::create);
+
+    manager->registerCustomObject("block-7.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-8.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-9.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-10.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-11.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-12.png"_spr, CCSize(60, 60), CustomGameObject::create);
+
+    manager->registerCustomObject("block-7.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-8.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-9.png"_spr, CCSize(60, 30), CustomGameObject::create);
+    manager->registerCustomObject("block-10.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-11.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-12.png"_spr, CCSize(60, 60), CustomGameObject::create);
 }
