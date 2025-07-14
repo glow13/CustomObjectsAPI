@@ -23,14 +23,14 @@ public:
         auto manager = CustomObjectsManager::get();
         manager->printModObjectCount();
 
-        // auto sheet = CustomObjectsSheet::create(manager->getObjects());
-        // auto spritesheet = sheet->generateSpritesheet();
+        auto sheet = CustomObjectsSheet::create(manager->getObjects());
+        auto spritesheet = sheet->generateSpritesheet();
 
-        // gd::string savePath = Mod::get()->getSaveDir().string();
-        // gd::string path = savePath.substr(savePath.find("geode")) + "/cache/CustomObjects.png";
-        // bool saved = spritesheet->saveToFile(path.c_str(), tCCImageFormat::kCCImageFormatPNG);
-        // if (saved) log::info("Saved spritesheet to \"{}/cache/CustomObjects.png\"", savePath);
-        // else log::error("Failed to save spritesheet!!!");
+        gd::string savePath = Mod::get()->getSaveDir().string();
+        gd::string path = savePath.substr(savePath.find("geode")) + "/cache/CustomObjects.png";
+        bool saved = spritesheet->saveToFile(path.c_str(), tCCImageFormat::kCCImageFormatPNG);
+        if (saved) log::info("Saved spritesheet to \"{}/cache/CustomObjects.png\"", savePath);
+        else log::error("Failed to save spritesheet!!!");
 
         for (int i = 0; i < manager->getObjectCount(); i++) {
             auto obj = manager->getCustomObject(i);
@@ -120,7 +120,9 @@ public:
 
         auto manager = CustomObjectsManager::get();
         auto sheet = CustomObjectsSheet::create(manager->getObjects());
-        m_objectLayer->addChild(sheet->generateSpritesheet()->getSprite());
+        auto sprite = sheet->generateSpritesheet()->getSprite();
+        sprite->setAnchorPoint(CCPoint(0, 1));
+        m_objectLayer->addChild(sprite);
     } // setupLayers
 
     CCNode* parentForZLayer(int zLayer, bool blending, int parentMode, int uiObject) {

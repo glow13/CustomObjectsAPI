@@ -53,10 +53,10 @@ private:
     static inline CustomObjectsManager* s_manager;
 
     int m_customObjectsCount;
-    CCArray* m_customObjects;
+    Ref<CCArray> m_customObjects;
 
-    CCDictionary* m_modCustomObjectsDict;
-    CCDictionary* m_modCustomObjectsCount;
+    Ref<CCDictionary> m_modCustomObjectsDict;
+    Ref<CCDictionary> m_modCustomObjectsCount;
 public:
     static CustomObjectsManager* get() {
         if (!s_manager) {
@@ -66,11 +66,6 @@ public:
             s_manager->m_customObjects = CCArray::create();
             s_manager->m_modCustomObjectsDict = CCDictionary::create();
             s_manager->m_modCustomObjectsCount = CCDictionary::create();
-
-            s_manager->retain();
-            s_manager->m_customObjects->retain();
-            s_manager->m_modCustomObjectsDict->retain();
-            s_manager->m_modCustomObjectsCount->retain();
         } // if
         return s_manager;
     } // get
