@@ -84,6 +84,6 @@ $execute {
     manager->registerCustomObject("block-8.png"_spr, CCSize(60, 30), CustomGameObject::create);
     manager->registerCustomObject("block-9.png"_spr, CCSize(60, 30), CustomGameObject::create);
     manager->registerCustomObject("block-10.png"_spr, CCSize(60, 60), CustomGameObject::create);
-    manager->registerCustomObject("block-11.png"_spr, CCSize(60, 90), CustomGameObject::create);
-    manager->registerCustomObject("block-12.png"_spr, CCSize(90, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-11.png"_spr, CCSize(60, 60), CustomGameObject::create);
+    manager->registerCustomObject("block-12.png"_spr, CCSize(60, 60), CustomGameObject::create);
 }

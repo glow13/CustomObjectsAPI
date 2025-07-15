@@ -9,66 +9,39 @@ struct CustomObjectSprite : public CCObject {
     CCSize m_size;
     bool m_rotated;
 
-    CustomObjectSprite(gd::string spr, gd::string mod) {
+    CustomObjectSprite(gd::string spr, gd::string mod, CCSize size) {
         this->m_frame = fmt::format("{}/{}", mod, spr);
-        this->m_pos = CCPoint(9999, 9999);
-        this->m_size = CCSize(0, 0);
+        this->m_pos = CCPoint(0, 0);
+        this->m_size = size;
         this->m_rotated = false;
         this->autorelease();
     } // CustomObjectSprite
 
-    CustomObjectSprite(CustomObjectSprite* spr, CCPoint pos) {
-        this->m_frame = spr->m_frame;
-        this->m_pos = pos;
-        this->m_size = spr->m_size;
-        this->m_rotated = spr->m_rotated;
-        this->autorelease();
-    } // CustomObjectSprite
+    bool fits(CCRect rect) const {
+        return rect.size.width >= m_size.width && rect.size.height >= m_size.height;
+    } // fits
 
-    bool inBounds(CCSize bounds) {
-        return m_pos.x + m_size.width <= bounds.width && m_pos.y + m_size.height <= bounds.height;
-    } // inBounds
-
-    int distance() {
-        return m_pos.x + m_pos.y;
+    float distance(CCRect rect) const {
+        return std::max(rect.origin.x, rect.origin.y);
     } // distance
 
-    int area() {
-        return m_size.width * m_size.height;
-    } // area
+    float bssf(CCRect rect) const {
+        float leftoverWidth = rect.size.width - m_size.width;
+        float leftoverHeight = rect.size.height - m_size.height;
+        return std::min(leftoverWidth, leftoverHeight);
+    } // bssf
 
-    int areaInside(CCSize bounds) {
-        float leftEdge = std::max(bounds.width - m_pos.x, 0.0f);
-        float rightEdge = std::max(bounds.width - m_pos.x - m_size.width, 0.0f);
-
-        float topEdge = std::max(bounds.height - m_pos.y, 0.0f);
-        float bottomEdge = std::max(bounds.height - m_pos.y - m_size.height, 0.0f);
-
-        return (leftEdge - rightEdge) * (topEdge - bottomEdge);
-    } // areaInside
-
-    // Does the sprite intersect any other sprite?
-    bool intersectsAny(std::vector<CustomObjectSprite*> objs) {
-        auto rect = CCRect(m_pos, m_size);
-        for (CustomObjectSprite* obj : objs) {
-            auto objRect = CCRect(obj->m_pos, obj->m_size);
-            if (rect.intersectsRect(objRect)) return true;
-        } // for
-        return false;
-    } // intersectsAny
+    float baf(CCRect rect) const {
+        float area = m_size.width * m_size.height;
+        float rectArea = rect.size.width * rect.size.height;
+        return rectArea - area;
+    } // baf
 };
 
 class CustomObjectsSheet : public CCNode {
 public:
     CCArray* m_sprites;
     CCSize m_sheetSize;
-
-    void printSprites() {
-        for (int i = 0; i < m_sprites->count(); i++) {
-            auto spr = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
-            log::info("\"{}\": ({} | {})", spr->m_frame, spr->m_pos, spr->m_size);
-        } // for
-    } // printSprites
 
     CCRenderTexture* generateSpritesheet() {
         auto render = CCRenderTexture::create(m_sheetSize.width / 4, m_sheetSize.height / 4);
@@ -91,112 +64,122 @@ public:
         return render;
     } // generateSpritesheet
 
+    /*
+        A rudimentary implementation of the MaxRects algorithm for 2D bin packing.
+        Not as efficient as the Geode CLI sprite sheet generator, but can consistently
+        produce sprite sheets with 85%-90% space efficiency compared to the total area
+        of the sprites. This approach allows for batch rendering in-game and dynamic 
+        sprite scaling for any custom mod objects.
+
+        Algorithm made entirely by me, with some help from ChatGPT :)
+    */
     static CustomObjectsSheet* create(CCArray* objects) {
-        auto unfinished = std::vector<CustomObjectSprite*>(objects->count());
-        auto finished = std::vector<CustomObjectSprite*>(0);
+        auto sprites = std::vector<CustomObjectSprite*>(objects->count());
+        auto freeRects = std::vector<CCRect>(0);
+        auto size = CCSize(0, 0);
 
-        std::vector<CCPoint> points{CCPoint(0, 0)};
-        CCSize size = CCSize(0, 0);
-
-        // Initialize unfinished vector
+        // Initialize sprites vector
         float area = 0;
         for (int i = 0; i < objects->count(); i++) {
             auto obj = static_cast<ModCustomObject*>(objects->objectAtIndex(i));
-            auto spr = new CustomObjectSprite(obj->m_spr, obj->m_mod);
-            spr->m_size = obj->m_spriteSize * 4;
-            unfinished[i] = spr;
-            area += spr->m_size.width * spr->m_size.height;
+            sprites[i] = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize * 4);
+            area += (sprites[i]->m_size.width + 2) * (sprites[i]->m_size.height + 2); // not entirely accurate but close enough
         } // for
 
-        // Calculate the minimum size
-        int sideLength = std::ceil(std::sqrt(area));
-        auto minSize = CCSize(sideLength, sideLength);
+        // Sort the sprites from largest size to smallest size
+        std::sort(sprites.begin(), sprites.end(), [](CustomObjectSprite* a, CustomObjectSprite* b) {
+            float maxA = std::max(a->m_size.width, a->m_size.height);
+            float minA = std::min(a->m_size.width, a->m_size.height);
+            float maxB = std::max(b->m_size.width, b->m_size.height);
+            float minB = std::min(b->m_size.width, b->m_size.height);
+            
+            if (maxA != maxB) return maxA > maxB;
+            else return minA > minB;
+        });
+
+        // Add the first free rect
+        int sideLength = std::sqrt(area);
+        freeRects.push_back(CCRect(0, 0, sideLength + 30, sideLength * 2)); // leave some extra room
 
         // Main loop
-        while (unfinished.size() > 0) {
+        for (CustomObjectSprite* spr : sprites) {
 
-            // Initialize variables
-            bool inBounds = false;
-            int bestPointIndex = 0;
-            int bestSpriteIndex = 0;
-            CustomObjectSprite* bestChoice = new CustomObjectSprite("","");
+            // Find the best placement
+            auto best = std::min_element(freeRects.begin(), freeRects.end(), [spr](CCRect a, CCRect b) {
+                if (spr->fits(a) ^ spr->fits(b)) return spr->fits(a);
+                return CustomObjectsSheet::compareSprites(spr, spr, a, b);
+            });
 
-            // Choose the "best" sprite and point
-            for (int s = 0; s < unfinished.size() * 2; s++) for (int p = 0; p < points.size(); p++) {
-                CustomObjectSprite* choice = new CustomObjectSprite(unfinished[s / 2], points[p]);
-                if (s % 2 == 1) {
-                    if (choice->m_size.width == choice->m_size.height) continue;
-                    choice->m_rotated = true;
-                    choice->m_size.swap();
+            // Try rotated
+            if (spr->m_size.width != spr->m_size.height) {
+                auto sprRot = new CustomObjectSprite("", "", spr->m_size);
+                sprRot->m_size.swap();
+
+                // Find the best placement
+                auto bestRot = std::min_element(freeRects.begin(), freeRects.end(), [sprRot](CCRect a, CCRect b) {
+                    if (sprRot->fits(a) ^ sprRot->fits(b)) return sprRot->fits(a);
+                    return CustomObjectsSheet::compareSprites(sprRot, sprRot, a, b);
+                });
+
+                // Is the rotated version a better placement?
+                if (CustomObjectsSheet::compareSprites(sprRot, spr, *bestRot, *best)) {
+                    spr->m_size.swap();
+                    spr->m_rotated = true;
+                    best = bestRot;
                 } // if
+                delete sprRot;
+            } // if
 
-                // Check if the current choice intersects any finished sprites
-                if (choice->intersectsAny(finished)) continue;
+            // Remove the old rect
+            CCRect rect = *best;
+            freeRects.erase(best);
 
-                // Check if the current choice is in bounds
-                bool isTheChoiceInBounds = choice->inBounds(size);
-                if (isTheChoiceInBounds && !inBounds) goto newBest;
-                else if (!isTheChoiceInBounds && inBounds) continue;
+            // Split the rect
+            auto rect1 = CCRect(rect.origin.x + spr->m_size.width + 2, rect.origin.y, rect.size.width - spr->m_size.width - 2, spr->m_size.height);
+            auto rect2 = CCRect(rect.origin.x, rect.origin.y + spr->m_size.height + 2, rect.size.width, rect.size.height - spr->m_size.height - 2);
+            if (rect1.size.width > 0 && rect1.size.height > 0) freeRects.push_back(rect1);
+            if (rect2.size.width > 0 && rect2.size.height > 0) freeRects.push_back(rect2);
 
-                // Check if the current choice fills more area inside the bounds
-                if (choice->areaInside(size) > bestChoice->areaInside(size)) goto newBest;
-                else if (choice->areaInside(size) < bestChoice->areaInside(size)) continue;
-
-                // Check if the current choice is closer to the origin
-                if (choice->distance() < bestChoice->distance()) goto newBest;
-                else if (choice->distance() > bestChoice->distance()) continue;
-
-                // Check if the current choice is larger
-                if (choice->area() > bestChoice->area()) goto newBest;
-                else continue;
-
-                newBest:
-                bestPointIndex = p;
-                bestSpriteIndex = s / 2;
-                bestChoice = choice;
-                inBounds = isTheChoiceInBounds;
+            // Prune rects
+            for (int i = 0; i < freeRects.size(); i++) for (int j = i + 1; j < freeRects.size();) {
+                CCRect r1 = freeRects[i], r2 = freeRects[j];
+                if (r1.getMinX() >= r2.getMinX() && r1.getMinY() >= r2.getMinY() && r1.getMaxX() <= r2.getMaxX() && r1.getMaxY() <= r2.getMaxY()) {
+                    freeRects.erase(freeRects.begin() + i);
+                    i--;
+                    break;
+                } else if (r2.getMinX() >= r1.getMinX() && r2.getMinY() >= r1.getMinY() && r2.getMaxX() <= r1.getMaxX() && r2.getMaxY() <= r1.getMaxY()) {
+                    freeRects.erase(freeRects.begin() + j);
+                } else j++;
             } // for
 
-            // Move the sprite from unfinished to finished and remove the point
-            unfinished.erase(unfinished.begin() + bestSpriteIndex);
-            points.erase(points.begin() + bestPointIndex);
-            finished.push_back(bestChoice);
+            // Update the sprite position
+            spr->m_pos = rect.origin;
 
-            // Add the new points
-            points.push_back(CCPoint(bestChoice->m_pos.x + bestChoice->m_size.width + 2, bestChoice->m_pos.y));
-            points.push_back(CCPoint(bestChoice->m_pos.x + bestChoice->m_size.width + 2, bestChoice->m_pos.y + 2));
-            points.push_back(CCPoint(bestChoice->m_pos.x + bestChoice->m_size.width + 2, bestChoice->m_pos.y + 4));
-            points.push_back(CCPoint(bestChoice->m_pos.x, bestChoice->m_pos.y + bestChoice->m_size.height + 2));
-            points.push_back(CCPoint(bestChoice->m_pos.x + 2, bestChoice->m_pos.y + bestChoice->m_size.height + 2));
-            points.push_back(CCPoint(bestChoice->m_pos.x + 4, bestChoice->m_pos.y + bestChoice->m_size.height + 2));
-
-            // Clean the points array
-            points.erase(std::unique(points.begin(), points.end()), points.end());
-            for (int p = 0; p < points.size();) {
-                auto rect = CCRect(bestChoice->m_pos, bestChoice->m_size);
-                if (rect.containsPoint(points[p])) points.erase(points.begin() + p);
-                else p++;
-            } // for
-
-            // Expand the sheet size if the new sprite was out of bounds
-            size.width = std::max(size.width, bestChoice->m_pos.x + bestChoice->m_size.width + 10);
-            size.height = std::max(size.height, bestChoice->m_pos.y + bestChoice->m_size.height + 10);
-        } // while
+            // Expand the size if needed
+            size.width = std::max(size.width, spr->m_pos.x + spr->m_size.width);
+            size.height = std::max(size.height, spr->m_pos.y + spr->m_size.height);
+        } // for
 
         // Create the sheet object
         auto sheet = new CustomObjectsSheet();
         sheet->m_sprites = CCArray::create();
-        sheet->m_sheetSize = (size -= CCSize(10, 10));
+        sheet->m_sheetSize = size;
         sheet->autorelease();
 
         // Add the finished sprites to the array
-        for (CustomObjectSprite* spr : finished) sheet->m_sprites->addObject(spr);
+        for (CustomObjectSprite* spr : sprites) sheet->m_sprites->addObject(spr);
 
         // Calculate efficiency
-        float efficiency = (minSize.width * minSize.height) / (size.width * size.height);
+        float efficiency = area / (size.width * size.height);
         log::info("Generated the spritesheet with {}% efficiency", efficiency * 100);
 
         // Return the final sprite sheet object
         return sheet;
     } // create
+
+    static bool compareSprites(CustomObjectSprite* sprA, CustomObjectSprite* sprB, CCRect a, CCRect b) {
+        if (sprA->bssf(a) != sprB->bssf(b)) return sprA->bssf(a) < sprB->bssf(b);
+        else if (sprA->baf(a) != sprB->baf(b)) return sprA->baf(a) < sprB->baf(b);
+        else return sprA->distance(a) < sprB->distance(b);
+    } // compareSprites
 };
