@@ -66,25 +66,29 @@ public:
 
     /*
         A rudimentary implementation of the MaxRects algorithm for 2D bin packing.
-        Not as efficient as the Geode CLI sprite sheet generator, but can consistently
-        produce sprite sheets with 85%-90% space efficiency compared to the total area
-        of the sprites. This approach allows for batch rendering in-game and dynamic 
-        sprite scaling for any custom mod objects.
+        Can consistently produce spritesheets with 95-99% space efficiency compared
+        to the total area of the sprites. Generating the spritesheet at runtime allows
+        for batch rendering in-game and dynamic sprite scaling for custom mod objects.
 
-        Algorithm made entirely by me, with some help from ChatGPT :)
+        Algorithm written entirely by me, with some help from ChatGPT :)
     */
     static CustomObjectsSheet* create(CCArray* objects) {
         auto sprites = std::vector<CustomObjectSprite*>(objects->count());
-        auto freeRects = std::vector<CCRect>(0);
         auto size = CCSize(0, 0);
+        float totalArea = 0;
+        float minWidth = 0;
+        float maxWidth = 0;
 
-        // Initialize sprites vector
-        float area = 0;
+        // Initialize sprites vector and find side lengths
         for (int i = 0; i < objects->count(); i++) {
             auto obj = static_cast<ModCustomObject*>(objects->objectAtIndex(i));
             sprites[i] = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize * 4);
-            area += (sprites[i]->m_size.width + 2) * (sprites[i]->m_size.height + 2); // not entirely accurate but close enough
+
+            totalArea += (sprites[i]->m_size.width + 2) * (sprites[i]->m_size.height + 2); // not entirely accurate but close enough
+            float side = std::max(sprites[i]->m_size.width, sprites[i]->m_size.height);
+            if (side > minWidth) minWidth = side;
         } // for
+        maxWidth = std::sqrt(totalArea);
 
         // Sort the sprites from largest size to smallest size
         std::sort(sprites.begin(), sprites.end(), [](CustomObjectSprite* a, CustomObjectSprite* b) {
@@ -97,86 +101,117 @@ public:
             else return minA > minB;
         });
 
-        // Add the first free rect
-        int sideLength = std::sqrt(area);
-        freeRects.push_back(CCRect(0, 0, sideLength + 30, sideLength * 2)); // leave some extra room
+        // Brute force generate multiple spritesheets with different widths
+        // This almost always guarantees the most efficient option
+        float bestArea = totalArea * 2;
+        float bestWidth = maxWidth * 2;
+        for (int width = minWidth; width < maxWidth + 120; width += 60) {
+            std::vector<CCRect> freeRects = {CCRect(0, 0, width, (totalArea / width) * 2)};
+            size = CCSize(0, 0);
 
-        // Main loop
-        for (CustomObjectSprite* spr : sprites) {
-
-            // Find the best placement
-            auto best = std::min_element(freeRects.begin(), freeRects.end(), [spr](CCRect a, CCRect b) {
-                if (spr->fits(a) ^ spr->fits(b)) return spr->fits(a);
-                return CustomObjectsSheet::compareSprites(spr, spr, a, b);
-            });
-
-            // Try rotated
-            if (spr->m_size.width != spr->m_size.height) {
-                auto sprRot = new CustomObjectSprite("", "", spr->m_size);
-                sprRot->m_size.swap();
+            // MaxRects algorithm
+            bool success = true;
+            for (CustomObjectSprite* spr : sprites) {
+                if (spr->m_rotated) {
+                    spr->m_size.swap();
+                    spr->m_rotated = false;
+                } // if
 
                 // Find the best placement
-                auto bestRot = std::min_element(freeRects.begin(), freeRects.end(), [sprRot](CCRect a, CCRect b) {
-                    if (sprRot->fits(a) ^ sprRot->fits(b)) return sprRot->fits(a);
-                    return CustomObjectsSheet::compareSprites(sprRot, sprRot, a, b);
+                auto best = std::min_element(freeRects.begin(), freeRects.end(), [spr](CCRect a, CCRect b) {
+                    if (spr->fits(a) ^ spr->fits(b)) return spr->fits(a);
+                    return CustomObjectsSheet::compareSprites(spr, spr, a, b);
                 });
 
-                // Is the rotated version a better placement?
-                if (CustomObjectsSheet::compareSprites(sprRot, spr, *bestRot, *best)) {
-                    spr->m_size.swap();
-                    spr->m_rotated = true;
-                    best = bestRot;
-                } // if
-                delete sprRot;
-            } // if
+                // Try rotated
+                if (spr->m_size.width != spr->m_size.height) {
+                    auto sprRot = new CustomObjectSprite("", "", spr->m_size);
+                    sprRot->m_size.swap();
 
-            // Remove the old rect
-            CCRect rect = *best;
-            freeRects.erase(best);
+                    // Find the best placement
+                    auto bestRot = std::min_element(freeRects.begin(), freeRects.end(), [sprRot](CCRect a, CCRect b) {
+                        if (sprRot->fits(a) ^ sprRot->fits(b)) return sprRot->fits(a);
+                        return CustomObjectsSheet::compareSprites(sprRot, sprRot, a, b);
+                    });
 
-            // Split the rect
-            auto rect1 = CCRect(rect.origin.x + spr->m_size.width + 2, rect.origin.y, rect.size.width - spr->m_size.width - 2, spr->m_size.height);
-            auto rect2 = CCRect(rect.origin.x, rect.origin.y + spr->m_size.height + 2, rect.size.width, rect.size.height - spr->m_size.height - 2);
-            if (rect1.size.width > 0 && rect1.size.height > 0) freeRects.push_back(rect1);
-            if (rect2.size.width > 0 && rect2.size.height > 0) freeRects.push_back(rect2);
+                    // Is the rotated version a better placement?
+                    if (CustomObjectsSheet::compareSprites(sprRot, spr, *bestRot, *best)) {
+                        spr->m_size.swap();
+                        spr->m_rotated = true;
+                        best = bestRot;
+                    } // if
+                    delete sprRot;
+                } // Try rotated
 
-            // Prune rects
-            for (int i = 0; i < freeRects.size(); i++) for (int j = i + 1; j < freeRects.size();) {
-                CCRect r1 = freeRects[i], r2 = freeRects[j];
-                if (r1.getMinX() >= r2.getMinX() && r1.getMinY() >= r2.getMinY() && r1.getMaxX() <= r2.getMaxX() && r1.getMaxY() <= r2.getMaxY()) {
-                    freeRects.erase(freeRects.begin() + i);
-                    i--;
+                // Test if the sprite fits in the chosen rect
+                if (!spr->fits(*best)) {
+                    success = false;
                     break;
-                } else if (r2.getMinX() >= r1.getMinX() && r2.getMinY() >= r1.getMinY() && r2.getMaxX() <= r1.getMaxX() && r2.getMaxY() <= r1.getMaxY()) {
-                    freeRects.erase(freeRects.begin() + j);
-                } else j++;
-            } // for
+                } // if
 
-            // Update the sprite position
-            spr->m_pos = rect.origin;
+                // Remove the old rect
+                CCRect rect = *best;
+                freeRects.erase(best);
 
-            // Expand the size if needed
-            size.width = std::max(size.width, spr->m_pos.x + spr->m_size.width);
-            size.height = std::max(size.height, spr->m_pos.y + spr->m_size.height);
-        } // for
+                // Split the rect
+                auto rect1 = CCRect(rect.origin.x + spr->m_size.width + 2, rect.origin.y, rect.size.width - spr->m_size.width - 2, spr->m_size.height);
+                auto rect2 = CCRect(rect.origin.x, rect.origin.y + spr->m_size.height + 2, rect.size.width, rect.size.height - spr->m_size.height - 2);
+                if (rect1.size.width > 0 && rect1.size.height > 0) freeRects.push_back(rect1);
+                if (rect2.size.width > 0 && rect2.size.height > 0) freeRects.push_back(rect2);
 
-        // Create the sheet object
+                // Prune rects
+                for (int i = 0; i < freeRects.size(); i++) for (int j = i + 1; j < freeRects.size();) {
+                    CCRect r1 = freeRects[i], r2 = freeRects[j];
+                    if (r1.getMinX() >= r2.getMinX() && r1.getMinY() >= r2.getMinY() && r1.getMaxX() <= r2.getMaxX() && r1.getMaxY() <= r2.getMaxY()) {
+                        freeRects.erase(freeRects.begin() + i);
+                        i--;
+                        break;
+                    } else if (r2.getMinX() >= r1.getMinX() && r2.getMinY() >= r1.getMinY() && r2.getMaxX() <= r1.getMaxX() && r2.getMaxY() <= r1.getMaxY()) {
+                        freeRects.erase(freeRects.begin() + j);
+                    } else j++;
+                } // Prune rects
+
+                // Update the sprite position
+                spr->m_pos = rect.origin;
+
+                // Expand the size if needed
+                size.width = std::max(size.width, spr->m_pos.x + spr->m_size.width);
+                size.height = std::max(size.height, spr->m_pos.y + spr->m_size.height);
+            } // MaxRects algorithm
+
+            // Was the spritesheet able to generate?
+            if (!success) continue;
+
+            // Once we have run the algorithm, test to see if the area is smaller
+            int area = size.width * size.height;
+            if (area < bestArea) {
+                bestArea = area;
+                bestWidth = width;
+            } else if (width == bestWidth) break; // We just went back and generated the best spritesheet, so the algorithm is done
+
+            // Once we have reached the end of the loop, go back to the best width to generate the best spritesheet
+            if (width >= maxWidth) width = bestWidth - 60;
+        } // Main loop
+
+        // Create the spritesheet object
         auto sheet = new CustomObjectsSheet();
         sheet->m_sprites = CCArray::create();
         sheet->m_sheetSize = size;
         sheet->autorelease();
 
-        // Add the finished sprites to the array
+        // Add the finished sprites to the sheet
         for (CustomObjectSprite* spr : sprites) sheet->m_sprites->addObject(spr);
 
-        // Calculate efficiency
-        float efficiency = area / (size.width * size.height);
-        log::info("Generated the spritesheet with {}% efficiency", efficiency * 100);
+        // Calculate space efficiency
+        float efficiency = totalArea / (size.width * size.height);
+        log::info("Found the smallest spritesheet with dimensions {} x {}", size.width, size.height);
+        log::info("Generated the spritesheet with {}% space efficiency", std::min(efficiency * 100, 100.0f));
 
-        // Return the final sprite sheet object
+        // Return the final spritesheet object
         return sheet;
     } // create
 
+    // Comparison used by the MaxRects algorithm to score the free rects
     static bool compareSprites(CustomObjectSprite* sprA, CustomObjectSprite* sprB, CCRect a, CCRect b) {
         if (sprA->bssf(a) != sprB->bssf(b)) return sprA->bssf(a) < sprB->bssf(b);
         else if (sprA->baf(a) != sprB->baf(b)) return sprA->baf(a) < sprB->baf(b);
