@@ -23,13 +23,12 @@ public:
         auto manager = CustomObjectsManager::get();
         manager->printModObjectCount();
 
-        auto sheet = CustomObjectsSheet::create(manager->getObjects());
-        auto spritesheet = sheet->generateSpritesheet();
+        auto sheet = CustomObjectsSheet::create(manager->getObjects(), Quality::HIGH);
+        auto spritesheet = sheet->createSpritesheetImage();
 
-        gd::string savePath = Mod::get()->getSaveDir().string();
-        gd::string path = savePath.substr(savePath.find("geode")) + "/cache/CustomObjects.png";
-        bool saved = spritesheet->saveToFile(path.c_str(), tCCImageFormat::kCCImageFormatPNG);
-        if (saved) log::info("Saved spritesheet to \"{}/cache/CustomObjects.png\"", savePath);
+        gd::string savePath = Mod::get()->getSaveDir().string() + "/cache/CustomObjects.png";
+        bool saved = spritesheet->saveToFile(savePath.c_str(), false);
+        if (saved) log::info("Saved spritesheet to \"{}\"", savePath);
         else log::error("Failed to save spritesheet!!!");
 
         for (int i = 0; i < manager->getObjectCount(); i++) {
@@ -117,12 +116,6 @@ public:
         m_fields->m_customLayerB5->setZOrder(m_gameLayerB5->getZOrder());
         m_fields->m_customLayerB5->setUseChildIndex(true);
         m_objectLayer->addChild(m_fields->m_customLayerB5);
-
-        auto manager = CustomObjectsManager::get();
-        auto sheet = CustomObjectsSheet::create(manager->getObjects());
-        auto sprite = sheet->generateSpritesheet()->getSprite();
-        sprite->setAnchorPoint(CCPoint(0, 1));
-        m_objectLayer->addChild(sprite);
     } // setupLayers
 
     CCNode* parentForZLayer(int zLayer, bool blending, int parentMode, int uiObject) {

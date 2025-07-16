@@ -3,6 +3,12 @@
 
 using namespace geode::prelude;
 
+enum Quality {
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 4
+};
+
 struct CustomObjectSprite : public CCObject {
     gd::string m_frame;
     CCPoint m_pos;
@@ -43,36 +49,39 @@ public:
     CCArray* m_sprites;
     CCSize m_sheetSize;
 
-    CCRenderTexture* generateSpritesheet() {
-        auto render = CCRenderTexture::create(m_sheetSize.width / 4, m_sheetSize.height / 4);
+    CCImage* createSpritesheetImage() const {
+        int csf = CCDirector::get()->getContentScaleFactor();
+        auto render = CCRenderTexture::create(m_sheetSize.width / csf, m_sheetSize.height / csf);
         render->begin();
-        
+
         for (int i = 0; i < m_sprites->count(); i++) {
             auto obj = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
-            auto rotatedSize = obj->m_rotated ? CCSize(obj->m_size.height, obj->m_size.width) : obj->m_size;
+            auto rotatedSize = (obj->m_rotated ? CCSize(obj->m_size.height, obj->m_size.width) : obj->m_size) / csf;
 
             auto spr = CCSprite::createWithSpriteFrameName(obj->m_frame.c_str());
-            spr->setPosition(CCPoint(obj->m_pos.x / 4, (m_sheetSize.height - obj->m_pos.y) / 4));
+            spr->setPosition(CCPoint(obj->m_pos.x, m_sheetSize.height - obj->m_pos.y) / csf);
             spr->setAnchorPoint(obj->m_rotated ? CCPoint(0, 0) : CCPoint(0, 1));
-            spr->setScaleX((rotatedSize.width / 4) / spr->getContentWidth());
-            spr->setScaleY((rotatedSize.height / 4) / spr->getContentHeight());
+            spr->setScaleX((rotatedSize.width) / spr->getContentWidth());
+            spr->setScaleY((rotatedSize.height) / spr->getContentHeight());
             spr->setRotation(obj->m_rotated ? 90 : 0);
             spr->visit();
         } // for
 
         render->end();
-        return render;
-    } // generateSpritesheet
+        auto image = render->newCCImage();
+        image->autorelease();
+        return image;
+    } // createSpritesheetImage
 
     /*
         A rudimentary implementation of the MaxRects algorithm for 2D bin packing.
-        Can consistently produce spritesheets with 95-99% space efficiency compared
-        to the total area of the sprites. Generating the spritesheet at runtime allows
-        for batch rendering in-game and dynamic sprite scaling for custom mod objects.
+        Can consistently produce spritesheets with 90-95% total coverage of the entire
+        spritesheet. Generating the spritesheet at runtime allows for batch rendering
+        in-game and dynamic sprite scaling for custom mod objects.
 
         Algorithm written entirely by me, with some help from ChatGPT :)
     */
-    static CustomObjectsSheet* create(CCArray* objects) {
+    static CustomObjectsSheet* create(CCArray* objects, Quality scale) {
         auto sprites = std::vector<CustomObjectSprite*>(objects->count());
         auto size = CCSize(0, 0);
         float totalArea = 0;
@@ -82,13 +91,13 @@ public:
         // Initialize sprites vector and find side lengths
         for (int i = 0; i < objects->count(); i++) {
             auto obj = static_cast<ModCustomObject*>(objects->objectAtIndex(i));
-            sprites[i] = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize * 4);
+            sprites[i] = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize * scale);
 
-            totalArea += (sprites[i]->m_size.width + 2) * (sprites[i]->m_size.height + 2); // not entirely accurate but close enough
+            totalArea += sprites[i]->m_size.width * sprites[i]->m_size.height;
             float side = std::max(sprites[i]->m_size.width, sprites[i]->m_size.height);
             if (side > minWidth) minWidth = side;
         } // for
-        maxWidth = std::sqrt(totalArea);
+        maxWidth = std::ceil(std::sqrt(totalArea));
 
         // Sort the sprites from largest size to smallest size
         std::sort(sprites.begin(), sprites.end(), [](CustomObjectSprite* a, CustomObjectSprite* b) {
@@ -96,7 +105,7 @@ public:
             float minA = std::min(a->m_size.width, a->m_size.height);
             float maxB = std::max(b->m_size.width, b->m_size.height);
             float minB = std::min(b->m_size.width, b->m_size.height);
-            
+
             if (maxA != maxB) return maxA > maxB;
             else return minA > minB;
         });
@@ -106,7 +115,7 @@ public:
         float bestArea = totalArea * 2;
         float bestWidth = maxWidth * 2;
         for (int width = minWidth; width < maxWidth + 120; width += 60) {
-            std::vector<CCRect> freeRects = {CCRect(0, 0, width, (totalArea / width) * 2)};
+            std::vector<CCRect> freeRects = {CCRect(0, 0, width, maxWidth * 2)};
             size = CCSize(0, 0);
 
             // MaxRects algorithm
@@ -193,6 +202,10 @@ public:
             if (width >= maxWidth) width = bestWidth - 60;
         } // Main loop
 
+        // Make the size a multiple of 4 so that we can render it properly
+        size.width = std::ceil(size.width / 4) * 4;
+        size.height = std::ceil(size.height / 4) * 4;
+
         // Create the spritesheet object
         auto sheet = new CustomObjectsSheet();
         sheet->m_sprites = CCArray::create();
@@ -202,10 +215,10 @@ public:
         // Add the finished sprites to the sheet
         for (CustomObjectSprite* spr : sprites) sheet->m_sprites->addObject(spr);
 
-        // Calculate space efficiency
-        float efficiency = totalArea / (size.width * size.height);
+        // Calculate total coverage
+        float coverage = totalArea / (size.width * size.height);
         log::info("Found the smallest spritesheet with dimensions {} x {}", size.width, size.height);
-        log::info("Generated the spritesheet with {}% space efficiency", std::min(efficiency * 100, 100.0f));
+        log::info("Generated the spritesheet with {}% coverage", std::min(coverage * 100, 100.0f));
 
         // Return the final spritesheet object
         return sheet;
