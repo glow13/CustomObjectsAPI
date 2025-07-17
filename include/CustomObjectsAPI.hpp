@@ -124,13 +124,18 @@ public:
         } // for
     } // printModObjectCount
 
-    void addSpritesheetsToCache() {
-        auto sheet = CustomObjectsSheet::create(m_customObjects, Quality::HIGH);
-        auto spritesheet = sheet->createSpritesheetImage();
+    void addSpritesheetToCache(gd::string name, Quality quality) {
+        auto spritesheet = CustomObjectsSheet::create(m_customObjects, quality);
 
-        gd::string savePath = Mod::get()->getSaveDir().string() + "/cache/CustomObjects.png";
-        bool saved = spritesheet->saveToFile(savePath.c_str(), false);
-        if (saved) log::info("Saved spritesheet to \"{}\"", savePath);
+        auto image = spritesheet->createSpritesheetImage();
+        gd::string sheetPath = Mod::get()->getSaveDir().string() + "/cache/" + name + ".png";
+        bool saved = image->saveToFile(sheetPath.c_str(), false);
+
+        auto dict = spritesheet->createSpritesheetData(name);
+        gd::string dataPath = Mod::get()->getSaveDir().string() + "/cache/" + name + ".plist";
+        saved = saved && dict->writeToFile(dataPath.c_str());
+
+        if (saved) log::info("Saved spritesheet to \"{}\"", sheetPath);
         else log::error("Failed to save spritesheet!!!");
-    } // addSpritesheetsToCache
+    } // addSpritesheetToCache
 };

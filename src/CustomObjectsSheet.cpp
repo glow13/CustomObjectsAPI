@@ -26,6 +26,38 @@ CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     return image;
 } // createSpritesheetImage
 
+CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
+    auto data = CCDictionary::create();
+
+    // Add the sprite frames
+    auto frames = CCDictionary::create();
+    for (int i = 0; i < m_sprites->count(); i++) {
+        auto spr = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
+        auto frame = fmt::format("custom-objects/{}", spr->m_spr);
+
+        auto sprData = CCDictionary::create();
+        sprData->setObject(CCString::create("{0,0}"), "spriteOffset");
+        sprData->setObject(CCString::create(spr->getSizeString()), "spriteSize");
+        sprData->setObject(CCString::create(spr->getSizeString()), "spriteSourceSize");
+        sprData->setObject(CCString::create(spr->getRectString()), "textureRect");
+        sprData->setObject(CCString::create(spr->m_rotated ? "true" : "false"), "textureRotated");
+        frames->setObject(sprData, frame);
+    } // for
+
+    // Add the spritesheet metadata
+    auto metadata = CCDictionary::create();
+    metadata->setObject(CCString::create("3"), "format");
+    metadata->setObject(CCString::create("custom-objects/" + name + ".png"), "realTextureFileName");
+    metadata->setObject(CCString::create(getSizeString()), "size");
+    metadata->setObject(CCString::create("custom-objects/" + name + ".png"), "textureFileName");
+
+    // Add them to the data dict
+    data->setObject(frames, "frames");
+    data->setObject(metadata, "metadata");
+
+    return data;
+} // createSpritesheetData
+
 CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality scale) {
     auto sprites = std::vector<CustomObjectSprite*>(objects->count());
     auto size = CCSize(0, 0);
@@ -153,7 +185,7 @@ CCSize CustomObjectsSheet::maxRectsBinPacking(std::vector<CustomObjectSprite*> &
         freeRects.erase(best);
 
         // Split the rect
-        auto rect1 = CCRect(rect.origin.x + spr->m_size.width + 2, rect.origin.y, rect.size.width - spr->m_size.width - 2, spr->m_size.height + 2);
+        auto rect1 = CCRect(rect.origin.x + spr->m_size.width + 2, rect.origin.y, rect.size.width - spr->m_size.width - 2, spr->m_size.height);
         auto rect2 = CCRect(rect.origin.x, rect.origin.y + spr->m_size.height + 2, rect.size.width, rect.size.height - spr->m_size.height - 2);
         if (rect1.size.width > 0 && rect1.size.height > 0) freeRects.push_back(rect1);
         if (rect2.size.width > 0 && rect2.size.height > 0) freeRects.push_back(rect2);

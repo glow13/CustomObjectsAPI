@@ -25,6 +25,14 @@ struct CustomObjectSprite : public CCObject {
         this->autorelease();
     } // CustomObjectSprite
 
+    gd::string getSizeString() const {
+        return "{" + fmt::format("{},{}", m_size.width, m_size.height) + "}";
+    } // getSize
+
+    gd::string getRectString() const {
+        return "{{" + fmt::format("{},{}", m_pos.x, m_pos.y) + "}," + getSizeString() + "}";
+    } // getRect
+
     bool fits(CCRect rect) const {
         return rect.size.width >= m_size.width && rect.size.height >= m_size.height;
     } // fits
@@ -51,7 +59,12 @@ public:
     CCArray* m_sprites;
     CCSize m_sheetSize;
 
+    gd::string getSizeString() const {
+        return "{" + fmt::format("{},{}", m_sheetSize.width, m_sheetSize.height) + "}";
+    } // getSizeString
+
     CCImage* createSpritesheetImage() const;
+    CCDictionary* createSpritesheetData(gd::string name) const;
     static CustomObjectsSheet* create(CCArray* objects, Quality scale);
 
 private:

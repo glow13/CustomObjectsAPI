@@ -21,7 +21,6 @@ public:
 
         auto manager = CustomObjectsManager::get();
         manager->printModObjectCount();
-        manager->addSpritesheetsToCache();
 
         for (int i = 0; i < manager->getObjectCount(); i++) {
             auto obj = manager->getCustomObject(i);
