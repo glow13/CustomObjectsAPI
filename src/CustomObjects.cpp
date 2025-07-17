@@ -1,9 +1,7 @@
-#include "CustomObjectsManager.hpp"
+#include "CustomObjectsAPI.hpp"
 
 #include "object/CustomGameObject.hpp"
 #include "object/CustomEffectGameObject.hpp"
-
-#include "CustomObjectsSheet.hpp"
 
 class FrownGameObject : public CustomGameObject {
 public:

@@ -1,5 +1,5 @@
 #include "CustomObjectsSheet.hpp"
-#include "CustomObjectsManager.hpp"
+#include "CustomObjectsAPI.hpp"
 
 CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     int csf = CCDirector::get()->getContentScaleFactor();

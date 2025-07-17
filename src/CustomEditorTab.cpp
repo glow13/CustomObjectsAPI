@@ -3,7 +3,7 @@
 
 #include <alphalaneous.editortab_api/include/EditorTabs.hpp>
 
-#include "CustomObjectsManager.hpp"
+#include "CustomObjectsAPI.hpp"
 
 using namespace geode::prelude;
 

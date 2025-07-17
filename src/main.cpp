@@ -4,7 +4,7 @@
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
-#include "CustomObjectsManager.hpp"
+#include "CustomObjectsAPI.hpp"
 
 using namespace geode::prelude;
 
