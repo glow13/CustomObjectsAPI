@@ -5,7 +5,6 @@
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
 #include "CustomObjectsManager.hpp"
-#include "CustomObjectsSheet.hpp"
 
 using namespace geode::prelude;
 
@@ -22,14 +21,7 @@ public:
 
         auto manager = CustomObjectsManager::get();
         manager->printModObjectCount();
-
-        auto sheet = CustomObjectsSheet::create(manager->getObjects(), Quality::HIGH);
-        auto spritesheet = sheet->createSpritesheetImage();
-
-        gd::string savePath = Mod::get()->getSaveDir().string() + "/cache/CustomObjects.png";
-        bool saved = spritesheet->saveToFile(savePath.c_str(), false);
-        if (saved) log::info("Saved spritesheet to \"{}\"", savePath);
-        else log::error("Failed to save spritesheet!!!");
+        manager->addSpritesheetsToCache();
 
         for (int i = 0; i < manager->getObjectCount(); i++) {
             auto obj = manager->getCustomObject(i);

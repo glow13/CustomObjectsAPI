@@ -1,6 +1,8 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "CustomObjectsSheet.hpp"
+
 using namespace geode::prelude;
 
 struct ModCustomObject : public CCObject {
@@ -78,10 +80,6 @@ public:
         m_customObjectsCount++;
     } // incrementObjectCount
 
-    CCArray* getObjects() {
-        return m_customObjects;
-    } // getObjects
-
     int getModObjectCount(gd::string id) {
         auto count = static_cast<CCInteger*>(m_modCustomObjectsCount->objectForKey(id));
         if (!count) m_modCustomObjectsCount->setObject(CCInteger::create(0), id);
@@ -125,4 +123,14 @@ public:
             log::info("Mod \"{}\" registered {} custom objects", mod, count);
         } // for
     } // printModObjectCount
+
+    void addSpritesheetsToCache() {
+        auto sheet = CustomObjectsSheet::create(m_customObjects, Quality::HIGH);
+        auto spritesheet = sheet->createSpritesheetImage();
+
+        gd::string savePath = Mod::get()->getSaveDir().string() + "/cache/CustomObjects.png";
+        bool saved = spritesheet->saveToFile(savePath.c_str(), false);
+        if (saved) log::info("Saved spritesheet to \"{}\"", savePath);
+        else log::error("Failed to save spritesheet!!!");
+    } // addSpritesheetsToCache
 };
