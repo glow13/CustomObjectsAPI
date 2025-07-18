@@ -68,6 +68,8 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality quality
     for (int i = 0; i < objects->count(); i++) {
         auto obj = static_cast<ModCustomObject*>(objects->objectAtIndex(i));
         auto spr = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize, quality);
+
+        // Check if this sprite is already present
         if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite* other) {
             return spr->m_sourceFrame == other->m_sourceFrame && spr->m_size == other->m_size;
         }) < sprites.end()) continue;
@@ -114,6 +116,9 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality quality
         if (width >= maxWidth) width = bestWidth - minSide / 2;
     } // for
 
+    // Return if no spritesheet was able to generate, realistically this should never happen
+    if (size.isZero()) return nullptr;
+
     // Make the size a multiple of 4 so that we can render it properly
     size.width = std::ceil(size.width / 4) * 4;
     size.height = std::ceil(size.height / 4) * 4;
@@ -128,9 +133,8 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality quality
     for (CustomObjectSprite* spr : sprites) sheet->m_sprites->addObject(spr);
 
     // Calculate total coverage
-    float coverage = totalArea / (size.width * size.height);
-    log::info("Found the smallest spritesheet with dimensions {} x {}", size.width, size.height);
-    log::info("Generated the spritesheet with {}% coverage", std::min(coverage * 100, 100.0f));
+    float coverage = std::min(totalArea / (size.width * size.height) * 100, 100.0f);
+    log::info("Generated the spritesheet with dimensions ({} x {}) and {}% total coverage", size.width, size.height, coverage);
 
     // Return the final spritesheet object
     return sheet;
@@ -138,7 +142,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality quality
 
 /*
     A rudimentary implementation of the MaxRects algorithm for 2D bin packing.
-    Can consistently produce spritesheets with 90-95% total coverage of the entire
+    Can consistently produce spritesheets with 85-95% total coverage of the entire
     spritesheet. Generating the spritesheet at runtime allows for batch rendering
     in-game and dynamic sprite scaling for custom mod objects.
 
@@ -148,7 +152,7 @@ CCSize CustomObjectsSheet::maxRectsBinPacking(std::vector<CustomObjectSprite*> &
     std::vector<CCRect> freeRects = {CCRect(0, 0, binSize.width, binSize.height)};
     auto size = CCSize(0, 0);
 
-    // Simplified MaxRects algorithm
+    // Rudimentary MaxRects algorithm
     for (CustomObjectSprite* spr : sprites) {
         if (spr->m_rotated) {
             spr->m_size.swap();

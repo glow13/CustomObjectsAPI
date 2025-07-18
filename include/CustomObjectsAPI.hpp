@@ -83,12 +83,9 @@ public:
 
     gd::string getSpritesheetQualityName() {
         switch (GameManager::sharedState()->m_texQuality) {
-            case 1:
-                return "CustomObjects";
-            case 2:
-                return "CustomObjects-hd";
-            case 3:
-                return "CustomObjects-uhd";
+            case 1: return "CustomObjects";
+            case 2: return "CustomObjects-hd";
+            case 3: return "CustomObjects-uhd";
         } // switch
         return "";
     } // getSpritesheetImagePath
@@ -130,6 +127,10 @@ public:
 
     void addSpritesheetToCache(gd::string name, Quality quality) {
         auto spritesheet = CustomObjectsSheet::create(m_customObjects, quality);
+        if (!spritesheet) {
+            log::error("Failed to create spritesheet!!!");
+            return;
+        } // if
 
         auto image = spritesheet->createSpritesheetImage();
         auto sheetPath = getCacheDirectory() + name + ".png";

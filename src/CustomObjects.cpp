@@ -69,7 +69,7 @@ $execute {
     auto manager = CustomObjectsManager::get();
 
     manager->registerCustomObject("frown-block.png"_spr, FrownGameObject::create);
-    manager->registerCustomObject("smile-block.png"_spr, CCSize(1, 0.25), SmileGameObject::create);
+    manager->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
     manager->registerCustomObject("container.png"_spr, ContainerGameObject::create);
 
     manager->registerCustomObject("block-1.png"_spr);
