@@ -10,8 +10,7 @@ CCImage* CustomObjectsSheet::createSpritesheetImage() const {
         auto obj = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
         auto rotatedSize = (obj->m_rotated ? CCSize(obj->m_size.height, obj->m_size.width) : obj->m_size) / csf;
 
-        auto frame = fmt::format("{}/{}", obj->m_mod, obj->m_spr);
-        auto spr = CCSprite::createWithSpriteFrameName(frame.c_str());
+        auto spr = CCSprite::createWithSpriteFrameName(obj->m_sourceFrame.c_str());
         spr->setPosition(CCPoint(obj->m_pos.x, m_sheetSize.height - obj->m_pos.y) / csf);
         spr->setAnchorPoint(obj->m_rotated ? CCPoint(0, 0) : CCPoint(0, 1));
         spr->setScaleX((rotatedSize.width) / spr->getContentWidth());
@@ -33,7 +32,6 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
     auto frames = CCDictionary::create();
     for (int i = 0; i < m_sprites->count(); i++) {
         auto spr = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
-        auto frame = fmt::format("custom-objects/{}", spr->m_spr);
 
         auto sprData = CCDictionary::create();
         sprData->setObject(CCString::create("{0,0}"), "spriteOffset");
@@ -41,7 +39,7 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
         sprData->setObject(CCString::create(spr->getSizeString()), "spriteSourceSize");
         sprData->setObject(CCString::create(spr->getRectString()), "textureRect");
         sprData->setObject(CCString::create(spr->m_rotated ? "true" : "false"), "textureRotated");
-        frames->setObject(sprData, frame);
+        frames->setObject(sprData, spr->m_frame);
     } // for
 
     // Add the spritesheet metadata
@@ -58,8 +56,8 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
     return data;
 } // createSpritesheetData
 
-CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality scale) {
-    auto sprites = std::vector<CustomObjectSprite*>(objects->count());
+CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality quality) {
+    std::vector<CustomObjectSprite*> sprites;
     auto size = CCSize(0, 0);
     float totalArea = 0;
     float minWidth = 0;
@@ -69,7 +67,11 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality scale) 
     // Initialize sprites vector and find side lengths
     for (int i = 0; i < objects->count(); i++) {
         auto obj = static_cast<ModCustomObject*>(objects->objectAtIndex(i));
-        sprites[i] = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize * scale);
+        auto spr = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize, quality);
+        if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite* other) {
+            return spr->m_sourceFrame == other->m_sourceFrame && spr->m_size == other->m_size;
+        }) < sprites.end()) continue;
+        else sprites.push_back(spr);
 
         totalArea += sprites[i]->m_size.width * sprites[i]->m_size.height;
         float side = std::max(sprites[i]->m_size.width, sprites[i]->m_size.height);
@@ -160,7 +162,7 @@ CCSize CustomObjectsSheet::maxRectsBinPacking(std::vector<CustomObjectSprite*> &
 
         // Try rotated
         if (spr->m_size.width != spr->m_size.height) {
-            auto sprRot = new CustomObjectSprite("", "", spr->m_size);
+            auto sprRot = new CustomObjectSprite(spr->m_size);
             sprRot->m_size.swap();
 
             // Find the best placement

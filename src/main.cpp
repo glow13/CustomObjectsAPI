@@ -44,8 +44,7 @@ public:
         auto manager = CustomObjectsManager::get();
         for (int i = 0; i < manager->getObjectCount(); i++) {
             auto obj = manager->getCustomObject(i);
-            gd::string frame = fmt::format("custom-objects/{}", obj->m_spr);
-            m_allKeys.insert(std::pair(obj->m_id, frame));
+            m_allKeys.insert(std::pair(obj->m_id, obj->m_frame));
         } // for
 
         return true;

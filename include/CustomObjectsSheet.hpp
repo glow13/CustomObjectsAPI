@@ -10,17 +10,26 @@ enum Quality {
 };
 
 struct CustomObjectSprite : public CCObject {
-    gd::string m_spr;
-    gd::string m_mod;
+    gd::string m_frame;
+    gd::string m_sourceFrame;
     CCPoint m_pos;
     CCSize m_size;
     bool m_rotated;
 
-    CustomObjectSprite(gd::string spr, gd::string mod, CCSize size) {
-        this->m_spr = spr;
-        this->m_mod = mod;
+    CustomObjectSprite(CCSize size) {
+        this->m_frame = "";
+        this->m_sourceFrame = "";
         this->m_pos = CCPoint(0, 0);
         this->m_size = size;
+        this->m_rotated = false;
+        this->autorelease();
+    } // CustomObjectSprite
+
+    CustomObjectSprite(gd::string spr, gd::string mod, CCSize size, Quality quality) {
+        this->m_frame = "custom-objects" + fmt::format("/{}/{}/", size.width, size.height) + spr;
+        this->m_sourceFrame = fmt::format("{}/{}", mod, spr);
+        this->m_pos = CCPoint(0, 0);
+        this->m_size = size * quality;
         this->m_rotated = false;
         this->autorelease();
     } // CustomObjectSprite
@@ -66,7 +75,7 @@ public:
 
     CCImage* createSpritesheetImage() const;
     CCDictionary* createSpritesheetData(gd::string name) const;
-    static CustomObjectsSheet* create(CCArray* objects, Quality scale);
+    static CustomObjectsSheet* create(CCArray* objects, Quality quality);
 
 private:
     static CCSize maxRectsBinPacking(std::vector<CustomObjectSprite*> &sprites, CCSize binSize);

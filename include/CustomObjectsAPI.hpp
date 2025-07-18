@@ -2,10 +2,12 @@
 #include <Geode/Geode.hpp>
 
 #include "CustomObjectsSheet.hpp"
+#include "object/CustomGameObject.hpp"
 
 using namespace geode::prelude;
 
 struct ModCustomObject : public CCObject {
+    gd::string m_frame;
     gd::string m_spr;
     gd::string m_mod;
     int m_id;
@@ -16,6 +18,7 @@ struct ModCustomObject : public CCObject {
         int pos = spr.find("/");
         this->m_spr = spr.substr(pos + 1);
         this->m_mod = spr.substr(0, pos);
+        this->m_frame = "custom-objects" + fmt::format("/{}/{}/", size.width, size.height) + m_spr;
         this->m_id =  modToID(m_mod) + offset;
         this->m_spriteSize = size;
         this->m_createFunction = create;
@@ -116,19 +119,6 @@ public:
         return static_cast<ModCustomObject*>(obj);
     } // getCustomObjectByID
 
-    void registerCustomObject(gd::string spr, CCSize size, std::function<GameObject*(int)> create) {
-        gd::string mod = spr.substr(0, spr.find("/"));
-        auto obj = new ModCustomObject(spr, getModObjectCount(mod), size, create);
-
-        m_customObjects->addObject(obj);
-        m_modCustomObjectsDict->setObject(obj, obj->m_id);
-
-        m_customObjectsCount++;
-        incrementModObjectCount(mod);
-
-        log::info("Registered custom object with id {}", obj->m_id);
-    } // registerCustomObject
-
     void printModObjectCount() {
         auto keys = m_modCustomObjectsCount->allKeys();
         for (int i = 0; i < keys->count(); i++) {
@@ -152,4 +142,21 @@ public:
         if (saved) log::info("Saved spritesheet to \"{}\"", sheetPath);
         else log::error("Failed to save spritesheet!!!");
     } // addSpritesheetToCache
+
+    void registerCustomObject(gd::string spr, CCSize size, std::function<GameObject*(int)> create = CustomGameObject::create) {
+        gd::string mod = spr.substr(0, spr.find("/"));
+        auto obj = new ModCustomObject(spr, getModObjectCount(mod), size * 30, create);
+
+        m_customObjects->addObject(obj);
+        m_modCustomObjectsDict->setObject(obj, obj->m_id);
+
+        m_customObjectsCount++;
+        incrementModObjectCount(mod);
+
+        log::info("Registered custom object with id {}", obj->m_id);
+    } // registerCustomObject
+
+    void registerCustomObject(gd::string spr, std::function<GameObject*(int)> create = CustomGameObject::create) {
+        registerCustomObject(spr, CCSize(1, 1), create);
+    } // registerCustomObject
 };
