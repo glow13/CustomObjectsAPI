@@ -26,7 +26,8 @@ struct CustomObjectSprite : public CCObject {
     } // CustomObjectSprite
 
     gd::string getSizeString() const {
-        return "{" + fmt::format("{},{}", m_size.width, m_size.height) + "}";
+        auto rotSize = m_rotated ? CCSize(m_size.height, m_size.width) : m_size;
+        return "{" + fmt::format("{},{}", rotSize.width, rotSize.height) + "}";
     } // getSize
 
     gd::string getRectString() const {

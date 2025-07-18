@@ -72,13 +72,27 @@ public:
         return s_manager;
     } // get
 
+    gd::string getCacheDirectory() {
+        auto path = Mod::get()->getSaveDir().string() + "/custom-objects/";
+        if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
+        return path;
+    } // getCacheDirectory
+
+    gd::string getSpritesheetQualityName() {
+        switch (GameManager::sharedState()->m_texQuality) {
+            case 1:
+                return "CustomObjects";
+            case 2:
+                return "CustomObjects-hd";
+            case 3:
+                return "CustomObjects-uhd";
+        } // switch
+        return "";
+    } // getSpritesheetImagePath
+
     int getObjectCount() {
         return m_customObjectsCount;
     } // getCustomObjectCount
-
-    void incrementObjectCount() {
-        m_customObjectsCount++;
-    } // incrementObjectCount
 
     int getModObjectCount(gd::string id) {
         auto count = static_cast<CCInteger*>(m_modCustomObjectsCount->objectForKey(id));
@@ -109,7 +123,7 @@ public:
         m_customObjects->addObject(obj);
         m_modCustomObjectsDict->setObject(obj, obj->m_id);
 
-        incrementObjectCount();
+        m_customObjectsCount++;
         incrementModObjectCount(mod);
 
         log::info("Registered custom object with id {}", obj->m_id);
@@ -128,11 +142,11 @@ public:
         auto spritesheet = CustomObjectsSheet::create(m_customObjects, quality);
 
         auto image = spritesheet->createSpritesheetImage();
-        gd::string sheetPath = Mod::get()->getSaveDir().string() + "/cache/" + name + ".png";
+        auto sheetPath = getCacheDirectory() + name + ".png";
         bool saved = image->saveToFile(sheetPath.c_str(), false);
 
         auto dict = spritesheet->createSpritesheetData(name);
-        gd::string dataPath = Mod::get()->getSaveDir().string() + "/cache/" + name + ".plist";
+        auto dataPath = getCacheDirectory() + name + ".plist";
         saved = saved && dict->writeToFile(dataPath.c_str());
 
         if (saved) log::info("Saved spritesheet to \"{}\"", sheetPath);

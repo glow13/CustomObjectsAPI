@@ -1,5 +1,6 @@
 #pragma once
 #include <Geode/Geode.hpp>
+#include <Geode/modify/LoadingLayer.hpp>
 #include <Geode/modify/ObjectToolbox.hpp>
 #include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
@@ -14,17 +15,36 @@ using namespace geode::prelude;
     GameObject::getObjectTextureRect
 */
 
+class $modify(LoadingLayer) {
+    void loadAssets() {
+        LoadingLayer::loadAssets();
+
+        if (m_loadStep == 1) {
+            auto manager = CustomObjectsManager::get();
+            manager->printModObjectCount();
+
+            manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
+            manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
+            manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
+
+            auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
+            auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
+
+            auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
+            CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);
+        } // if
+    } // loadAssets
+};
+
 class $modify(ObjectToolbox) {
 public:
     bool init() {
         if (!ObjectToolbox::init()) return false;
 
         auto manager = CustomObjectsManager::get();
-        manager->printModObjectCount();
-
         for (int i = 0; i < manager->getObjectCount(); i++) {
             auto obj = manager->getCustomObject(i);
-            gd::string frame = fmt::format("{}/{}", obj->m_mod, obj->m_spr);
+            gd::string frame = fmt::format("custom-objects/{}", obj->m_spr);
             m_allKeys.insert(std::pair(obj->m_id, frame));
         } // for
 
@@ -60,8 +80,9 @@ public:
     void setupLayers() {
         GJBaseGameLayer::setupLayers();
 
-        // @geode-ignore(unknown-resource)
-        auto spr = CCSprite::create("CustomObjects.png"_spr)->getTexture();
+        auto manager = CustomObjectsManager::get();
+        auto path = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
+        auto spr = CCTextureCache::sharedTextureCache()->addImage(path.c_str(), false);
 
         m_fields->m_customLayerT4 = CCSpriteBatchNode::createWithTexture(spr);
         m_fields->m_customLayerT4->setZOrder(m_gameLayerT4->getZOrder());
