@@ -16,11 +16,11 @@ namespace rectpack2D {
 
 		/* MSVC fix for non-conformant if constexpr implementation */
 
-		static auto make_output_rect(const int x, const int y, const int w, const int h) {
+		static auto make_output_rect(const float x, const float y, const float w, const float h) {
 			return rect_xywh(x, y, w, h);
 		}
 
-		static auto make_output_rect(const int x, const int y, const int w, const int h, const bool flipped) {
+		static auto make_output_rect(const float x, const float y, const float w, const float h, const bool flipped) {
 			return rect_xywhf(x, y, w, h, flipped);
 		}
 
