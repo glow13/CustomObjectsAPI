@@ -1,6 +1,8 @@
 #include "CustomObjectsSheet.hpp"
 #include "CustomObjectsAPI.hpp"
 
+#include "rectpack2D/finders_interface.hpp"
+
 CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     int csf = CCDirector::get()->getContentScaleFactor();
     auto render = CCRenderTexture::create(m_sheetSize.width / csf, m_sheetSize.height / csf);
