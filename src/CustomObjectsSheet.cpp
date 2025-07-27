@@ -8,8 +8,7 @@ CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     auto render = CCRenderTexture::create(m_sheetSize.width / csf, m_sheetSize.height / csf);
     render->begin();
 
-    for (int i = 0; i < m_sprites->count(); i++) {
-        auto obj = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
+    for (auto obj : m_sprites) {
         auto rotatedSize = (obj->m_rotated ? CCSize(obj->m_size.height, obj->m_size.width) : obj->m_size) / csf;
 
         auto spr = CCSprite::createWithSpriteFrameName(obj->m_sourceFrame.c_str());
@@ -32,9 +31,7 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
 
     // Add the sprite frames
     auto frames = CCDictionary::create();
-    for (int i = 0; i < m_sprites->count(); i++) {
-        auto spr = static_cast<CustomObjectSprite*>(m_sprites->objectAtIndex(i));
-
+    for (auto spr : m_sprites) {
         auto sprData = CCDictionary::create();
         sprData->setObject(CCString::create("{0,0}"), "spriteOffset");
         sprData->setObject(CCString::create(spr->getSizeString()), "spriteSize");
@@ -63,9 +60,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCDictionary* objects, Quality qu
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
-    CCDictElement* element = nullptr;
-    CCDICT_FOREACH(objects, element) {
-        auto obj = static_cast<ModCustomObject*>(element->getObject());
+    for (auto [id, obj] : CCDictionaryExt<int, ModCustomObject*>(objects)) {
         auto spr = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize, quality);
 
         // Check if this sprite is already present
@@ -82,12 +77,11 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCDictionary* objects, Quality qu
 
     // Create the spritesheet object
     auto sheet = new CustomObjectsSheet();
-    sheet->m_sprites = CCArray::create();
     sheet->m_sheetSize = size;
     sheet->autorelease();
 
     // Add the finished sprites to the sheet
-    for (CustomObjectSprite* spr : sprites) sheet->m_sprites->addObject(spr);
+    for (CustomObjectSprite* spr : sprites) sheet->m_sprites.push_back(spr);
 
     // Calculate total coverage
     float coverage = std::min(totalArea / (size.width * size.height) * 100, 100.0f);

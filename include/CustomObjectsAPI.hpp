@@ -37,11 +37,11 @@ private:
     // An offset value to give more control when generating object ids
     short m_generationOffsetValue;
 
-    // Dictionary of every registered custom object, the object id is the key and a ModCustomObject is the object
-    Ref<CCDictionary> m_customObjectsDict;
+    // Dictionary of every registered custom object, the object id is the key
+    CCDictionaryExt<int, ModCustomObject*> m_customObjectsDict;
 
-    // Dictionary of every registered mod and its objects, the mod id is the key and a CCArray is the object
-    Ref<CCDictionary> m_modCustomObjectsDict;
+    // Dictionary of every registered mod and a CCArray of its objects, the mod id is the key
+    CCDictionaryExt<gd::string, CCArray*> m_modCustomObjectsDict;
 
 public:
     static CustomObjectsManager* get();
@@ -52,12 +52,12 @@ public:
     gd::string getCacheDirectory();
     gd::string getSpritesheetQualityName();
 
-    int getObjectCount() { return m_customObjectsDict->count(); }
+    int getObjectCount() { return m_customObjectsDict.size(); }
     int getModObjectCount(gd::string id);
     void printModObjectCount();
 
     ModCustomObject* getCustomObject(int index);
-    ModCustomObject* getCustomObjectByID(int id);
+    ModCustomObject* getCustomObjectByID(int id) { return m_customObjectsDict[id]; }
 
     void addSpritesheetToCache(gd::string name, Quality quality);
 

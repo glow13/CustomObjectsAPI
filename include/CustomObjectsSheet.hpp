@@ -37,7 +37,7 @@ struct CustomObjectSprite : public CCObject {
 
 class CustomObjectsSheet : public CCNode {
 public:
-    CCArray* m_sprites;
+    CCArrayExt<CustomObjectSprite*> m_sprites;
     CCSize m_sheetSize;
 
     CCImage* createSpritesheetImage() const;

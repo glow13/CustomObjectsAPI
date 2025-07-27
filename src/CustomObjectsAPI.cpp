@@ -1,12 +1,7 @@
 #include "CustomObjectsAPI.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {
-    if (!s_manager) {
-        s_manager = new CustomObjectsManager();
-
-        s_manager->m_customObjectsDict = CCDictionary::create();
-        s_manager->m_modCustomObjectsDict = CCDictionary::create();
-    } // if
+    if (!s_manager) s_manager = new CustomObjectsManager();
 
     s_manager->m_generationOffsetValue = 0;
     return s_manager;
@@ -51,29 +46,20 @@ int CustomObjectsManager::modToObjectId(gd::string modId) {
 } // modToObjectId
 
 int CustomObjectsManager::getModObjectCount(gd::string id) {
-    auto objs = static_cast<CCArray*>(m_modCustomObjectsDict->objectForKey(id));
-    return (objs) ? objs->count() : 0;
+    return (m_modCustomObjectsDict.contains(id)) ? m_modCustomObjectsDict[id]->count() : 0;
 } // getModObjectCount
 
 ModCustomObject* CustomObjectsManager::getCustomObject(int index) {
-    auto id = static_cast<CCInteger*>(m_customObjectsDict->allKeys()->objectAtIndex(index));
-    return static_cast<ModCustomObject*>(m_customObjectsDict->objectForKey(id->getValue()));
+    auto id = static_cast<CCInteger*>(m_customObjectsDict.inner()->allKeys()->objectAtIndex(index));
+    return m_customObjectsDict[id->getValue()];
 } // getCustomObject
 
-ModCustomObject* CustomObjectsManager::getCustomObjectByID(int id) {
-    return static_cast<ModCustomObject*>(m_customObjectsDict->objectForKey(id));
-} // getCustomObjectByID
-
 void CustomObjectsManager::printModObjectCount() {
-    CCDictElement* objs = nullptr;
-    CCDICT_FOREACH(m_modCustomObjectsDict, objs) {
-        int count = static_cast<CCArray*>(objs->getObject())->count();
-        log::info("Mod \"{}\" registered {} custom objects", objs->getStrKey(), count);
-    } // for
+    for (auto [mod, arr] : m_modCustomObjectsDict) log::info("Mod \"{}\" registered {} custom objects", mod, arr->count());
 } // printModObjectCount
 
 void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality quality) {
-    auto spritesheet = CustomObjectsSheet::create(m_customObjectsDict, quality);
+    auto spritesheet = CustomObjectsSheet::create(m_customObjectsDict.inner(), quality);
     if (!spritesheet) {
         log::error("Failed to create spritesheet!!!");
         return;
@@ -96,10 +82,10 @@ void CustomObjectsManager::registerCustomObject(gd::string spr, CCSize size, std
     int id = modToObjectId(mod) + getModObjectCount(mod);
     auto obj = new ModCustomObject(spr, id, size * 30, create);
 
-    m_customObjectsDict->setObject(obj, obj->m_id);
+    m_customObjectsDict[obj->m_id] = obj;
 
-    if (auto modArr = static_cast<CCArray*>(m_modCustomObjectsDict->objectForKey(mod))) modArr->addObject(obj);
-    else m_modCustomObjectsDict->setObject(CCArray::createWithObject(obj), mod);
+    if (m_modCustomObjectsDict.contains(mod)) m_modCustomObjectsDict[mod]->addObject(obj);
+    else m_modCustomObjectsDict[mod] = CCArray::createWithObject(obj);
 
     log::info("Registered custom object with id {}", obj->m_id);
 } // registerCustomObject
