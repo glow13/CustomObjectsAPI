@@ -34,6 +34,9 @@ class CustomObjectsManager : public CCNode {
 private:
     static inline CustomObjectsManager* s_manager;
 
+    // An offset value to give more control when generating object ids
+    short m_generationOffsetValue;
+
     // Dictionary of every registered custom object, the object id is the key and a ModCustomObject is the object
     Ref<CCDictionary> m_customObjectsDict;
 
@@ -43,7 +46,8 @@ private:
 public:
     static CustomObjectsManager* get();
 
-    static int modToObjectId(gd::string modId, int offset = 0);
+    int modToObjectId(gd::string modId);
+    void setModCustomObjectGenerationValue(short value) { m_generationOffsetValue = value; }
 
     gd::string getCacheDirectory();
     gd::string getSpritesheetQualityName();

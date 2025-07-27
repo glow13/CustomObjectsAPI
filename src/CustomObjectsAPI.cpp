@@ -7,6 +7,8 @@ CustomObjectsManager* CustomObjectsManager::get() {
         s_manager->m_customObjectsDict = CCDictionary::create();
         s_manager->m_modCustomObjectsDict = CCDictionary::create();
     } // if
+
+    s_manager->m_generationOffsetValue = 0;
     return s_manager;
 } // get
 
@@ -25,7 +27,7 @@ gd::string CustomObjectsManager::getSpritesheetQualityName() {
     return "";
 } // getSpritesheetImagePath
 
-int CustomObjectsManager::modToObjectId(gd::string modId, int offset) {
+int CustomObjectsManager::modToObjectId(gd::string modId) {
     int pos = modId.find(".");
     gd::string dev = modId.substr(0, pos);
     gd::string mod = modId.substr(pos + 1);
@@ -43,7 +45,7 @@ int CustomObjectsManager::modToObjectId(gd::string modId, int offset) {
     } // for
 
     srand(modNum);
-    for (int i = 0; i < devNum + offset; i++) rand();
+    for (int i = 0; i < devNum + m_generationOffsetValue; i++) rand();
     int uniqueID = (rand() * 989999.0f) / RAND_MAX;
     return uniqueID + 10000;
 } // modToObjectId
