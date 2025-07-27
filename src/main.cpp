@@ -42,9 +42,8 @@ public:
         if (!ObjectToolbox::init()) return false;
 
         auto manager = CustomObjectsManager::get();
-        for (int i = 0; i < manager->getObjectCount(); i++) {
-            auto obj = manager->getCustomObject(i);
-            m_allKeys.insert(std::pair(obj->m_id, obj->m_frame));
+        for (auto [id, obj] : manager->m_customObjectsDict) {
+            m_allKeys.insert(std::pair(id, obj->m_frame));
         } // for
 
         return true;
@@ -54,7 +53,7 @@ public:
 class $modify(GameObject) {
 public:
     static GameObject* createWithKey(int key) {
-        if (key >= 4600) {
+        if (key >= 10000) {
             auto manager = CustomObjectsManager::get();
             if (auto obj = manager->getCustomObjectByID(key)) return obj->create();
         } // if

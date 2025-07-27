@@ -67,7 +67,7 @@ public:
 
 $execute {
     auto manager = CustomObjectsManager::get();
-    manager->setModCustomObjectGenerationValue(10);
+    manager->setModCustomObjectGenerationValue(4);
 
     manager->registerCustomObject("frown-block.png"_spr, FrownGameObject::create);
     manager->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);

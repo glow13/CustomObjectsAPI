@@ -18,8 +18,7 @@ class $modify(EditorUI) {
 
             auto buttons = CCArray::create();
             auto manager = CustomObjectsManager::get();
-            for (int i = 0; i < manager->getObjectCount(); i++) {
-                auto obj = manager->getCustomObject(i);
+            for (auto [id, obj] : manager->m_customObjectsDict) {
                 buttons->addObject(getCreateBtn(obj->m_id, 4));
             } // for
  

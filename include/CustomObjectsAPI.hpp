@@ -37,13 +37,13 @@ private:
     // An offset value to give more control when generating object ids
     short m_generationOffsetValue;
 
+public:
     // Dictionary of every registered custom object, the object id is the key
     CCDictionaryExt<int, ModCustomObject*> m_customObjectsDict;
 
     // Dictionary of every registered mod and a CCArray of its objects, the mod id is the key
     CCDictionaryExt<gd::string, CCArray*> m_modCustomObjectsDict;
 
-public:
     static CustomObjectsManager* get();
 
     int modToObjectId(gd::string modId);
