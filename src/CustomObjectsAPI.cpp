@@ -25,6 +25,29 @@ gd::string CustomObjectsManager::getSpritesheetQualityName() {
     return "";
 } // getSpritesheetImagePath
 
+int CustomObjectsManager::modToObjectId(gd::string modId, int offset) {
+    int pos = modId.find(".");
+    gd::string dev = modId.substr(0, pos);
+    gd::string mod = modId.substr(pos + 1);
+
+    int devNum = 0;
+    for (int i = 0, f = 0; i < dev.length() && f < 3; i++) {
+        if (dev[i] < 'a' || dev[i] > 'z') continue;
+        devNum = (devNum * 26) + (dev[i] - 'a'), f++;
+    } // for
+
+    int modNum = 0;
+    for (int i = 0, f = 0; i < mod.length() && f < 6; i++) {
+        if (mod[i] < 'a' || mod[i] > 'z') continue;
+        modNum = (modNum * 26) + (mod[i] - 'a'), f++;
+    } // for
+
+    srand(modNum);
+    for (int i = 0; i < devNum + offset; i++) rand();
+    int uniqueID = (rand() * 989999.0f) / RAND_MAX;
+    return uniqueID + 10000;
+} // modToObjectId
+
 int CustomObjectsManager::getModObjectCount(gd::string id) {
     auto objs = static_cast<CCArray*>(m_modCustomObjectsDict->objectForKey(id));
     return (objs) ? objs->count() : 0;
@@ -68,7 +91,8 @@ void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality qualit
 
 void CustomObjectsManager::registerCustomObject(gd::string spr, CCSize size, std::function<GameObject*(int)> create) {
     gd::string mod = spr.substr(0, spr.find("/"));
-    auto obj = new ModCustomObject(spr, getModObjectCount(mod), size * 30, create);
+    int id = modToObjectId(mod) + getModObjectCount(mod);
+    auto obj = new ModCustomObject(spr, id, size * 30, create);
 
     m_customObjectsDict->setObject(obj, obj->m_id);
 
