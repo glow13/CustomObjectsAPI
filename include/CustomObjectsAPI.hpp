@@ -57,20 +57,20 @@ class CustomObjectsManager : public CCNode {
 private:
     static inline CustomObjectsManager* s_manager;
 
-    int m_customObjectsCount;
-    Ref<CCArray> m_customObjects;
+    // Dictionary of every registered custom object, the object id is the key and a ModCustomObject is the object
+    Ref<CCDictionary> m_customObjectsDict;
 
+    // Dictionary of every registered mod and its objects, the mod id is the key and a CCArray is the object
     Ref<CCDictionary> m_modCustomObjectsDict;
-    Ref<CCDictionary> m_modCustomObjectsCount;
+
 public:
     static CustomObjectsManager* get();
 
     gd::string getCacheDirectory();
     gd::string getSpritesheetQualityName();
 
-    int getObjectCount() { return m_customObjectsCount; }
+    int getObjectCount() { return m_customObjectsDict->count(); }
     int getModObjectCount(gd::string id);
-    void incrementModObjectCount(gd::string id);
     void printModObjectCount();
 
     ModCustomObject* getCustomObject(int index);

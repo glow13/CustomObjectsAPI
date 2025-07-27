@@ -58,13 +58,14 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
     return data;
 } // createSpritesheetData
 
-CustomObjectsSheet* CustomObjectsSheet::create(CCArray* objects, Quality quality) {
+CustomObjectsSheet* CustomObjectsSheet::create(CCDictionary* objects, Quality quality) {
     std::vector<CustomObjectSprite*> sprites;
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
-    for (int i = 0; i < objects->count(); i++) {
-        auto obj = static_cast<ModCustomObject*>(objects->objectAtIndex(i));
+    CCDictElement* element = nullptr;
+    CCDICT_FOREACH(objects, element) {
+        auto obj = static_cast<ModCustomObject*>(element->getObject());
         auto spr = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize, quality);
 
         // Check if this sprite is already present

@@ -42,7 +42,7 @@ public:
 
     CCImage* createSpritesheetImage() const;
     CCDictionary* createSpritesheetData(gd::string name) const;
-    static CustomObjectsSheet* create(CCArray* objects, Quality quality);
+    static CustomObjectsSheet* create(CCDictionary* objects, Quality quality);
 
 private:
     static CCSize binPacking(std::vector<CustomObjectSprite*> &sprites);
