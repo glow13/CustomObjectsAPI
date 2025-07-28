@@ -18,7 +18,7 @@ struct ModCustomObject : public CCObject {
         int pos = spr.find("/");
         this->m_spr = spr.substr(pos + 1);
         this->m_mod = spr.substr(0, pos);
-        this->m_frame = "custom-objects" + fmt::format("/{}/{}/", size.width, size.height) + m_spr;
+        this->m_frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + m_spr;
         this->m_id = id;
         this->m_spriteSize = size;
         this->m_createFunction = create;
@@ -37,13 +37,13 @@ private:
     // An offset value to give more control when generating object ids
     short m_generationOffsetValue;
 
-public:
     // Dictionary of every registered custom object, the object id is the key
     CCDictionaryExt<int, ModCustomObject*> m_customObjectsDict;
 
     // Dictionary of every registered mod and a CCArray of its objects, the mod id is the key
     CCDictionaryExt<gd::string, CCArray*> m_modCustomObjectsDict;
 
+public:
     static CustomObjectsManager* get();
 
     int modToObjectId(gd::string modId);
@@ -56,8 +56,8 @@ public:
     int getModObjectCount(gd::string id);
     void printModObjectCount();
 
-    ModCustomObject* getCustomObject(int index);
     ModCustomObject* getCustomObjectByID(int id) { return m_customObjectsDict[id]; }
+    void forEachCustomObject(std::function<void(ModCustomObject*)> operation);
 
     void addSpritesheetToCache(gd::string name, Quality quality);
 

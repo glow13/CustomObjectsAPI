@@ -42,9 +42,9 @@ public:
         if (!ObjectToolbox::init()) return false;
 
         auto manager = CustomObjectsManager::get();
-        for (auto [id, obj] : manager->m_customObjectsDict) {
-            m_allKeys.insert(std::pair(id, obj->m_frame));
-        } // for
+        manager->forEachCustomObject([this](auto obj) {
+            m_allKeys.insert(std::pair(obj->m_id, obj->m_frame));
+        });
 
         return true;
     } // init

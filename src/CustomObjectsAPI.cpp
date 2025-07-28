@@ -49,14 +49,13 @@ int CustomObjectsManager::getModObjectCount(gd::string id) {
     return (m_modCustomObjectsDict.contains(id)) ? m_modCustomObjectsDict[id]->count() : 0;
 } // getModObjectCount
 
-ModCustomObject* CustomObjectsManager::getCustomObject(int index) {
-    auto id = static_cast<CCInteger*>(m_customObjectsDict.inner()->allKeys()->objectAtIndex(index));
-    return m_customObjectsDict[id->getValue()];
-} // getCustomObject
-
 void CustomObjectsManager::printModObjectCount() {
     for (auto [mod, arr] : m_modCustomObjectsDict) log::info("Mod \"{}\" registered {} custom objects", mod, arr->count());
 } // printModObjectCount
+
+void CustomObjectsManager::forEachCustomObject(std::function<void(ModCustomObject*)> operation) {
+    for (auto [id, obj] : m_customObjectsDict) operation(obj);
+} // forEachCustomObject
 
 void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality quality) {
     auto spritesheet = CustomObjectsSheet::create(m_customObjectsDict.inner(), quality);
