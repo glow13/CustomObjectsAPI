@@ -42,7 +42,7 @@ public:
 
         auto manager = CustomObjectsManager::get();
         manager->forEachCustomObject([this](auto obj) {
-            m_allKeys.insert(std::pair(obj.m_id, obj.m_frame));
+            m_allKeys.insert(std::pair(obj.id, obj.frame));
         });
 
         return true;

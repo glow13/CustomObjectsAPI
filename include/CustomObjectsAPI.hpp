@@ -7,23 +7,20 @@
 using namespace geode::prelude;
 
 struct ModCustomObject {
-    gd::string m_frame;
-    gd::string m_spr;
-    gd::string m_mod;
-    int m_id;
-    CCSize m_spriteSize;
-    std::function<GameObject*(int)> m_createFunction;
+    gd::string frame;
+    gd::string sourceFrame;
+    std::function<GameObject*(int)> createFunction;
 
-    ModCustomObject() : m_frame(""), m_spr(""), m_mod(""), m_id(0), m_spriteSize(CCSize(30, 30)) {}
+    int id;
+    CCSize boxSize;
+    CCSize spriteSize;
 
-    ModCustomObject(gd::string spr, int id, CCSize size, std::function<GameObject*(int)> create) : m_id(id), m_spriteSize(size), m_createFunction(create) {
-        int pos = spr.find("/");
-        m_spr = spr.substr(pos + 1);
-        m_mod = spr.substr(0, pos);
-        m_frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + m_spr;
+    ModCustomObject() : frame(""), sourceFrame(""), id(0), spriteSize(CCSize(30, 30)), boxSize(CCSize(30, 30)) {}
+    ModCustomObject(gd::string frame, int id, CCSize size, std::function<GameObject*(int)> create) : sourceFrame(frame), id(id), spriteSize(size), boxSize(CCSize(30, 30)), createFunction(create) {
+        this->frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + frame.substr(frame.find("/") + 1);
     } // ModCustomObject
 
-    GameObject* create() { return m_createFunction(m_id); }
+    GameObject* create() { return createFunction(id); }
 };
 
 class CustomObjectsManager : public CCNode {

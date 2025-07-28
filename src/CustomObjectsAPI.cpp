@@ -81,10 +81,10 @@ void CustomObjectsManager::registerCustomObject(gd::string spr, CCSize size, std
     int id = modToObjectId(mod) + getModObjectCount(mod);
     auto obj = ModCustomObject(spr, id, size * 30, create);
 
-    customObjectsCache[obj.m_id] = obj;
+    customObjectsCache[obj.id] = obj;
 
     if (modCustomObjectsCache.contains(mod)) modCustomObjectsCache[mod].emplace_back(obj);
     else modCustomObjectsCache[mod] = { obj };
 
-    log::info("Registered custom object with id {}", obj.m_id);
+    log::info("Registered custom object with id {}", obj.id);
 } // registerCustomObject

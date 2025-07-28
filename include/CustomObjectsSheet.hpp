@@ -12,27 +12,24 @@ enum Quality {
 };
 
 struct CustomObjectSprite {
-    gd::string m_frame;
-    gd::string m_sourceFrame;
-    CCPoint m_pos;
-    CCSize m_size;
-    bool m_rotated;
+    gd::string frame;
+    gd::string sourceFrame;
+    CCPoint pos;
+    CCSize size;
+    bool rotated;
 
-    CustomObjectSprite() : m_frame(""), m_sourceFrame(""), m_pos(CCPoint(0, 0)), m_size(CCSize(30, 30)), m_rotated(false) {}
-
-    CustomObjectSprite(gd::string spr, gd::string mod, CCSize size, Quality quality) : CustomObjectSprite() {
-        m_frame = "custom-objects" + fmt::format("/{}/{}/", size.width, size.height) + spr;
-        m_sourceFrame = fmt::format("{}/{}", mod, spr);
-        m_size = size * quality;
+    CustomObjectSprite() : frame(""), sourceFrame(""), pos(CCPoint(0, 0)), size(CCSize(30, 30)), rotated(false) {}
+    CustomObjectSprite(gd::string sourceFrame, CCSize size, Quality quality) : sourceFrame(sourceFrame), pos(CCPoint(0, 0)), size(size * quality), rotated(false) {
+        this->frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + sourceFrame.substr(sourceFrame.find("/") + 1);
     } // CustomObjectSprite
 
     gd::string getSizeString() const {
-        auto rotSize = m_rotated ? CCSize(m_size.height, m_size.width) : m_size;
+        auto rotSize = rotated ? CCSize(size.height, size.width) : size;
         return "{" + fmt::format("{},{}", rotSize.width, rotSize.height) + "}";
     } // getSize
 
     gd::string getRectString() const {
-        return "{{" + fmt::format("{},{}", m_pos.x, m_pos.y) + "}," + getSizeString() + "}";
+        return "{{" + fmt::format("{},{}", pos.x, pos.y) + "}," + getSizeString() + "}";
     } // getRect
 };
 
