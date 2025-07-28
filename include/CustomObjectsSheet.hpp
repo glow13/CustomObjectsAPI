@@ -3,13 +3,8 @@
 
 using namespace geode::prelude;
 
+enum Quality;
 struct ModCustomObject;
-
-enum Quality {
-    LOW = 1,
-    MEDIUM = 2,
-    HIGH = 4
-};
 
 struct CustomObjectSprite {
     gd::string frame;

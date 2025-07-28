@@ -1,10 +1,15 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectsSheet.hpp"
 #include "object/CustomGameObject.hpp"
 
 using namespace geode::prelude;
+
+enum Quality {
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 4
+};
 
 struct ModCustomObject {
     gd::string frame;

@@ -1,4 +1,11 @@
 #include "CustomObjectsAPI.hpp"
+#include "CustomObjectsSheet.hpp"
+
+/*
+    For this mod to work you need to make these functions return pointers!!!!
+    GameObject::getObjectRect2
+    GameObject::getObjectTextureRect
+*/
 
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();

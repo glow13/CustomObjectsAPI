@@ -1,64 +1,9 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/LoadingLayer.hpp>
-#include <Geode/modify/ObjectToolbox.hpp>
-#include <Geode/modify/GameObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
 #include "CustomObjectsAPI.hpp"
 
 using namespace geode::prelude;
-
-/*
-    For this mod to work you need to make these functions return pointers!!!!
-    GameObject::getObjectRect2
-    GameObject::getObjectTextureRect
-*/
-
-class $modify(LoadingLayer) {
-    void loadAssets() {
-        LoadingLayer::loadAssets();
-
-        if (m_loadStep == 1) {
-            auto manager = CustomObjectsManager::get();
-            manager->printModObjectCount();
-
-            manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
-            manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
-            manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
-
-            auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
-            auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
-
-            auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
-            CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);
-        } // if
-    } // loadAssets
-};
-
-class $modify(ObjectToolbox) {
-public:
-    bool init() {
-        if (!ObjectToolbox::init()) return false;
-
-        auto manager = CustomObjectsManager::get();
-        manager->forEachCustomObject([this](auto obj) {
-            m_allKeys.insert(std::pair(obj.id, obj.frame));
-        });
-
-        return true;
-    } // init
-};
-
-class $modify(GameObject) {
-public:
-    static GameObject* createWithKey(int key) {
-        if (key >= 10000) {
-            auto manager = CustomObjectsManager::get();
-            if (manager->containsCustomObject(key)) return manager->getCustomObjectByID(key).create();
-        } // if
-        return GameObject::createWithKey(key);
-    } // createWithKey
-};
 
 class $modify(GJBaseGameLayer) {
 public:
@@ -150,6 +95,6 @@ public:
                     return m_fields->m_customLayerB5;
             } // switch
         } // if
-    return GJBaseGameLayer::parentForZLayer(zLayer, blending, parentMode, uiObject);
+        return GJBaseGameLayer::parentForZLayer(zLayer, blending, parentMode, uiObject);
     } // parentForZLayer
 };
