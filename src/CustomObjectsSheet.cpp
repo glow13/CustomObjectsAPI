@@ -5,18 +5,18 @@
 
 CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     int csf = CCDirector::get()->getContentScaleFactor();
-    auto render = CCRenderTexture::create(m_sheetSize.width / csf, m_sheetSize.height / csf);
+    auto render = CCRenderTexture::create(sheetSize.width / csf, sheetSize.height / csf);
     render->begin();
 
-    for (auto obj : m_sprites) {
-        auto rotatedSize = (obj->m_rotated ? CCSize(obj->m_size.height, obj->m_size.width) : obj->m_size) / csf;
+    for (auto obj : spritesCache) {
+        auto rotatedSize = (obj.m_rotated ? CCSize(obj.m_size.height, obj.m_size.width) : obj.m_size) / csf;
 
-        auto spr = CCSprite::createWithSpriteFrameName(obj->m_sourceFrame.c_str());
-        spr->setPosition(CCPoint(obj->m_pos.x, m_sheetSize.height - obj->m_pos.y) / csf);
-        spr->setAnchorPoint(obj->m_rotated ? CCPoint(0, 0) : CCPoint(0, 1));
+        auto spr = CCSprite::createWithSpriteFrameName(obj.m_sourceFrame.c_str());
+        spr->setPosition(CCPoint(obj.m_pos.x, sheetSize.height - obj.m_pos.y) / csf);
+        spr->setAnchorPoint(obj.m_rotated ? CCPoint(0, 0) : CCPoint(0, 1));
         spr->setScaleX((rotatedSize.width) / spr->getContentWidth());
         spr->setScaleY((rotatedSize.height) / spr->getContentHeight());
-        spr->setRotation(obj->m_rotated ? 90 : 0);
+        spr->setRotation(obj.m_rotated ? 90 : 0);
         spr->visit();
     } // for
 
@@ -31,14 +31,14 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
 
     // Add the sprite frames
     auto frames = CCDictionary::create();
-    for (auto spr : m_sprites) {
+    for (auto spr : spritesCache) {
         auto sprData = CCDictionary::create();
         sprData->setObject(CCString::create("{0,0}"), "spriteOffset");
-        sprData->setObject(CCString::create(spr->getSizeString()), "spriteSize");
-        sprData->setObject(CCString::create(spr->getSizeString()), "spriteSourceSize");
-        sprData->setObject(CCString::create(spr->getRectString()), "textureRect");
-        sprData->setObject(CCString::create(spr->m_rotated ? "true" : "false"), "textureRotated");
-        frames->setObject(sprData, spr->m_frame);
+        sprData->setObject(CCString::create(spr.getSizeString()), "spriteSize");
+        sprData->setObject(CCString::create(spr.getSizeString()), "spriteSourceSize");
+        sprData->setObject(CCString::create(spr.getRectString()), "textureRect");
+        sprData->setObject(CCString::create(spr.m_rotated ? "true" : "false"), "textureRotated");
+        frames->setObject(sprData, spr.m_frame);
     } // for
 
     // Add the spritesheet metadata
@@ -55,21 +55,21 @@ CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
     return data;
 } // createSpritesheetData
 
-CustomObjectsSheet* CustomObjectsSheet::create(CCDictionary* objects, Quality quality) {
-    std::vector<CustomObjectSprite*> sprites;
+CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, ModCustomObject> objects, Quality quality) {
+    std::vector<CustomObjectSprite> sprites;
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
-    for (auto [id, obj] : CCDictionaryExt<int, ModCustomObject*>(objects)) {
-        auto spr = new CustomObjectSprite(obj->m_spr, obj->m_mod, obj->m_spriteSize, quality);
+    for (auto [id, obj] : objects) {
+        auto spr = CustomObjectSprite(obj.m_spr, obj.m_mod, obj.m_spriteSize, quality);
 
         // Check if this sprite is already present
-        if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite* other) {
-            return spr->m_sourceFrame == other->m_sourceFrame && spr->m_size == other->m_size;
+        if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite other) {
+            return spr.m_sourceFrame == other.m_sourceFrame && spr.m_size == other.m_size;
         }) < sprites.end()) continue;
 
-        sprites.push_back(spr);
-        totalArea += spr->m_size.width * spr->m_size.height;
+        sprites.emplace_back(spr);
+        totalArea += spr.m_size.width * spr.m_size.height;
     } // for
 
     // Run the bin packing algorithm
@@ -77,11 +77,9 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCDictionary* objects, Quality qu
 
     // Create the spritesheet object
     auto sheet = new CustomObjectsSheet();
-    sheet->m_sheetSize = size;
+    sheet->spritesCache = sprites;
+    sheet->sheetSize = size;
     sheet->autorelease();
-
-    // Add the finished sprites to the sheet
-    for (CustomObjectSprite* spr : sprites) sheet->m_sprites.push_back(spr);
 
     // Calculate total coverage
     float coverage = std::min(totalArea / (size.width * size.height) * 100, 100.0f);
@@ -91,14 +89,14 @@ CustomObjectsSheet* CustomObjectsSheet::create(CCDictionary* objects, Quality qu
     return sheet;
 } // create
 
-CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite*> &sprites) {
+CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) {
     using namespace rectpack2D;
     auto rectangles = std::vector<rect_xywhf>(sprites.size());
 
     float totalWidth = 0;
     for (auto spr : sprites) {
-        rectangles.emplace_back(rect_xywhf(0, 0, spr->m_size.width + 2, spr->m_size.height + 2, false));
-        totalWidth += std::max(spr->m_size.width, spr->m_size.height);
+        rectangles.emplace_back(rect_xywhf(0, 0, spr.m_size.width + 2, spr.m_size.height + 2, false));
+        totalWidth += std::max(spr.m_size.width, spr.m_size.height);
     } // for
 
     auto size = find_best_packing<empty_spaces<true>>(rectangles, make_finder_input(
@@ -108,13 +106,13 @@ CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite*> &sprites)
         flipping_option::ENABLED
     ));
 
-    for (auto spr : sprites) for (int i = 0; i < rectangles.size(); i++) {
-        if (spr->m_size.width == rectangles[i].w - 2 && spr->m_size.height == rectangles[i].h - 2) {
-            spr->m_pos = CCPoint(rectangles[i].x, rectangles[i].y);
-        } else if (spr->m_size.width == rectangles[i].h - 2 && spr->m_size.height == rectangles[i].w - 2) {
-            spr->m_pos = CCPoint(rectangles[i].x, rectangles[i].y);
-            spr->m_size.swap();
-            spr->m_rotated = true;
+    for (auto &spr : sprites) for (int i = 0; i < rectangles.size(); i++) {
+        if (spr.m_size.width == rectangles[i].w - 2 && spr.m_size.height == rectangles[i].h - 2) {
+            spr.m_pos = CCPoint(rectangles[i].x, rectangles[i].y);
+        } else if (spr.m_size.width == rectangles[i].h - 2 && spr.m_size.height == rectangles[i].w - 2) {
+            spr.m_pos = CCPoint(rectangles[i].x, rectangles[i].y);
+            spr.m_size.swap();
+            spr.m_rotated = true;
         } else continue;
 
         rectangles.erase(rectangles.begin() + i);

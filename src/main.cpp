@@ -1,4 +1,3 @@
-#pragma once
 #include <Geode/Geode.hpp>
 #include <Geode/modify/LoadingLayer.hpp>
 #include <Geode/modify/ObjectToolbox.hpp>
@@ -43,7 +42,7 @@ public:
 
         auto manager = CustomObjectsManager::get();
         manager->forEachCustomObject([this](auto obj) {
-            m_allKeys.insert(std::pair(obj->m_id, obj->m_frame));
+            m_allKeys.insert(std::pair(obj.m_id, obj.m_frame));
         });
 
         return true;
@@ -55,7 +54,7 @@ public:
     static GameObject* createWithKey(int key) {
         if (key >= 10000) {
             auto manager = CustomObjectsManager::get();
-            if (auto obj = manager->getCustomObjectByID(key)) return obj->create();
+            if (manager->containsCustomObject(key)) return manager->getCustomObjectByID(key).create();
         } // if
         return GameObject::createWithKey(key);
     } // createWithKey

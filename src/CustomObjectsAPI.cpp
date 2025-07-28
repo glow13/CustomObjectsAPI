@@ -46,19 +46,19 @@ int CustomObjectsManager::modToObjectId(gd::string modId) {
 } // modToObjectId
 
 int CustomObjectsManager::getModObjectCount(gd::string id) {
-    return (m_modCustomObjectsDict.contains(id)) ? m_modCustomObjectsDict[id]->count() : 0;
+    return (modCustomObjectsCache.contains(id)) ? modCustomObjectsCache[id].size() : 0;
 } // getModObjectCount
 
 void CustomObjectsManager::printModObjectCount() {
-    for (auto [mod, arr] : m_modCustomObjectsDict) log::info("Mod \"{}\" registered {} custom objects", mod, arr->count());
+    for (auto [mod, objs] : modCustomObjectsCache) log::info("Mod \"{}\" registered {} custom objects", mod, objs.size());
 } // printModObjectCount
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(ModCustomObject*)> operation) {
-    for (auto [id, obj] : m_customObjectsDict) operation(obj);
+void CustomObjectsManager::forEachCustomObject(std::function<void(ModCustomObject)> operation) {
+    for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
 
 void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality quality) {
-    auto spritesheet = CustomObjectsSheet::create(m_customObjectsDict.inner(), quality);
+    auto spritesheet = CustomObjectsSheet::create(customObjectsCache, quality);
     if (!spritesheet) {
         log::error("Failed to create spritesheet!!!");
         return;
@@ -79,12 +79,12 @@ void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality qualit
 void CustomObjectsManager::registerCustomObject(gd::string spr, CCSize size, std::function<GameObject*(int)> create) {
     gd::string mod = spr.substr(0, spr.find("/"));
     int id = modToObjectId(mod) + getModObjectCount(mod);
-    auto obj = new ModCustomObject(spr, id, size * 30, create);
+    auto obj = ModCustomObject(spr, id, size * 30, create);
 
-    m_customObjectsDict[obj->m_id] = obj;
+    customObjectsCache[obj.m_id] = obj;
 
-    if (m_modCustomObjectsDict.contains(mod)) m_modCustomObjectsDict[mod]->addObject(obj);
-    else m_modCustomObjectsDict[mod] = CCArray::createWithObject(obj);
+    if (modCustomObjectsCache.contains(mod)) modCustomObjectsCache[mod].emplace_back(obj);
+    else modCustomObjectsCache[mod] = { obj };
 
-    log::info("Registered custom object with id {}", obj->m_id);
+    log::info("Registered custom object with id {}", obj.m_id);
 } // registerCustomObject

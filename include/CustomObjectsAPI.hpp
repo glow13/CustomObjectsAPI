@@ -6,7 +6,7 @@
 
 using namespace geode::prelude;
 
-struct ModCustomObject : public CCObject {
+struct ModCustomObject {
     gd::string m_frame;
     gd::string m_spr;
     gd::string m_mod;
@@ -14,34 +14,26 @@ struct ModCustomObject : public CCObject {
     CCSize m_spriteSize;
     std::function<GameObject*(int)> m_createFunction;
 
-    ModCustomObject(gd::string spr, int id, CCSize size, std::function<GameObject*(int)> create) {
+    ModCustomObject() : m_frame(""), m_spr(""), m_mod(""), m_id(0), m_spriteSize(CCSize(30, 30)) {}
+
+    ModCustomObject(gd::string spr, int id, CCSize size, std::function<GameObject*(int)> create) : m_id(id), m_spriteSize(size), m_createFunction(create) {
         int pos = spr.find("/");
-        this->m_spr = spr.substr(pos + 1);
-        this->m_mod = spr.substr(0, pos);
-        this->m_frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + m_spr;
-        this->m_id = id;
-        this->m_spriteSize = size;
-        this->m_createFunction = create;
-        this->autorelease();
+        m_spr = spr.substr(pos + 1);
+        m_mod = spr.substr(0, pos);
+        m_frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + m_spr;
     } // ModCustomObject
 
-    GameObject* create() {
-        return m_createFunction(m_id);
-    } // create
+    GameObject* create() { return m_createFunction(m_id); }
 };
 
 class CustomObjectsManager : public CCNode {
 private:
     static inline CustomObjectsManager* s_manager;
 
-    // An offset value to give more control when generating object ids
     short m_generationOffsetValue;
 
-    // Dictionary of every registered custom object, the object id is the key
-    CCDictionaryExt<int, ModCustomObject*> m_customObjectsDict;
-
-    // Dictionary of every registered mod and a CCArray of its objects, the mod id is the key
-    CCDictionaryExt<gd::string, CCArray*> m_modCustomObjectsDict;
+    std::map<int, ModCustomObject> customObjectsCache;
+    std::map<gd::string, std::vector<ModCustomObject>> modCustomObjectsCache;
 
 public:
     static CustomObjectsManager* get();
@@ -52,12 +44,13 @@ public:
     gd::string getCacheDirectory();
     gd::string getSpritesheetQualityName();
 
-    int getObjectCount() { return m_customObjectsDict.size(); }
+    int getObjectCount() { return customObjectsCache.size(); }
     int getModObjectCount(gd::string id);
     void printModObjectCount();
 
-    ModCustomObject* getCustomObjectByID(int id) { return m_customObjectsDict[id]; }
-    void forEachCustomObject(std::function<void(ModCustomObject*)> operation);
+    ModCustomObject getCustomObjectByID(int id) { return customObjectsCache[id]; }
+    bool containsCustomObject(int id) { return customObjectsCache.contains(id); }
+    void forEachCustomObject(std::function<void(ModCustomObject)> operation);
 
     void addSpritesheetToCache(gd::string name, Quality quality);
 

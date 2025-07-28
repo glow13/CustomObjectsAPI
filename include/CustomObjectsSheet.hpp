@@ -3,26 +3,27 @@
 
 using namespace geode::prelude;
 
+struct ModCustomObject;
+
 enum Quality {
     LOW = 1,
     MEDIUM = 2,
     HIGH = 4
 };
 
-struct CustomObjectSprite : public CCObject {
+struct CustomObjectSprite {
     gd::string m_frame;
     gd::string m_sourceFrame;
     CCPoint m_pos;
     CCSize m_size;
     bool m_rotated;
 
-    CustomObjectSprite(gd::string spr, gd::string mod, CCSize size, Quality quality) {
-        this->m_frame = "custom-objects" + fmt::format("/{}/{}/", size.width, size.height) + spr;
-        this->m_sourceFrame = fmt::format("{}/{}", mod, spr);
-        this->m_pos = CCPoint(0, 0);
-        this->m_size = size * quality;
-        this->m_rotated = false;
-        this->autorelease();
+    CustomObjectSprite() : m_frame(""), m_sourceFrame(""), m_pos(CCPoint(0, 0)), m_size(CCSize(30, 30)), m_rotated(false) {}
+
+    CustomObjectSprite(gd::string spr, gd::string mod, CCSize size, Quality quality) : CustomObjectSprite() {
+        m_frame = "custom-objects" + fmt::format("/{}/{}/", size.width, size.height) + spr;
+        m_sourceFrame = fmt::format("{}/{}", mod, spr);
+        m_size = size * quality;
     } // CustomObjectSprite
 
     gd::string getSizeString() const {
@@ -37,17 +38,14 @@ struct CustomObjectSprite : public CCObject {
 
 class CustomObjectsSheet : public CCNode {
 public:
-    CCArrayExt<CustomObjectSprite*> m_sprites;
-    CCSize m_sheetSize;
+    std::vector<CustomObjectSprite> spritesCache;
+    CCSize sheetSize;
 
     CCImage* createSpritesheetImage() const;
     CCDictionary* createSpritesheetData(gd::string name) const;
-    static CustomObjectsSheet* create(CCDictionary* objects, Quality quality);
+    static CustomObjectsSheet* create(std::map<int, ModCustomObject> objects, Quality quality);
 
 private:
-    static CCSize binPacking(std::vector<CustomObjectSprite*> &sprites);
-
-    gd::string getSizeString() const {
-        return "{" + fmt::format("{},{}", m_sheetSize.width, m_sheetSize.height) + "}";
-    } // getSizeString
+    static CCSize binPacking(std::vector<CustomObjectSprite> &sprites);
+    gd::string getSizeString() const { return "{" + fmt::format("{},{}", sheetSize.width, sheetSize.height) + "}"; }
 };
