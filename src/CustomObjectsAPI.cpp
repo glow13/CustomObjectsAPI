@@ -14,25 +14,25 @@ CustomObjectsManager* CustomObjectsManager::get() {
     return s_manager;
 } // get
 
-gd::string CustomObjectsManager::getCacheDirectory() {
+std::string CustomObjectsManager::getCacheDirectory() {
     auto path = Mod::get()->getSaveDir().string() + "/custom-objects/";
     if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
     return path;
 } // getCacheDirectory
 
-gd::string CustomObjectsManager::getSpritesheetQualityName() {
+std::string CustomObjectsManager::getSpritesheetQualityName() {
     switch (GameManager::sharedState()->m_texQuality) {
         case 1: return "CustomObjects";
         case 2: return "CustomObjects-hd";
         case 3: return "CustomObjects-uhd";
+        default: return "CustomObjects-hd";
     } // switch
-    return "";
 } // getSpritesheetImagePath
 
-int CustomObjectsManager::modToObjectId(gd::string modId) {
+int CustomObjectsManager::modToObjectId(std::string modId) {
     int pos = modId.find(".");
-    gd::string dev = modId.substr(0, pos);
-    gd::string mod = modId.substr(pos + 1);
+    auto dev = modId.substr(0, pos);
+    auto mod = modId.substr(pos + 1);
 
     int devNum = 0;
     for (int i = 0, f = 0; i < dev.length() && f < 3; i++) {
@@ -48,11 +48,11 @@ int CustomObjectsManager::modToObjectId(gd::string modId) {
 
     srand(modNum);
     for (int i = 0; i < devNum + m_generationOffsetValue; i++) rand();
-    int uniqueID = (rand() * 989999.0f) / RAND_MAX;
+    int uniqueID = (rand() * 989999) / RAND_MAX;
     return uniqueID + 10000;
 } // modToObjectId
 
-int CustomObjectsManager::getModObjectCount(gd::string id) {
+int CustomObjectsManager::getModObjectCount(std::string id) {
     return (modCustomObjectsCache.contains(id)) ? modCustomObjectsCache[id].size() : 0;
 } // getModObjectCount
 
@@ -64,7 +64,7 @@ void CustomObjectsManager::forEachCustomObject(std::function<void(ModCustomObjec
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
 
-void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality quality) {
+void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quality) {
     auto spritesheet = CustomObjectsSheet::create(customObjectsCache, quality);
     if (!spritesheet) {
         log::error("Failed to create spritesheet!!!");
@@ -83,8 +83,8 @@ void CustomObjectsManager::addSpritesheetToCache(gd::string name, Quality qualit
     else log::error("Failed to save spritesheet!!!");
 } // addSpritesheetToCache
 
-void CustomObjectsManager::registerCustomObject(gd::string spr, CCSize size, std::function<GameObject*(int)> create) {
-    gd::string mod = spr.substr(0, spr.find("/"));
+void CustomObjectsManager::registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create) {
+    auto mod = spr.substr(0, spr.find("/"));
     int id = modToObjectId(mod) + getModObjectCount(mod);
     auto obj = ModCustomObject(spr, id, size * 30, create);
 

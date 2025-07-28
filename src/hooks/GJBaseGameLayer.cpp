@@ -75,24 +75,16 @@ public:
     CCNode* parentForZLayer(int zLayer, bool blending, int parentMode, int uiObject) {
         if (parentMode == 10) {
             switch(static_cast<ZLayer>(zLayer)) {
-                case ZLayer::T4:
-                    return m_fields->m_customLayerT4;
-                case ZLayer::T3:
-                    return m_fields->m_customLayerT3;
-                case ZLayer::T2:
-                    return m_fields->m_customLayerT2;
-                case ZLayer::T1:
-                    return m_fields->m_customLayerT1;
-                case ZLayer::B1:
-                    return m_fields->m_customLayerB1;
-                case ZLayer::B2:
-                    return m_fields->m_customLayerB2;
-                case ZLayer::B3:
-                    return m_fields->m_customLayerB3;
-                case ZLayer::B4:
-                    return m_fields->m_customLayerB4;
-                case ZLayer::B5:
-                    return m_fields->m_customLayerB5;
+                case ZLayer::T4: return m_fields->m_customLayerT4;
+                case ZLayer::T3: return m_fields->m_customLayerT3;
+                case ZLayer::T2: return m_fields->m_customLayerT2;
+                case ZLayer::T1: return m_fields->m_customLayerT1;
+                case ZLayer::B1: return m_fields->m_customLayerB1;
+                case ZLayer::B2: return m_fields->m_customLayerB2;
+                case ZLayer::B3: return m_fields->m_customLayerB3;
+                case ZLayer::B4: return m_fields->m_customLayerB4;
+                case ZLayer::B5: return m_fields->m_customLayerB5;
+                default: return nullptr;
             } // switch
         } // if
         return GJBaseGameLayer::parentForZLayer(zLayer, blending, parentMode, uiObject);

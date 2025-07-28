@@ -26,7 +26,7 @@ CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     return image;
 } // createSpritesheetImage
 
-CCDictionary* CustomObjectsSheet::createSpritesheetData(gd::string name) const {
+CCDictionary* CustomObjectsSheet::createSpritesheetData(std::string name) const {
     auto data = CCDictionary::create();
 
     // Add the sprite frames
