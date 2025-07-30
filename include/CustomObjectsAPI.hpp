@@ -22,7 +22,9 @@ struct ModCustomObject {
 
     ModCustomObject() : frame(""), sourceFrame(""), id(0), spriteSize(CCSize(30, 30)), boxSize(CCSize(30, 30)) {}
     ModCustomObject(std::string frame, int id, CCSize size, std::function<GameObject*(int)> create) : sourceFrame(frame), id(id), spriteSize(size), boxSize(CCSize(30, 30)), createFunction(create) {
-        this->frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + frame.substr(frame.find("/") + 1);
+        auto mod = frame.substr(0, frame.find("/"));
+        auto spr = frame.substr(frame.find("/") + 1);
+        this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, spr);
     } // ModCustomObject
 
     GameObject* create() { return createFunction(id); }
@@ -52,8 +54,9 @@ public:
 
     ModCustomObject getCustomObjectByID(int id) { return customObjectsCache[id]; }
     bool containsCustomObject(int id) { return customObjectsCache.contains(id); }
-    void forEachCustomObject(std::function<void(ModCustomObject)> operation);
+    void forEachCustomObject(std::function<void(const ModCustomObject)> operation) const;
 
+    bool isTheSpritesheetCacheUpToDate();
     void addSpritesheetToCache(std::string name, Quality quality);
 
     void registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create = CustomGameObject::create);

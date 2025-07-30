@@ -9,7 +9,7 @@ CustomObjectsManager* CustomObjectsManager::get() {
 } // get
 
 std::string CustomObjectsManager::getCacheDirectory() {
-    auto path = Mod::get()->getSaveDir().string() + "/custom-objects/";
+    auto path = Mod::get()->getSaveDir().string() + "/cache/";
     if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
     return path;
 } // getCacheDirectory
@@ -54,9 +54,20 @@ void CustomObjectsManager::printModObjectCount() {
     for (auto [mod, objs] : modCustomObjectsCache) log::info("Mod \"{}\" registered {} custom objects", mod, objs.size());
 } // printModObjectCount
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(ModCustomObject)> operation) {
+void CustomObjectsManager::forEachCustomObject(std::function<void(const ModCustomObject)> operation) const {
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
+
+bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() {
+    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>("custom-objects");
+    if (customObjectsCache.size() != cache.size()) return false;
+
+    for (auto [id, obj] : customObjectsCache) {
+        if (std::find(cache.begin(), cache.end(), obj.frame) == cache.end()) return false;
+    } // for
+
+    return true;
+} // isTheSpritesheetCacheUpToDate
 
 void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quality) {
     auto spritesheet = CustomObjectsSheet::create(customObjectsCache, quality);

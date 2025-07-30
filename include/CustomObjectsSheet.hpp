@@ -15,7 +15,9 @@ struct CustomObjectSprite {
 
     CustomObjectSprite() : frame(""), sourceFrame(""), pos(CCPoint(0, 0)), size(CCSize(30, 30)), rotated(false) {}
     CustomObjectSprite(std::string sourceFrame, CCSize size, Quality quality) : sourceFrame(sourceFrame), pos(CCPoint(0, 0)), size(size * quality), rotated(false) {
-        this->frame = fmt::format("custom-objects/{}/{}/", size.width, size.height) + sourceFrame.substr(sourceFrame.find("/") + 1);
+        auto mod = sourceFrame.substr(0, sourceFrame.find("/"));
+        auto spr = sourceFrame.substr(sourceFrame.find("/") + 1);
+        this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, spr);
     } // CustomObjectSprite
 
     std::string getSizeString() const {

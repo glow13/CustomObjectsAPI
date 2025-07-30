@@ -21,5 +21,17 @@
 				"resources/sprites/*.png"
 			]
 		}
-    }
+    },
+	"settings": {
+		"debug": {
+            "type": "title",
+            "name": "Debug"
+        },
+		"force-generation": {
+			"type": "bool",
+			"name": "Force Spritesheet Generation",
+			"description": "Always generate the spritesheets on game launch, used for debugging",
+			"default": false
+		}
+	}
 }

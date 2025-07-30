@@ -83,7 +83,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, ModCustomObject> ob
 
     // Calculate total coverage
     float coverage = std::min(totalArea / (size.width * size.height) * 100, 100.0f);
-    log::info("Generated the spritesheet with dimensions ({} x {}) and {}% total coverage", size.width, size.height, coverage);
+    log::debug("Generated the spritesheet with dimensions ({} x {}) and {}% total coverage", size.width, size.height, coverage);
 
     // Return the final spritesheet object
     return sheet;
