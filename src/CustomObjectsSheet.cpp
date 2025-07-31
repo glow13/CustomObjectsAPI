@@ -5,14 +5,15 @@
 #include "stb/stb_image_write.hpp"
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
-    auto render = CCRenderTexture::create(sheetSize.width / 4, sheetSize.height / 4);
+    int csf = CCDirector::get()->getContentScaleFactor();
+    auto render = CCRenderTexture::create(sheetSize.width / csf, sheetSize.height / csf);
     render->begin();
 
     for (auto obj : spritesCache) {
-        auto rotatedSize = (obj.rotated ? CCSize(obj.size.height, obj.size.width) : obj.size) / 4;
+        auto rotatedSize = (obj.rotated ? CCSize(obj.size.height, obj.size.width) : obj.size) / csf;
 
         auto spr = CCSprite::createWithSpriteFrameName(obj.sourceFrame.c_str());
-        spr->setPosition(CCPoint(obj.pos.x, sheetSize.height - obj.pos.y) / 4);
+        spr->setPosition(CCPoint(obj.pos.x, sheetSize.height - obj.pos.y) / csf);
         spr->setAnchorPoint(obj.rotated ? CCPoint(0, 0) : CCPoint(0, 1));
         spr->setScaleX((rotatedSize.width) / spr->getContentWidth());
         spr->setScaleY((rotatedSize.height) / spr->getContentHeight());
