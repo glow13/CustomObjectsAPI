@@ -15,6 +15,8 @@ public:
 
     bool customInit() {
         m_objectType = GameObjectType::Hazard;
+        m_width = 20;
+        m_height = 20;
         return true;
     } // customInit
 };
@@ -40,23 +42,18 @@ public:
     int m_bouncePower;
 
     static SmileGameObject* create(int id) {
-        log::info("SmileGameObject::create");
-
         auto obj = new SmileGameObject();
         if (obj->init(id)) return obj;
-
-        log::error("SmileGameObject::create failure!");
 
         delete obj;
         return nullptr;
     } // create
 
     bool customInit() {
-        log::info("SmileGameObject::customInit");
-
         m_objectType = GameObjectType::Modifier;
         m_isTouchTriggered = true;
         m_isMultiTriggered = true;
+        m_shouldPreview = true;
         m_isTrigger = true;
         return true;
     } // customInit
@@ -66,8 +63,6 @@ public:
     } // setToDefault
 
     void onTrigger(GJBaseGameLayer* playLayer) {
-        log::info("SmileGameObject::onTrigger");
-
         playLayer->m_player1->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
     } // onTrigger

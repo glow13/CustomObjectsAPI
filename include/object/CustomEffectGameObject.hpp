@@ -10,9 +10,7 @@ public:
         auto toolbox = ObjectToolbox::sharedState();
         auto spr = toolbox->intKeyToFrame(id);
 
-        if (GameObject::init(spr) && customInit()) {
-            log::info("EffectGameObject::init success!");
-
+        if (EffectGameObject::init(spr) && customInit()) {
             m_objectID = id;
             m_parentMode = 10;
 
@@ -20,8 +18,6 @@ public:
             autorelease();
             return true;
         } // if
-
-        log::error("EffectGameObject::init failure!");
 
         return false;
     } // init
