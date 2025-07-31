@@ -26,34 +26,39 @@ CCImage* CustomObjectsSheet::createSpritesheetImage() const {
     return image;
 } // createSpritesheetImage
 
-CCDictionary* CustomObjectsSheet::createSpritesheetData(std::string name) const {
-    auto data = CCDictionary::create();
+bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path) const {
+    auto fullPath = path + name + ".plist";
+    auto file = std::ofstream(fullPath);
 
-    // Add the sprite frames
-    auto frames = CCDictionary::create();
+    if (!file.is_open()) {
+        log::error("Failed to create the spritesheet plist file \"{}.plist\"", name);
+        return false;
+    } // if
+
+    file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    file << "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n";
+    file << "<plist version=\"1.0\">\n";
+    file << "<dict>\n\t<key>frames</key>\n\t<dict>\n";
+
     for (auto spr : spritesCache) {
-        auto sprData = CCDictionary::create();
-        sprData->setObject(CCString::create("{0,0}"), "spriteOffset");
-        sprData->setObject(CCString::create(spr.getSizeString()), "spriteSize");
-        sprData->setObject(CCString::create(spr.getSizeString()), "spriteSourceSize");
-        sprData->setObject(CCString::create(spr.getRectString()), "textureRect");
-        sprData->setObject(CCString::create(spr.rotated ? "true" : "false"), "textureRotated");
-        frames->setObject(sprData, spr.frame);
+        file << "\t\t<key>"+spr.frame+"</key>\n\t\t<dict>\n";
+        file << "\t\t\t<key>spriteOffset</key>\n\t\t\t<string>{0,0}</string>\n";
+        file << "\t\t\t<key>spriteSize</key>\n\t\t\t<string>"+spr.sizeString()+"</string>\n";
+        file << "\t\t\t<key>spriteSourceSize</key>\n\t\t\t<string>"+spr.sizeString()+"</string>\n";
+        file << "\t\t\t<key>textureRect</key>\n\t\t\t<string>"+spr.rectString()+"</string>\n";
+        file << "\t\t\t<key>textureRotated</key>\n\t\t\t"+spr.rotatedString()+"\n\t\t</dict>\n";
     } // for
 
-    // Add the spritesheet metadata
-    auto metadata = CCDictionary::create();
-    metadata->setObject(CCString::create("3"), "format");
-    metadata->setObject(CCString::create("custom-objects/" + name + ".png"), "realTextureFileName");
-    metadata->setObject(CCString::create(getSizeString()), "size");
-    metadata->setObject(CCString::create("custom-objects/" + name + ".png"), "textureFileName");
+    file << "\t</dict>\n\t<key>metadata</key>\n\t<dict>\n";
+    file << "\t\t<key>format</key>\n\t\t<integer>3</integer>\n";
+    file << "\t\t<key>realTextureFileName</key>\n\t\t<string>custom-objects/"+name+".png</string>\n";
+    file << "\t\t<key>size</key>\n\t\t<string>"+sizeString()+"</string>\n";
+    file << "\t\t<key>textureFileName</key>\n\t\t<string>custom-objects/"+name+".png</string>\n";
+    file << "\t</dict>\n</dict>\n</plist>";
 
-    // Add them to the data dict
-    data->setObject(frames, "frames");
-    data->setObject(metadata, "metadata");
-
-    return data;
-} // createSpritesheetData
+    file.close();
+    return true;
+} // saveSpritesheetPlist
 
 CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, ModCustomObject> objects, Quality quality) {
     std::vector<CustomObjectSprite> sprites;

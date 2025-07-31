@@ -20,14 +20,18 @@ struct CustomObjectSprite {
         this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, spr);
     } // CustomObjectSprite
 
-    std::string getSizeString() const {
+    std::string sizeString() const {
         auto rotSize = rotated ? CCSize(size.height, size.width) : size;
         return "{" + fmt::format("{},{}", rotSize.width, rotSize.height) + "}";
-    } // getSize
+    } // sizeString
 
-    std::string getRectString() const {
-        return "{{" + fmt::format("{},{}", pos.x, pos.y) + "}," + getSizeString() + "}";
-    } // getRect
+    std::string rectString() const {
+        return "{{" + fmt::format("{},{}", pos.x, pos.y) + "}," + sizeString() + "}";
+    } // rectString
+
+    std::string rotatedString() const {
+        return rotated ? "<true/>" : "<false/>";
+    } // rotatedString
 };
 
 class CustomObjectsSheet : public CCNode {
@@ -36,10 +40,10 @@ public:
     CCSize sheetSize;
 
     CCImage* createSpritesheetImage() const;
-    CCDictionary* createSpritesheetData(std::string name) const;
+    bool saveSpritesheetPlist(std::string name, std::string path) const;
     static CustomObjectsSheet* create(std::map<int, ModCustomObject> objects, Quality quality);
 
 private:
     static CCSize binPacking(std::vector<CustomObjectSprite> &sprites);
-    std::string getSizeString() const { return "{" + fmt::format("{},{}", sheetSize.width, sheetSize.height) + "}"; }
+    std::string sizeString() const { return "{" + fmt::format("{},{}", sheetSize.width, sheetSize.height) + "}"; }
 };

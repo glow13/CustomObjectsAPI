@@ -80,9 +80,7 @@ void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quali
     auto sheetPath = getCacheDirectory() + name + ".png";
     bool saved = image->saveToFile(sheetPath.c_str(), false);
 
-    auto dict = spritesheet->createSpritesheetData(name);
-    auto dataPath = getCacheDirectory() + name + ".plist";
-    saved = saved && dict->writeToFile(dataPath.c_str());
+    saved = saved && spritesheet->saveSpritesheetPlist(name, getCacheDirectory());
 
     if (saved) log::info("Saved spritesheet to \"{}\"", sheetPath);
     else log::error("Failed to save spritesheet!!!");
