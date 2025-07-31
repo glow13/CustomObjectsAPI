@@ -21,7 +21,7 @@ public:
             return true;
         } // if
 
-        log::info("EffectGameObject::init failure!");
+        log::error("EffectGameObject::init failure!");
 
         return false;
     } // init

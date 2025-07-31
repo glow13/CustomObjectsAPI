@@ -45,6 +45,8 @@ public:
         auto obj = new SmileGameObject();
         if (obj->init(id)) return obj;
 
+        log::error("SmileGameObject::create failure!");
+
         delete obj;
         return nullptr;
     } // create
