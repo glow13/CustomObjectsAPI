@@ -40,6 +40,8 @@ public:
     int m_bouncePower;
 
     static SmileGameObject* create(int id) {
+        log::info("SmileGameObject::create");
+
         auto obj = new SmileGameObject();
         if (obj->init(id)) return obj;
 
@@ -48,6 +50,8 @@ public:
     } // create
 
     bool customInit() {
+        log::info("SmileGameObject::customInit");
+
         m_objectType = GameObjectType::Modifier;
         m_isTouchTriggered = true;
         m_isMultiTriggered = true;
@@ -60,6 +64,8 @@ public:
     } // setToDefault
 
     void onTrigger(GJBaseGameLayer* playLayer) {
+        log::info("SmileGameObject::onTrigger");
+
         playLayer->m_player1->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
     } // onTrigger

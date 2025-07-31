@@ -94,5 +94,5 @@ void CustomObjectsManager::registerCustomObject(std::string spr, CCSize size, st
     if (modCustomObjectsCache.contains(mod)) modCustomObjectsCache[mod].emplace_back(obj);
     else modCustomObjectsCache[mod] = { obj };
 
-    log::info("Registered custom object with id {}", obj.id);
+    log::debug("Registered custom object with id {}", obj.id);
 } // registerCustomObject
