@@ -39,7 +39,7 @@ public:
     std::vector<CustomObjectSprite> spritesCache;
     CCSize sheetSize;
 
-    CCImage* createSpritesheetImage() const;
+    bool saveSpritesheetImage(std::string name, std::string path) const;
     bool saveSpritesheetPlist(std::string name, std::string path) const;
     static CustomObjectsSheet* create(std::map<int, ModCustomObject> objects, Quality quality);
 

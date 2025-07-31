@@ -2,8 +2,9 @@
 #include "CustomObjectsAPI.hpp"
 
 #include "rectpack2D/finders_interface.hpp"
+#include "stb/stb_image_write.hpp"
 
-CCImage* CustomObjectsSheet::createSpritesheetImage() const {
+bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
     int csf = CCDirector::get()->getContentScaleFactor();
     auto render = CCRenderTexture::create(sheetSize.width / csf, sheetSize.height / csf);
     render->begin();
@@ -22,9 +23,19 @@ CCImage* CustomObjectsSheet::createSpritesheetImage() const {
 
     render->end();
     auto image = render->newCCImage();
-    image->autorelease();
-    return image;
-} // createSpritesheetImage
+
+    auto success = stbi_write_png(
+        (path + name + ".png").c_str(),
+        image->getWidth(),
+        image->getHeight(),
+        4,
+        image->getData(),
+        image->getWidth() * 4
+    );
+
+    image->release();
+    return success;
+} // saveSpritesheetImage
 
 bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path) const {
     auto fullPath = path + name + ".plist";
