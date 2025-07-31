@@ -10,7 +10,7 @@ public:
         auto toolbox = ObjectToolbox::sharedState();
         auto spr = toolbox->intKeyToFrame(id);
 
-        if (EffectGameObject::init(spr) && customInit()) {
+        if (GameObject::init(spr) && customInit()) {
             log::info("EffectGameObject::init success!");
 
             m_objectID = id;
