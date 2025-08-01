@@ -89,4 +89,16 @@ public:
         } // if
         return GJBaseGameLayer::parentForZLayer(zLayer, blending, parentMode, uiObject);
     } // parentForZLayer
+
+    void playerTouchedTrigger(PlayerObject* player, EffectGameObject* obj) {
+        log::info("{} {}", obj, obj->m_objectID);
+        GJBaseGameLayer::playerTouchedTrigger(player, obj);
+    } // playerTouchedTrigger
+
+    void setupLevelStart(LevelSettingsObject* p0) {
+        GJBaseGameLayer::setupLevelStart(p0);
+        for (auto obj : CCArrayExt<EffectGameObject*>(m_objects)) {
+            log::info("start = {} | {} {}", obj, obj->m_objectID, obj->m_isTouchTriggered);
+        } // for
+    } // setupLevelStart
 };
