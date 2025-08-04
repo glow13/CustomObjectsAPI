@@ -1,7 +1,7 @@
 #include "CustomObjectsAPI.hpp"
 #include "CustomObjectsSheet.hpp"
 
-#include <random>
+#include "pcg/pcg_random.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();
@@ -42,12 +42,9 @@ int CustomObjectsManager::modToObjectId(std::string modId) {
         modNum = (modNum * 26) + (mod[i] - 'a'), f++;
     } // for
 
-    std::uniform_int_distribution<int> range(200,19999);
-    std::default_random_engine engine(modNum);
-    std::function<int()> random = std::bind(range, engine);
-
-    for (int i = 0; i < devNum + m_generationOffsetValue; i++) random();
-    return random() * 50;
+    pcg32 rng(modNum);
+    for (int i = 0; i < devNum + m_generationOffsetValue; i++) rng();
+    return (pcg_extras::bounded_rand(rng, 19799) + 200) * 50;
 } // modToObjectId
 
 int CustomObjectsManager::getModObjectCount(std::string id) {
