@@ -2,6 +2,7 @@
 
 #include "object/CustomGameObject.hpp"
 #include "object/CustomEffectGameObject.hpp"
+#include "object/CustomRingGameObject.hpp"
 
 class FrownGameObject : public CustomGameObject {
 public:
@@ -21,8 +22,10 @@ public:
     } // customInit
 };
 
-class ContainerGameObject : public CustomGameObject {
+class ContainerGameObject : public CustomRingGameObject {
 public:
+    float m_bouncePower = 1;
+
     static ContainerGameObject* create(int id) {
         auto obj = new ContainerGameObject();
         if (obj->init(id)) return obj;
@@ -31,10 +34,22 @@ public:
         return nullptr;
     } // create
 
-    bool customInit() {
-        m_objectType = GameObjectType::Solid;
+    bool customInit() override {
+        m_unk532 = true;
+        m_width = 36;
+        m_height = 36;
+
         return true;
     } // customInit
+
+    void onJump() override {
+        auto player = GJBaseGameLayer::get()->m_player1;
+        player->propellPlayer(m_bouncePower * 0.35, true, 12);
+        player->animatePlatformerJump(1.0f);
+        m_bouncePower += 0.1;
+    } // onJump
+
+    void resetObject() override { m_bouncePower = 1; }
 };
 
 class SmileGameObject : public CustomEffectGameObject {
@@ -55,12 +70,7 @@ public:
         m_isMultiTriggered = true;
         m_isTrigger = true;
 
-        m_uniqueID = 22;
-        m_unk390 = 20;
-        m_unk40C = true;
         m_unk532 = true;
-
-        // addCustomColorChild("custom-objects/glow12.custom-objects-api/30/30/smile-block.png");
 
         return true;
     } // customInit
