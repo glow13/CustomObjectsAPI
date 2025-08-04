@@ -32,6 +32,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Clone Geode bindings
+        run: git clone https://github.com/glow13/bindings build/_deps/bindings-src
+
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:

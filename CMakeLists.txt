@@ -20,6 +20,8 @@ else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
+set(GEODE_BINDINGS_REPO_PATH "${CMAKE_SOURCE_DIR}/build/_deps/bindings-src")
+
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)

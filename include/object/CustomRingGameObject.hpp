@@ -21,7 +21,7 @@ public:
 
             m_width = 36;
             m_height = 36;
-            m_unk3b8 = true; // audio pulse
+            m_usesAudioScale = true; // audio pulse
             m_unk532 = true; // green hitbox
 
             m_claimTouch = false;
