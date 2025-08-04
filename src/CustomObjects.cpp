@@ -34,22 +34,21 @@ public:
         return nullptr;
     } // create
 
-    bool customInit() override {
-        m_unk532 = true;
-        m_width = 36;
-        m_height = 36;
+    void setupCustomRing(CCParticleSystemQuad* particle) override {
+        if (!particle) return;
 
-        return true;
-    } // customInit
+        particle->setStartColor(ccColor4F{ 0, 0, 0, 255 });
+        particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
+        particle->setBlendFunc(kCCBlendFuncDisable);
+    } // setupCustomRing
 
-    void onJump() override {
-        auto player = GJBaseGameLayer::get()->m_player1;
+    void pressCustomRing(PlayerObject* player) override {
         player->propellPlayer(m_bouncePower * 0.35, true, 12);
         player->animatePlatformerJump(1.0f);
         m_bouncePower += 0.1;
     } // onJump
 
-    void resetObject() override { m_bouncePower = 1; }
+    void resetCustomRing() override { m_bouncePower = 1; }
 };
 
 class SmileGameObject : public CustomEffectGameObject {
