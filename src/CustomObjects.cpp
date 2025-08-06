@@ -2,7 +2,7 @@
 
 #include "object/CustomGameObject.hpp"
 #include "object/CustomEffectGameObject.hpp"
-#include "object/CustomRingGameObject.hpp"
+#include "object/CustomRingObject.hpp"
 
 /*
     m_objectType == 0x388
@@ -29,7 +29,7 @@ public:
     } // customInit
 };
 
-class ContainerGameObject : public CustomRingGameObject {
+class ContainerGameObject : public CustomRingObject {
 public:
     float m_bouncePower = 1;
 
@@ -41,12 +41,12 @@ public:
         return nullptr;
     } // create
 
-    void setupCustomRing(CCParticleSystemQuad* particle) override {
-        if (!particle) return;
-
-        particle->setStartColor(ccColor4F{ 0, 0, 0, 255 });
-        particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
-        particle->setBlendFunc(kCCBlendFuncDisable);
+    void setupCustomRing() override {
+        if (auto particle = createRingParticles()) {
+            particle->setStartColor(ccColor4F{ 0, 0, 0, 255 });
+            particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
+            particle->setBlendFunc(kCCBlendFuncDisable);
+        } // if
     } // setupCustomRing
 
     void pressCustomRing(PlayerObject* player) override {

@@ -3,15 +3,11 @@
 
 using namespace geode::prelude;
 
-/*
-    You need to set the RingObject in the constructor for this to work!
-    Set it to EffectGameObject constructor for now ig
-*/
-
-class CustomRingGameObject : public RingObject {
+class CustomRingObject : public RingObject {
 public:
-    static CustomRingGameObject* create(int id);
-    virtual void setupCustomRing(CCParticleSystemQuad* particle) {}
+    static CustomRingObject* create(int id);
+
+    virtual void setupCustomRing() { createRingParticles(); }
     virtual void pressCustomRing(PlayerObject* player) {}
     virtual void resetCustomRing() {}
 
@@ -26,7 +22,7 @@ public:
 
             m_width = 36;
             m_height = 36;
-            m_usesAudioScale = true; // audio pulse
+            m_usesAudioScale = true;
             m_unk532 = true; // green hitbox
 
             m_claimTouch = false;
@@ -39,15 +35,18 @@ public:
         return false;
     } // init
 
+    // Returns nullptr if in the editor
+    CCParticleSystemQuad* createRingParticles() {
+        if (PlayLayer::get() && !m_hasNoParticles) {
+            return createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+        } // if
+        return nullptr;
+    } // createRingParticle
+
+private:
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         RingObject::customObjectSetup(p0, p1);
-
-        CCParticleSystemQuad* particle = nullptr;
-        if (PlayLayer::get() && !m_hasNoParticles) {
-            particle= createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
-        } // if
-
-        setupCustomRing(particle);
+        setupCustomRing();
     } // customObjectSetup
 
     void resetObject() override {
