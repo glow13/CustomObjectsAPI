@@ -1,8 +1,7 @@
 #include "CustomObjectsSheet.hpp"
-#include "CustomObjectsAPI.hpp"
 
-#include "rectpack2D/finders_interface.hpp"
-#include "stb/stb_image_write.hpp"
+#include "library/rectpack2D/finders_interface.hpp"
+#include "library/stb/stb_image_write.hpp"
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
     int csf = CCDirector::get()->getContentScaleFactor();
@@ -71,7 +70,7 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
     return true;
 } // saveSpritesheetPlist
 
-CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, ModCustomObject> objects, Quality quality) {
+CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObject> objects, Quality quality) {
     std::vector<CustomObjectSprite> sprites;
     float totalArea = 0;
 

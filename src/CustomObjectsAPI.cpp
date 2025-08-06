@@ -1,7 +1,7 @@
 #include "CustomObjectsAPI.hpp"
 #include "CustomObjectsSheet.hpp"
 
-#include "pcg/pcg_random.hpp"
+#include "library/pcg/pcg_random.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();
@@ -55,7 +55,7 @@ void CustomObjectsManager::printModObjectCount() {
     for (auto [mod, objs] : modCustomObjectsCache) log::info("Mod \"{}\" registered {} custom objects", mod, objs.size());
 } // printModObjectCount
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(const ModCustomObject)> operation) const {
+void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObject)> operation) const {
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
 
@@ -88,7 +88,7 @@ void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quali
 void CustomObjectsManager::registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create) {
     auto mod = spr.substr(0, spr.find("/"));
     int id = modToObjectId(mod) + getModObjectCount(mod);
-    auto obj = ModCustomObject(spr, id, size * 30, create);
+    auto obj = CustomObject(spr, id, size * 30, create);
 
     customObjectsCache[obj.id] = obj;
 

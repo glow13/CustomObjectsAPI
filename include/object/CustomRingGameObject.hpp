@@ -3,6 +3,11 @@
 
 using namespace geode::prelude;
 
+/*
+    You need to set the RingObject in the constructor for this to work!
+    Set it to EffectGameObject constructor for now ig
+*/
+
 class CustomRingGameObject : public RingObject {
 public:
     static CustomRingGameObject* create(int id);

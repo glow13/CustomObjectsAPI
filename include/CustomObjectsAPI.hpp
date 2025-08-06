@@ -1,34 +1,10 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "CustomObjectsStructs.hpp"
 #include "object/CustomGameObject.hpp"
 
 using namespace geode::prelude;
-
-enum Quality : unsigned int {
-    LOW = 1,
-    MEDIUM = 2,
-    HIGH = 4
-};
-
-struct ModCustomObject {
-    std::string frame;
-    std::string sourceFrame;
-    std::function<GameObject*(int)> createFunction;
-
-    int id;
-    CCSize boxSize;
-    CCSize spriteSize;
-
-    ModCustomObject() : frame(""), sourceFrame(""), id(0), spriteSize(CCSize(30, 30)), boxSize(CCSize(30, 30)) {}
-    ModCustomObject(std::string frame, int id, CCSize size, std::function<GameObject*(int)> create) : sourceFrame(frame), id(id), spriteSize(size), boxSize(CCSize(30, 30)), createFunction(create) {
-        auto mod = frame.substr(0, frame.find("/"));
-        auto spr = frame.substr(frame.find("/") + 1);
-        this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, spr);
-    } // ModCustomObject
-
-    GameObject* create() { return createFunction(id); }
-};
 
 class CustomObjectsManager : public CCNode {
 private:
@@ -36,8 +12,8 @@ private:
 
     short m_generationOffsetValue;
 
-    std::map<int, ModCustomObject> customObjectsCache;
-    std::map<std::string, std::vector<ModCustomObject>> modCustomObjectsCache;
+    std::map<int, CustomObject> customObjectsCache;
+    std::map<std::string, std::vector<CustomObject>> modCustomObjectsCache;
 
 public:
     static CustomObjectsManager* get();
@@ -52,9 +28,9 @@ public:
     int getModObjectCount(std::string id);
     void printModObjectCount();
 
-    ModCustomObject getCustomObjectByID(int id) { return customObjectsCache[id]; }
+    CustomObject getCustomObjectByID(int id) { return customObjectsCache[id]; }
     bool containsCustomObject(int id) { return customObjectsCache.contains(id); }
-    void forEachCustomObject(std::function<void(const ModCustomObject)> operation) const;
+    void forEachCustomObject(std::function<void(const CustomObject)> operation) const;
 
     bool isTheSpritesheetCacheUpToDate();
     void addSpritesheetToCache(std::string name, Quality quality);

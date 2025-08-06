@@ -4,6 +4,13 @@
 #include "object/CustomEffectGameObject.hpp"
 #include "object/CustomRingGameObject.hpp"
 
+/*
+    m_objectType == 0x388
+    m_objectID == 0x3f4
+    m_hasNoAudioScale == 0x3b9
+    m_hasNoEffects = 0x404
+*/
+
 class FrownGameObject : public CustomGameObject {
 public:
     static FrownGameObject* create(int id) {
