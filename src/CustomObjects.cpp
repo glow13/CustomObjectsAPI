@@ -1,7 +1,7 @@
 #include "CustomObjectsAPI.hpp"
 
 #include "object/CustomGameObject.hpp"
-#include "object/CustomEffectGameObject.hpp"
+#include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"
 
 /*
@@ -58,7 +58,7 @@ public:
     void resetCustomRing() override { m_bouncePower = 1; }
 };
 
-class SmileGameObject : public CustomEffectGameObject {
+class SmileGameObject : public CustomTriggerObject {
 public:
     int m_bouncePower;
 
@@ -70,25 +70,19 @@ public:
         return nullptr;
     } // create
 
-    bool customInit() override {
-        m_objectType = GameObjectType::Modifier;
+    void setupCustomTrigger() override {
         m_isTouchTriggered = true;
         m_isMultiTriggered = true;
-        m_isTrigger = true;
+    } // setupCustomTrigger
 
-        m_unk532 = true;
-
-        return true;
-    } // customInit
-
-    void setToDefault() override {
+    void resetCustomTrigger() override {
         m_bouncePower = 8;
-    } // setToDefault
+    } // resetCustomTrigger
 
-    void onTrigger(GJBaseGameLayer* playLayer) override {
+    void activateCustomTrigger(GJBaseGameLayer* playLayer) override {
         playLayer->m_player1->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
-    } // onTrigger
+    } // activateCustomTrigger
 };
 
 $execute {

@@ -16,4 +16,9 @@ public:
         } // if
         return GameObject::createWithKey(key);
     } // createWithKey
+
+    bool isSpawnableTrigger() {
+        if (m_objectID >= 10000) return m_isTrigger;
+        return GameObject::isSpawnableTrigger();
+    } // isSpawnableTrigger
 };
