@@ -61,9 +61,9 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
 
     file << "\t</dict>\n\t<key>metadata</key>\n\t<dict>\n";
     file << "\t\t<key>format</key>\n\t\t<integer>3</integer>\n";
-    file << "\t\t<key>realTextureFileName</key>\n\t\t<string>custom-objects/"+name+".png</string>\n";
+    file << "\t\t<key>realTextureFileName</key>\n\t\t<string>"+name+".png</string>\n";
     file << "\t\t<key>size</key>\n\t\t<string>"+sizeString()+"</string>\n";
-    file << "\t\t<key>textureFileName</key>\n\t\t<string>custom-objects/"+name+".png</string>\n";
+    file << "\t\t<key>textureFileName</key>\n\t\t<string>"+name+".png</string>\n";
     file << "\t</dict>\n</dict>\n</plist>";
 
     file.close();
@@ -76,7 +76,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObject> objec
 
     // Initialize sprites vector and find side lengths
     for (auto [id, obj] : objects) {
-        auto spr = CustomObjectSprite(obj.sourceFrame, obj.spriteSize, quality);
+        auto spr = CustomObjectSprite(obj.frame, obj.sourceFrame, obj.spriteSize, quality);
 
         // Check if this sprite is already present
         if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite other) {

@@ -1,14 +1,29 @@
 #include "CustomObjectsAPI.hpp"
 #include "CustomObjectsSheet.hpp"
 
-#include "library/pcg/pcg_random.hpp"
-
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();
-
-    s_manager->m_generationOffsetValue = 0;
     return s_manager;
 } // get
+
+CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, short offset) {
+    auto registeredMod = CustomObjectsMod(mod, offset);
+    registeredMods.emplace_back(registeredMod);
+    return &registeredMods.back();
+} // registerCustomObjectsMod
+
+void CustomObjectsManager::processRegisteredMods() {
+    for (auto mod : registeredMods) {
+        std::vector<CustomObject> objects;
+
+        for (auto obj : mod.objects) {
+            objects.emplace_back(obj);
+            customObjectsCache[obj.id] = obj;
+        } // for
+
+        modCustomObjectsCache[mod.modID] = objects;
+    } // for
+} // processRegisteredMods
 
 std::string CustomObjectsManager::getCacheDirectory() {
     auto path = Mod::get()->getSaveDir().string() + "/cache/";
@@ -24,28 +39,6 @@ std::string CustomObjectsManager::getSpritesheetQualityName() {
         default: return "CustomObjects-hd";
     } // switch
 } // getSpritesheetImagePath
-
-int CustomObjectsManager::modToObjectId(std::string modId) {
-    int pos = modId.find(".");
-    auto dev = modId.substr(0, pos);
-    auto mod = modId.substr(pos + 1);
-
-    int devNum = 0;
-    for (int i = 0, f = 0; i < dev.length() && f < 3; i++) {
-        if (dev[i] < 'a' || dev[i] > 'z') continue;
-        devNum = (devNum * 26) + (dev[i] - 'a'), f++;
-    } // for
-
-    int modNum = 0;
-    for (int i = 0, f = 0; i < mod.length() && f < 6; i++) {
-        if (mod[i] < 'a' || mod[i] > 'z') continue;
-        modNum = (modNum * 26) + (mod[i] - 'a'), f++;
-    } // for
-
-    pcg32 rng(modNum);
-    for (int i = 0; i < devNum + m_generationOffsetValue; i++) rng();
-    return (pcg_extras::bounded_rand(rng, 19799) + 200) * 50;
-} // modToObjectId
 
 int CustomObjectsManager::getModObjectCount(std::string id) {
     return (modCustomObjectsCache.contains(id)) ? modCustomObjectsCache[id].size() : 0;
@@ -84,16 +77,3 @@ void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quali
     if (saved) log::info("Saved spritesheet to \"{}\"", path + name + ".png");
     else log::error("Failed to save spritesheet!!!");
 } // addSpritesheetToCache
-
-void CustomObjectsManager::registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create) {
-    auto mod = spr.substr(0, spr.find("/"));
-    int id = modToObjectId(mod) + getModObjectCount(mod);
-    auto obj = CustomObject(spr, id, size * 30, create);
-
-    customObjectsCache[obj.id] = obj;
-
-    if (modCustomObjectsCache.contains(mod)) modCustomObjectsCache[mod].emplace_back(obj);
-    else modCustomObjectsCache[mod] = { obj };
-
-    log::debug("Registered custom object with id {}", obj.id);
-} // registerCustomObject

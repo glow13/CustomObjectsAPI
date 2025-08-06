@@ -10,7 +10,8 @@ class $modify(LoadingLayer) {
         LoadingLayer::loadAssets();
         auto manager = CustomObjectsManager::get();
         
-        if (m_loadStep == 1) {
+        if (m_loadStep == 9) {
+            manager->processRegisteredMods();
             manager->printModObjectCount();
 
             if (Mod::get()->getSettingValue<bool>("force-generation")) {
@@ -30,7 +31,7 @@ class $modify(LoadingLayer) {
             manager->forEachCustomObject([&objs](auto obj) { objs.emplace_back(obj.frame); });
             Mod::get()->setSavedValue<std::vector<std::string>>("custom-objects", objs);
 
-        } else if (m_loadStep == 2) {
+        } else if (m_loadStep == 10) {
             auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
             auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
 

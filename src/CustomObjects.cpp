@@ -93,22 +93,22 @@ public:
 
 $execute {
     auto manager = CustomObjectsManager::get();
-    manager->setModCustomObjectGenerationValue(4);
+    auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
 
-    manager->registerCustomObject("frown-block.png"_spr, FrownGameObject::create);
-    manager->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
-    manager->registerCustomObject("container.png"_spr, ContainerGameObject::create);
+    mod->registerCustomObject("frown-block.png"_spr, FrownGameObject::create);
+    mod->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
+    mod->registerCustomObject("container.png"_spr, ContainerGameObject::create);
 
-    manager->registerCustomObject("block-1.png"_spr);
-    manager->registerCustomObject("block-2.png"_spr);
-    manager->registerCustomObject("block-3.png"_spr);
-    manager->registerCustomObject("block-4.png"_spr);
-    manager->registerCustomObject("block-5.png"_spr);
-    manager->registerCustomObject("block-6.png"_spr);
-    manager->registerCustomObject("block-7.png"_spr, CCSize(2, 1));
-    manager->registerCustomObject("block-8.png"_spr, CCSize(2, 1));
-    manager->registerCustomObject("block-9.png"_spr, CCSize(2, 1));
-    manager->registerCustomObject("block-10.png"_spr, CCSize(2, 2));
-    manager->registerCustomObject("block-11.png"_spr, CCSize(2, 2));
-    manager->registerCustomObject("block-12.png"_spr, CCSize(2, 2));
+    mod->registerCustomObject("block-1.png"_spr);
+    mod->registerCustomObject("block-2.png"_spr);
+    mod->registerCustomObject("block-3.png"_spr);
+    mod->registerCustomObject("block-4.png"_spr);
+    mod->registerCustomObject("block-5.png"_spr);
+    mod->registerCustomObject("block-6.png"_spr);
+    mod->registerCustomObject("block-7.png"_spr, CCSize(2, 1));
+    mod->registerCustomObject("block-8.png"_spr, CCSize(2, 1));
+    mod->registerCustomObject("block-9.png"_spr, CCSize(2, 1));
+    mod->registerCustomObject("block-10.png"_spr, CCSize(2, 2));
+    mod->registerCustomObject("block-11.png"_spr, CCSize(2, 2));
+    mod->registerCustomObject("block-12.png"_spr, CCSize(2, 2));
 }
