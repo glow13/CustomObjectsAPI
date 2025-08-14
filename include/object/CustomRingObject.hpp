@@ -3,9 +3,16 @@
 
 using namespace geode::prelude;
 
-class CustomRingObject : public RingObject {
+template <class T>
+class CustomRingObjectBase : public RingObject {
 public:
-    static CustomRingObject* create(int id);
+    static T* create(int id) {
+        auto obj = new T();
+        if (obj->init(id)) return obj;
+
+        delete obj;
+        return nullptr;
+    } // create
 
     virtual void setupCustomRing() { createRingParticles(); }
     virtual void pressCustomRing(PlayerObject* player) {}
@@ -59,3 +66,5 @@ private:
         pressCustomRing(player);
     } // activatedByPlayer
 };
+
+class CustomRingObject : public CustomRingObjectBase<CustomRingObject> {};

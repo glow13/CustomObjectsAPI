@@ -13,6 +13,9 @@ CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod
 } // registerCustomObjectsMod
 
 void CustomObjectsManager::processRegisteredMods() {
+    customObjectsCache.clear();
+    modCustomObjectsCache.clear();
+
     for (auto mod : registeredMods) {
         std::vector<CustomObject> objects;
 

@@ -11,16 +11,8 @@
     m_hasNoEffects = 0x404
 */
 
-class FrownGameObject : public CustomGameObject {
+class FrownGameObject : public CustomGameObjectBase<FrownGameObject> {
 public:
-    static FrownGameObject* create(int id) {
-        auto obj = new FrownGameObject();
-        if (obj->init(id)) return obj;
-
-        delete obj;
-        return nullptr;
-    } // create
-
     bool customInit() {
         m_objectType = GameObjectType::Hazard;
         m_width = 20;
@@ -29,17 +21,9 @@ public:
     } // customInit
 };
 
-class ContainerGameObject : public CustomRingObject {
+class ContainerGameObject : public CustomRingObjectBase<ContainerGameObject> {
 public:
     float m_bouncePower = 1;
-
-    static ContainerGameObject* create(int id) {
-        auto obj = new ContainerGameObject();
-        if (obj->init(id)) return obj;
-
-        delete obj;
-        return nullptr;
-    } // create
 
     void setupCustomRing() override {
         if (auto particle = createRingParticles()) {
@@ -58,17 +42,9 @@ public:
     void resetCustomRing() override { m_bouncePower = 1; }
 };
 
-class SmileGameObject : public CustomTriggerObject {
+class SmileGameObject : public CustomTriggerObjectBase<SmileGameObject> {
 public:
     int m_bouncePower;
-
-    static SmileGameObject* create(int id) {
-        auto obj = new SmileGameObject();
-        if (obj->init(id)) return obj;
-
-        delete obj;
-        return nullptr;
-    } // create
 
     void setupCustomTrigger() override {
         m_isTouchTriggered = true;

@@ -9,7 +9,7 @@ class $modify(LoadingLayer) {
     void loadAssets() {
         LoadingLayer::loadAssets();
         auto manager = CustomObjectsManager::get();
-        
+
         if (m_loadStep == 9) {
             manager->processRegisteredMods();
             manager->printModObjectCount();

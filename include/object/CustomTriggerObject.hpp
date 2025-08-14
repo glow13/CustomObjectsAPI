@@ -3,9 +3,16 @@
 
 using namespace geode::prelude;
 
-class CustomTriggerObject : public EffectGameObject {
+template <class T>
+class CustomTriggerObjectBase : public EffectGameObject {
 public:
-    static CustomTriggerObject* create(int id);
+    static T* create(int id) {
+        auto obj = new T();
+        if (obj->init(id)) return obj;
+
+        delete obj;
+        return nullptr;
+    } // create
 
     virtual void setupCustomTrigger() {}
     virtual void resetCustomTrigger() {}
@@ -43,3 +50,5 @@ private:
         activateCustomTrigger(p0);
     } // triggerObject
 };
+
+class CustomTriggerObject : public CustomTriggerObjectBase<CustomTriggerObject> {};

@@ -3,10 +3,11 @@
 
 using namespace geode::prelude;
 
-class CustomGameObject : public GameObject {
+template <class T>
+class CustomGameObjectBase : public GameObject {
 public:
-    static CustomGameObject* create(int id) {
-        auto obj = new CustomGameObject();
+    static T* create(int id) {
+        auto obj = new T();
         if (obj->init(id)) return obj;
 
         delete obj;
@@ -29,3 +30,5 @@ public:
 
     virtual bool customInit() { return true; }
 };
+
+class CustomGameObject : public CustomGameObjectBase<CustomGameObject> {};
