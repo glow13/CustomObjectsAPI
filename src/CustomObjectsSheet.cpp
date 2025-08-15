@@ -8,6 +8,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     auto render = CCRenderTexture::create(sheetSize.width / csf, sheetSize.height / csf);
     render->begin();
 
+    // Add each sprite to the rendered image
     for (auto obj : spritesCache) {
         auto rotatedSize = (obj.rotated ? CCSize(obj.size.height, obj.size.width) : obj.size) / csf;
 
@@ -20,20 +21,23 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
         spr->visit();
     } // for
 
+    // Save the rendered image pixel data
+    auto& s = render->m_pTexture->getContentSizeInPixels();
+    int w = s.width, h = s.height;
+    auto buffer = new uint8_t[w * h * 4];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
     render->end();
-    auto image = render->newCCImage();
+    render->release();
 
-    auto success = stbi_write_png(
-        (path + name + ".png").c_str(),
-        image->getWidth(),
-        image->getHeight(),
-        4,
-        image->getData(),
-        image->getWidth() * 4
-    );
+    // Flip the image
+    auto data = new uint8_t[w * h * 4];
+    for (int i = 0; i < h; i++) memcpy(&data[i * w * 4], &buffer[(h - i - 1) * w * 4], w * 4);
 
-    image->release();
-    return success;
+    // Write the image to the path
+    return stbi_write_png((path + name + ".png").c_str(), w, h, 4, data, w * 4);
 } // saveSpritesheetImage
 
 bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path) const {
