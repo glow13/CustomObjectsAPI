@@ -35,7 +35,6 @@ protected:
 private:
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         GameObject::customObjectSetup(p0, p1);
-        log::info("wow");
         setupCustomObject();
     } // customObjectSetup
 };

@@ -14,20 +14,42 @@ enum Quality {
 };
 
 struct CustomObject {
+    int id;
     std::string frame;
     std::string sourceFrame;
     std::function<GameObject*(int)> createFunction;
 
-    int id;
-    CCSize boxSize;
-    CCSize spriteSize;
+    CCSize boxSize = CCSize(30, 30);
+    CCSize spriteSize = CCSize(30, 30);
+    GameObjectType objectType = GameObjectType::Solid;
 
-    CustomObject() : frame(""), sourceFrame(""), id(0), spriteSize(CCSize(30, 30)), boxSize(CCSize(30, 30)) {}
-    CustomObject(std::string frame, std::string mod, int id, CCSize size, std::function<GameObject*(int)> create) : sourceFrame(frame), id(id), spriteSize(size), boxSize(CCSize(30, 30)), createFunction(create) {
-        this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, frame.substr(frame.find("/") + 1));
+    CustomObject() {}
+    CustomObject(std::string frame, std::function<GameObject*(int)> create = CustomGameObjectBase::create) : sourceFrame(frame), createFunction(create) {}
+
+    CustomObject(std::string frame, std::string mod, int id, CCSize size, std::function<GameObject*(int)> create) {
+        auto name = frame.substr(frame.find("/") + 1);
+        this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, name);
+
+        this->id = id;
+        this->sourceFrame = frame;
+        this->spriteSize = size;
+        this->boxSize = size;
+        this->createFunction = create;
     } // CustomObject
 
-    GameObject* create() { return createFunction(id); }
+    CustomObject setSpriteSize(int w, int h) { spriteSize = CCSize(w, h); return *this; }
+    CustomObject setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
+    CustomObject setObjectType(GameObjectType type) { objectType = type; return *this; }
+
+    GameObject* create() {
+        auto obj = createFunction(id);
+
+        obj->m_width = boxSize.width;
+        obj->m_height = boxSize.height;
+        obj->m_objectType = objectType;
+
+        return obj;
+    } // create
 };
 
 struct CustomObjectsMod {
@@ -62,6 +84,15 @@ struct CustomObjectsMod {
         objectID = (pcg_extras::bounded_rand(rng, 19799) + 200) * 50;
     } // CustomObjectsMod
 
+    void registerCustomObject(CustomObject obj) {
+        auto name = obj.sourceFrame.substr(obj.sourceFrame.find("/") + 1);
+        obj.frame = fmt::format("custom-objects/{}/{}/{}/{}", modID, obj.spriteSize.width, obj.spriteSize.height, name);
+        obj.id = objectID + objects.size();
+
+        objects.emplace_back(obj);
+        log::debug("Registered custom object with id {}", obj.id);
+    } // registerCustomObject
+
     void registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create = CustomGameObjectBase::create) {
         auto sprName = spr.substr(spr.find("/") + 1);
         int id = objectID + objects.size();
@@ -83,16 +114,7 @@ struct CustomObjectSprite {
     CustomObjectSprite() : frame(""), sourceFrame(""), pos(CCPoint(0, 0)), size(CCSize(30, 30)), rotated(false) {}
     CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) : frame(frame), sourceFrame(sourceFrame), pos(CCPoint(0, 0)), size(size * quality), rotated(false) {}
 
-    std::string sizeString() const {
-        auto rotSize = rotated ? CCSize(size.height, size.width) : size;
-        return "{" + fmt::format("{},{}", rotSize.width, rotSize.height) + "}";
-    } // sizeString
-
-    std::string rectString() const {
-        return "{{" + fmt::format("{},{}", pos.x, pos.y) + "}," + sizeString() + "}";
-    } // rectString
-
-    std::string rotatedString() const {
-        return rotated ? "<true/>" : "<false/>";
-    } // rotatedString
+    std::string sizeString() const { return "{" + fmt::format("{},{}", rotated ? size.height : size.width, rotated ? size.width : size.height) + "}"; }
+    std::string rectString() const { return "{{" + fmt::format("{},{}", pos.x, pos.y) + "}," + sizeString() + "}"; }
+    std::string rotatedString() const { return rotated ? "<true/>" : "<false/>"; }
 };

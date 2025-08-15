@@ -80,4 +80,9 @@ $execute {
     mod->registerCustomObject("block-10.png"_spr, CCSize(2, 2));
     mod->registerCustomObject("block-11.png"_spr, CCSize(2, 2));
     mod->registerCustomObject("block-12.png"_spr, CCSize(2, 2));
+
+    mod->registerCustomObject(CustomObject("frown-block.png"_spr)
+        .setObjectType(GameObjectType::Hazard)
+        .setBoxSize(20, 20)
+    );
 }
