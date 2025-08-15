@@ -4,7 +4,7 @@
 using namespace geode::prelude;
 
 template <class T>
-class CustomTriggerObjectBase : public EffectGameObject {
+class CustomTriggerObject : public EffectGameObject {
 public:
     static T* create(int id) {
         auto obj = new T();
@@ -14,6 +14,7 @@ public:
         return nullptr;
     } // create
 
+protected:
     virtual void setupCustomTrigger() {}
     virtual void resetCustomTrigger() {}
     virtual void activateCustomTrigger(GJBaseGameLayer* playLayer) {}
@@ -27,6 +28,7 @@ public:
             m_parentMode = 10;
             m_objectType = GameObjectType::Modifier;
 
+            setupCustomTrigger();
             autorelease();
             return true;
         } // if
@@ -51,4 +53,4 @@ private:
     } // triggerObject
 };
 
-class CustomTriggerObject : public CustomTriggerObjectBase<CustomTriggerObject> {};
+class CustomTriggerObjectBase : public CustomTriggerObject<CustomTriggerObjectBase> {};

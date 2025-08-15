@@ -4,7 +4,7 @@
 using namespace geode::prelude;
 
 template <class T>
-class CustomGameObjectBase : public GameObject {
+class CustomGameObject : public GameObject {
 public:
     static T* create(int id) {
         auto obj = new T();
@@ -14,21 +14,30 @@ public:
         return nullptr;
     } // create
 
+protected:
+    virtual void setupCustomObject() {}
+
     bool init(int id) {
         auto toolbox = ObjectToolbox::sharedState();
         auto spr = toolbox->intKeyToFrame(id);
 
-        if (GameObject::init(spr) && customInit()) {
+        if (GameObject::init(spr)) {
             m_objectID = id;
             m_parentMode = 10;
 
+            setupCustomObject();
             autorelease();
             return true;
         } // if
         return false;
     } // init
 
-    virtual bool customInit() { return true; }
+private:
+    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
+        GameObject::customObjectSetup(p0, p1);
+        log::info("wow");
+        setupCustomObject();
+    } // customObjectSetup
 };
 
-class CustomGameObject : public CustomGameObjectBase<CustomGameObject> {};
+class CustomGameObjectBase : public CustomGameObject<CustomGameObjectBase> {};

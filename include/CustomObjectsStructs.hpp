@@ -62,7 +62,7 @@ struct CustomObjectsMod {
         objectID = (pcg_extras::bounded_rand(rng, 19799) + 200) * 50;
     } // CustomObjectsMod
 
-    void registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create = CustomGameObject::create) {
+    void registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(int)> create = CustomGameObjectBase::create) {
         auto sprName = spr.substr(spr.find("/") + 1);
         int id = objectID + objects.size();
 
@@ -70,7 +70,7 @@ struct CustomObjectsMod {
         log::debug("Registered custom object with id {}", id);
     } // registerCustomObject
 
-    void registerCustomObject(std::string spr, std::function<GameObject*(int)> create = CustomGameObject::create) { registerCustomObject(spr, CCSize(1, 1), create); }
+    void registerCustomObject(std::string spr, std::function<GameObject*(int)> create = CustomGameObjectBase::create) { registerCustomObject(spr, CCSize(1, 1), create); }
 };
 
 struct CustomObjectSprite {

@@ -4,7 +4,7 @@
 using namespace geode::prelude;
 
 template <class T>
-class CustomRingObjectBase : public RingObject {
+class CustomRingObject : public RingObject {
 public:
     static T* create(int id) {
         auto obj = new T();
@@ -14,6 +14,7 @@ public:
         return nullptr;
     } // create
 
+protected:
     virtual void setupCustomRing() { createRingParticles(); }
     virtual void pressCustomRing(PlayerObject* player) {}
     virtual void resetCustomRing() {}
@@ -35,6 +36,7 @@ public:
             m_claimTouch = false;
             m_isSpawnOnly = true;
 
+            setupCustomRing();
             autorelease();
             return true;
         } // if
@@ -67,4 +69,4 @@ private:
     } // activatedByPlayer
 };
 
-class CustomRingObject : public CustomRingObjectBase<CustomRingObject> {};
+class CustomRingObjectBase : public CustomRingObject<CustomRingObjectBase> {};

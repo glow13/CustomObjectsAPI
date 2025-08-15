@@ -11,17 +11,16 @@
     m_hasNoEffects = 0x404
 */
 
-class FrownGameObject : public CustomGameObjectBase<FrownGameObject> {
+class FrownGameObject : public CustomGameObject<FrownGameObject> {
 public:
-    bool customInit() {
+    void setupCustomObject() {
         m_objectType = GameObjectType::Hazard;
         m_width = 20;
         m_height = 20;
-        return true;
-    } // customInit
+    } // setupCustomObject
 };
 
-class ContainerGameObject : public CustomRingObjectBase<ContainerGameObject> {
+class ContainerGameObject : public CustomRingObject<ContainerGameObject> {
 public:
     float m_bouncePower = 1;
 
@@ -42,7 +41,7 @@ public:
     void resetCustomRing() override { m_bouncePower = 1; }
 };
 
-class SmileGameObject : public CustomTriggerObjectBase<SmileGameObject> {
+class SmileGameObject : public CustomTriggerObject<SmileGameObject> {
 public:
     int m_bouncePower;
 
