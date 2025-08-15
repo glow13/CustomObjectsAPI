@@ -11,15 +11,6 @@
     m_hasNoEffects = 0x404
 */
 
-class FrownGameObject : public CustomGameObject<FrownGameObject> {
-public:
-    void setupCustomObject() {
-        m_objectType = GameObjectType::Hazard;
-        m_width = 20;
-        m_height = 20;
-    } // setupCustomObject
-};
-
 class ContainerGameObject : public CustomRingObject<ContainerGameObject> {
 public:
     float m_bouncePower = 1;
@@ -64,7 +55,7 @@ $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
 
-    mod->registerCustomObject("frown-block.png"_spr, FrownGameObject::create);
+    mod->registerCustomObject(CustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard));
     mod->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
     mod->registerCustomObject("container.png"_spr, ContainerGameObject::create);
 
@@ -74,15 +65,12 @@ $execute {
     mod->registerCustomObject("block-4.png"_spr);
     mod->registerCustomObject("block-5.png"_spr);
     mod->registerCustomObject("block-6.png"_spr);
-    mod->registerCustomObject("block-7.png"_spr, CCSize(2, 1));
-    mod->registerCustomObject("block-8.png"_spr, CCSize(2, 1));
-    mod->registerCustomObject("block-9.png"_spr, CCSize(2, 1));
-    mod->registerCustomObject("block-10.png"_spr, CCSize(2, 2));
-    mod->registerCustomObject("block-11.png"_spr, CCSize(2, 2));
-    mod->registerCustomObject("block-12.png"_spr, CCSize(2, 2));
+    mod->registerCustomObject("block-7.png"_spr, CCSize(60, 30));
+    mod->registerCustomObject("block-8.png"_spr, CCSize(60, 30));
+    mod->registerCustomObject("block-9.png"_spr, CCSize(60, 30));
+    mod->registerCustomObject("block-10.png"_spr, CCSize(60, 60));
+    mod->registerCustomObject("block-11.png"_spr, CCSize(60, 60));
+    mod->registerCustomObject("block-12.png"_spr, CCSize(60, 60));
 
-    mod->registerCustomObject(CustomObject("frown-block.png"_spr, CustomGameObjectBase::create)
-        .setObjectType(GameObjectType::Hazard)
-        .setBoxSize(20, 20)
-    );
+    mod->registerCustomObject(CustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard));
 }

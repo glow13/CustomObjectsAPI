@@ -6,9 +6,9 @@ using namespace geode::prelude;
 template <class T>
 class CustomGameObject : public GameObject {
 public:
-    static T* create(int id) {
+    static T* create(CustomObject config) {
         auto obj = new T();
-        if (obj->init(id)) return obj;
+        if (obj->init(config)) return obj;
 
         delete obj;
         return nullptr;
@@ -17,19 +17,20 @@ public:
 protected:
     virtual void setupCustomObject() {}
 
-    bool init(int id) {
-        auto toolbox = ObjectToolbox::sharedState();
-        auto spr = toolbox->intKeyToFrame(id);
+    bool init(CustomObject config) {
+        if (!GameObject::init(config.frame.c_str())) return false;
 
-        if (GameObject::init(spr)) {
-            m_objectID = id;
-            m_parentMode = 10;
+        m_objectID = config.id;
+        m_parentMode = 10;
+        m_objectType = GameObjectType::Solid;
 
-            setupCustomObject();
-            autorelease();
-            return true;
-        } // if
-        return false;
+        config.applyBoxSize(this);
+        config.applyObjectType(this);
+
+        setupCustomObject();
+        autorelease();
+
+        return true;
     } // init
 
 private:

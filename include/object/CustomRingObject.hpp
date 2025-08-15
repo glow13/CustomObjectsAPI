@@ -6,9 +6,9 @@ using namespace geode::prelude;
 template <class T>
 class CustomRingObject : public RingObject {
 public:
-    static T* create(int id) {
+    static T* create(CustomObject config) {
         auto obj = new T();
-        if (obj->init(id)) return obj;
+        if (obj->init(config)) return obj;
 
         delete obj;
         return nullptr;
@@ -19,29 +19,27 @@ protected:
     virtual void pressCustomRing(PlayerObject* player) {}
     virtual void resetCustomRing() {}
 
-    bool init(int id) {
-        auto toolbox = ObjectToolbox::sharedState();
-        auto spr = toolbox->intKeyToFrame(id);
+    bool init(CustomObject config) {
+        if (!EffectGameObject::init(config.frame.c_str())) return false;
 
-        if (EffectGameObject::init(spr)) {
-            m_objectID = id;
-            m_parentMode = 10;
-            m_objectType = GameObjectType::CustomRing;
+        m_objectID = config.id;
+        m_parentMode = 10;
+        m_objectType = GameObjectType::CustomRing;
 
-            m_width = 36;
-            m_height = 36;
-            m_usesAudioScale = true;
-            m_unk532 = true; // green hitbox
+        m_width = 36;
+        m_height = 36;
+        m_usesAudioScale = true;
+        m_unk532 = true; // green hitbox
 
-            m_claimTouch = false;
-            m_isSpawnOnly = true;
+        m_claimTouch = false;
+        m_isSpawnOnly = true;
 
-            setupCustomRing();
-            autorelease();
-            return true;
-        } // if
+        config.applyBoxSize(this);
 
-        return false;
+        setupCustomRing();
+        autorelease();
+
+        return true;
     } // init
 
     // Returns nullptr if in the editor

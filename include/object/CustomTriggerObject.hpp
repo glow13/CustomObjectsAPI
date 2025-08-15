@@ -6,9 +6,9 @@ using namespace geode::prelude;
 template <class T>
 class CustomTriggerObject : public EffectGameObject {
 public:
-    static T* create(int id) {
+    static T* create(CustomObject config) {
         auto obj = new T();
-        if (obj->init(id)) return obj;
+        if (obj->init(config)) return obj;
 
         delete obj;
         return nullptr;
@@ -19,21 +19,19 @@ protected:
     virtual void resetCustomTrigger() {}
     virtual void activateCustomTrigger(GJBaseGameLayer* playLayer) {}
 
-    bool init(int id) {
-        auto toolbox = ObjectToolbox::sharedState();
-        auto spr = toolbox->intKeyToFrame(id);
+    bool init(CustomObject config) {
+        if (!EffectGameObject::init(config.frame.c_str())) return false;
 
-        if (EffectGameObject::init(spr)) {
-            m_objectID = id;
-            m_parentMode = 10;
-            m_objectType = GameObjectType::Modifier;
+        m_objectID = config.id;
+        m_parentMode = 10;
+        m_objectType = GameObjectType::Modifier;
 
-            setupCustomTrigger();
-            autorelease();
-            return true;
-        } // if
+        config.applyBoxSize(this);
 
-        return false;
+        setupCustomTrigger();
+        autorelease();
+
+        return true;
     } // init
 
 private:
