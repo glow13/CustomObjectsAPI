@@ -1,7 +1,8 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectsStructs.hpp"
+#include "struct/CustomObject.hpp"
+#include "struct/CustomObjectSprite.hpp"
 
 using namespace geode::prelude;
 

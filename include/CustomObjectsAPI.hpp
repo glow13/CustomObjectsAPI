@@ -1,9 +1,16 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectsStructs.hpp"
+#include "struct/CustomObject.hpp"
+#include "struct/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
+
+enum Quality : unsigned int {
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 4
+};
 
 class CustomObjectsManager : public CCNode {
 private:
