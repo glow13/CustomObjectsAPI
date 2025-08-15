@@ -37,6 +37,11 @@ class $modify(LoadingLayer) {
 
             auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
             CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);
+
+            auto toolbox = ObjectToolbox::sharedState();
+            manager->forEachCustomObject([this, toolbox](auto obj) {
+                toolbox->m_allKeys.insert(std::pair(obj.id, obj.frame));
+            });
         } // if
     } // loadAssets
 };
