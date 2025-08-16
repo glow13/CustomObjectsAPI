@@ -1,42 +1,31 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "library/pcg/pcg_random.hpp"
-
 #include "object/CustomGameObject.hpp"
 
 using namespace geode::prelude;
 
 struct CustomObjectsMod {
     geode::Mod* mod;
-
     std::string modID;
-    std::string dev;
-    std::string name;
 
     int objectID;
     std::vector<CustomObject> objects;
 
     CustomObjectsMod(geode::Mod* mod, short offset) : mod(mod), modID(mod->getID()) {
-        int pos = modID.find(".");
-        dev = modID.substr(0, pos);
-        name = modID.substr(pos + 1);
 
-        int devNum = 0;
-        for (int i = 0, f = 0; i < dev.length() && f < 3; i++) {
-            if (dev[i] < 'a' || dev[i] > 'z') continue;
-            devNum = (devNum * 26) + (dev[i] - 'a'), f++;
+        // Basic FNV hashing algorithm
+        uint32_t hash = 0x811C9DC5u + offset; // FNV offset basis
+        for (size_t i = 0; i < modID.length(); i++) {
+            hash ^= static_cast<uint8_t>(modID[i]);
+            hash *= 0x01000193u; // FNV prime
         } // for
 
-        int modNum = 0;
-        for (int i = 0, f = 0; i < name.length() && f < 6; i++) {
-            if (name[i] < 'a' || name[i] > 'z') continue;
-            modNum = (modNum * 26) + (name[i] - 'a'), f++;
-        } // for
-
-        pcg32 rng(modNum);
-        for (int i = 0; i < devNum + offset; i++) rng();
-        objectID = (pcg_extras::bounded_rand(rng, 19799) + 200) * 50;
+        // Transform the hash value to be a valid object id
+        uint32_t min = 10000;
+        uint32_t max = INT32_MAX - 100;
+        uint64_t transform = min + ((uint64_t)hash * (max - min)) / UINT32_MAX;
+        objectID = transform - (transform % 100);
     } // CustomObjectsMod
 
     void registerCustomObject(CustomObject obj) {
