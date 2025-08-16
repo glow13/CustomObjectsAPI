@@ -35,6 +35,7 @@ protected:
         m_isSpawnOnly = true;
 
         config.applyBoxSize(this);
+        config.applyBoxOffset(this);
 
         setupCustomRing();
         autorelease();

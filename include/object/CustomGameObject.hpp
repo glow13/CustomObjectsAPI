@@ -25,6 +25,7 @@ protected:
         m_objectType = GameObjectType::Solid;
 
         config.applyBoxSize(this);
+        config.applyBoxOffset(this);
         config.applyObjectType(this);
 
         setupCustomObject();

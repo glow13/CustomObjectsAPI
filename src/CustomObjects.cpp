@@ -65,12 +65,12 @@ $execute {
     mod->registerCustomObject("block-4.png"_spr);
     mod->registerCustomObject("block-5.png"_spr);
     mod->registerCustomObject("block-6.png"_spr);
-    mod->registerCustomObject("block-7.png"_spr, CCSize(60, 30));
-    mod->registerCustomObject("block-8.png"_spr, CCSize(60, 30));
-    mod->registerCustomObject("block-9.png"_spr, CCSize(60, 30));
-    mod->registerCustomObject("block-10.png"_spr, CCSize(60, 60));
-    mod->registerCustomObject("block-11.png"_spr, CCSize(60, 60));
-    mod->registerCustomObject("block-12.png"_spr, CCSize(60, 60));
+    mod->registerCustomObject("block-7.png"_spr, {60, 30});
+    mod->registerCustomObject("block-8.png"_spr, {60, 30});
+    mod->registerCustomObject("block-9.png"_spr, {60, 30});
+    mod->registerCustomObject("block-10.png"_spr, {60, 60});
+    mod->registerCustomObject("block-11.png"_spr, {60, 60});
+    mod->registerCustomObject("block-12.png"_spr, {60, 60});
 
     mod->registerCustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
 }

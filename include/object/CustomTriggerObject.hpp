@@ -27,6 +27,7 @@ protected:
         m_objectType = GameObjectType::Modifier;
 
         config.applyBoxSize(this);
+        config.applyBoxOffset(this);
 
         setupCustomTrigger();
         autorelease();
