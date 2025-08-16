@@ -55,7 +55,7 @@ $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
 
-    mod->registerCustomObject(CustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard));
+    mod->registerCustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
     mod->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
     mod->registerCustomObject("container.png"_spr, ContainerGameObject::create);
 
@@ -72,5 +72,5 @@ $execute {
     mod->registerCustomObject("block-11.png"_spr, CCSize(60, 60));
     mod->registerCustomObject("block-12.png"_spr, CCSize(60, 60));
 
-    mod->registerCustomObject(CustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard));
+    mod->registerCustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
 }
