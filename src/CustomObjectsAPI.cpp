@@ -17,7 +17,7 @@ void CustomObjectsManager::processRegisteredMods() {
     modCustomObjectsCache.clear();
 
     for (auto mod : registeredMods) {
-        std::vector<CustomObject> objects;
+        std::vector<CustomObjectConfig> objects;
 
         for (auto obj : mod.objects) {
             objects.emplace_back(obj);
@@ -51,7 +51,7 @@ void CustomObjectsManager::printModObjectCount() {
     for (auto [mod, objs] : modCustomObjectsCache) log::info("Mod \"{}\" registered {} custom objects", mod, objs.size());
 } // printModObjectCount
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObject)> operation) const {
+void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig)> operation) const {
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
 

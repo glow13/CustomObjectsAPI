@@ -1,7 +1,7 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "struct/CustomObject.hpp"
+#include "struct/CustomObjectConfig.hpp"
 #include "struct/CustomObjectSprite.hpp"
 
 using namespace geode::prelude;
@@ -13,7 +13,7 @@ public:
 
     bool saveSpritesheetImage(std::string name, std::string path) const;
     bool saveSpritesheetPlist(std::string name, std::string path) const;
-    static CustomObjectsSheet* create(std::map<int, CustomObject> objects, Quality quality);
+    static CustomObjectsSheet* create(std::map<int, CustomObjectConfig> objects, Quality quality);
 
 private:
     static CCSize binPacking(std::vector<CustomObjectSprite> &sprites);

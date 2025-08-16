@@ -6,7 +6,7 @@ using namespace geode::prelude;
 template <class T>
 class CustomGameObject : public GameObject {
 public:
-    static T* create(CustomObject config) {
+    static T* create(CustomObjectConfig config) {
         auto obj = new T();
         if (obj->init(config)) return obj;
 
@@ -17,7 +17,7 @@ public:
 protected:
     virtual void setupCustomObject() {}
 
-    bool init(CustomObject config) {
+    bool init(CustomObjectConfig config) {
         if (!GameObject::init(config.frame.c_str())) return false;
 
         m_objectID = config.id;

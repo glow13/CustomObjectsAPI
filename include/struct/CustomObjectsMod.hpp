@@ -10,7 +10,7 @@ struct CustomObjectsMod {
     std::string modID;
 
     int objectID;
-    std::vector<CustomObject> objects;
+    std::vector<CustomObjectConfig> objects;
 
     CustomObjectsMod(geode::Mod* mod, short offset) : mod(mod), modID(mod->getID()) {
 
@@ -28,16 +28,14 @@ struct CustomObjectsMod {
         objectID = transform - (transform % 100);
     } // CustomObjectsMod
 
-    CustomObject registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(CustomObject)> create = CustomGameObjectBase::create) {
+    CustomObjectConfig& registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) {
         auto sprName = spr.substr(spr.find("/") + 1);
         int id = objectID + objects.size();
 
-        auto obj = CustomObject(spr, modID, id, size, create);
-        objects.emplace_back(obj);
-
+        auto& obj = objects.emplace_back(CustomObjectConfig(spr, modID, id, size, create));
         log::debug("Registered custom object with id {}", id);
         return obj;
     } // registerCustomObject
 
-    CustomObject registerCustomObject(std::string spr, std::function<GameObject*(CustomObject)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, CCSize(30, 30), create); }
+    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, CCSize(30, 30), create); }
 };

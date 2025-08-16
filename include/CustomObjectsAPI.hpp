@@ -1,7 +1,7 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "struct/CustomObject.hpp"
+#include "struct/CustomObjectConfig.hpp"
 #include "struct/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
@@ -18,8 +18,8 @@ private:
 
     std::vector<CustomObjectsMod> registeredMods;
 
-    std::map<int, CustomObject> customObjectsCache;
-    std::map<std::string, std::vector<CustomObject>> modCustomObjectsCache;
+    std::map<int, CustomObjectConfig> customObjectsCache;
+    std::map<std::string, std::vector<CustomObjectConfig>> modCustomObjectsCache;
 
 public:
     static CustomObjectsManager* get();
@@ -34,9 +34,9 @@ public:
     int getModObjectCount(std::string id);
     void printModObjectCount();
 
-    CustomObject getCustomObjectByID(int id) { return customObjectsCache[id]; }
+    CustomObjectConfig getCustomObjectByID(int id) { return customObjectsCache[id]; }
     bool containsCustomObject(int id) { return customObjectsCache.contains(id); }
-    void forEachCustomObject(std::function<void(const CustomObject)> operation) const;
+    void forEachCustomObject(std::function<void(const CustomObjectConfig)> operation) const;
 
     bool isTheSpritesheetCacheUpToDate();
     void addSpritesheetToCache(std::string name, Quality quality);

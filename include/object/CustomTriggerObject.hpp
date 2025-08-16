@@ -6,7 +6,7 @@ using namespace geode::prelude;
 template <class T>
 class CustomTriggerObject : public EffectGameObject {
 public:
-    static T* create(CustomObject config) {
+    static T* create(CustomObjectConfig config) {
         auto obj = new T();
         if (obj->init(config)) return obj;
 
@@ -19,7 +19,7 @@ protected:
     virtual void resetCustomTrigger() {}
     virtual void activateCustomTrigger(GJBaseGameLayer* playLayer) {}
 
-    bool init(CustomObject config) {
+    bool init(CustomObjectConfig config) {
         if (!EffectGameObject::init(config.frame.c_str())) return false;
 
         m_objectID = config.id;

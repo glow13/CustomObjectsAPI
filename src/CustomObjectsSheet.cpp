@@ -74,7 +74,7 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
     return true;
 } // saveSpritesheetPlist
 
-CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObject> objects, Quality quality) {
+CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObjectConfig> objects, Quality quality) {
     std::vector<CustomObjectSprite> sprites;
     float totalArea = 0;
 
