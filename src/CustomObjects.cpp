@@ -40,6 +40,7 @@ public:
     void setupCustomTrigger() override {
         m_isTouchTriggered = true;
         m_isMultiTriggered = true;
+        m_duration = 0;
     } // setupCustomTrigger
 
     void resetCustomTrigger() override {

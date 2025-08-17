@@ -32,9 +32,10 @@ class $modify(EditorUI) {
     #define $compare2(var) if (obj1->var != obj2->var) log::info(#var)
 
     gd::string copyObjects(CCArray* objects, bool copyColors, bool sort) {
+        bool actuallyDoSomething = false;
         auto obj1 = static_cast<EffectGameObject*>(objects->objectAtIndex(0));
         auto obj2 = static_cast<EffectGameObject*>(objects->objectAtIndex(1));
-        if (!obj1 || !obj2) return EditorUI::copyObjects(objects, copyColors, sort);
+        if (!obj1 || !obj2 || !actuallyDoSomething) return EditorUI::copyObjects(objects, copyColors, sort);
 
         $compare1(m_someOtherIndex);
         $compare1(m_innerSectionIndex);
