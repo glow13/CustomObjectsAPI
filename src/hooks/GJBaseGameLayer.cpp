@@ -27,50 +27,52 @@ public:
         auto path = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
         auto spr = CCTextureCache::sharedTextureCache()->addImage(path.c_str(), false);
 
-        m_fields->m_customLayerT4 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerT4->setZOrder(m_gameLayerT4->getZOrder());
-        m_fields->m_customLayerT4->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerT4);
+        auto fields = m_fields.self();
 
-        m_fields->m_customLayerT3 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerT3->setZOrder(m_gameLayerT3->getZOrder());
-        m_fields->m_customLayerT3->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerT3);
+        fields->m_customLayerT4 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerT4->setZOrder(m_gameLayerT4->getZOrder());
+        fields->m_customLayerT4->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerT4);
 
-        m_fields->m_customLayerT2 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerT2->setZOrder(m_gameLayerT2->getZOrder());
-        m_fields->m_customLayerT2->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerT2);
+        fields->m_customLayerT3 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerT3->setZOrder(m_gameLayerT3->getZOrder());
+        fields->m_customLayerT3->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerT3);
 
-        m_fields->m_customLayerT1 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerT1->setZOrder(m_gameLayerT1->getZOrder());
-        m_fields->m_customLayerT1->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerT1);
+        fields->m_customLayerT2 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerT2->setZOrder(m_gameLayerT2->getZOrder());
+        fields->m_customLayerT2->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerT2);
 
-        m_fields->m_customLayerB1 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerB1->setZOrder(m_gameLayerB1->getZOrder());
-        m_fields->m_customLayerB1->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerB1);
+        fields->m_customLayerT1 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerT1->setZOrder(m_gameLayerT1->getZOrder());
+        fields->m_customLayerT1->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerT1);
 
-        m_fields->m_customLayerB2 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerB2->setZOrder(m_gameLayerB2->getZOrder());
-        m_fields->m_customLayerB2->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerB2);
+        fields->m_customLayerB1 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerB1->setZOrder(m_gameLayerB1->getZOrder());
+        fields->m_customLayerB1->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerB1);
 
-        m_fields->m_customLayerB3 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerB3->setZOrder(m_gameLayerB3->getZOrder());
-        m_fields->m_customLayerB3->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerB3);
+        fields->m_customLayerB2 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerB2->setZOrder(m_gameLayerB2->getZOrder());
+        fields->m_customLayerB2->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerB2);
 
-        m_fields->m_customLayerB4 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerB4->setZOrder(m_gameLayerB4->getZOrder());
-        m_fields->m_customLayerB4->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerB4);
+        fields->m_customLayerB3 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerB3->setZOrder(m_gameLayerB3->getZOrder());
+        fields->m_customLayerB3->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerB3);
 
-        m_fields->m_customLayerB5 = CCSpriteBatchNode::createWithTexture(spr);
-        m_fields->m_customLayerB5->setZOrder(m_gameLayerB5->getZOrder());
-        m_fields->m_customLayerB5->setUseChildIndex(true);
-        m_objectLayer->addChild(m_fields->m_customLayerB5);
+        fields->m_customLayerB4 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerB4->setZOrder(m_gameLayerB4->getZOrder());
+        fields->m_customLayerB4->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerB4);
+
+        fields->m_customLayerB5 = CCSpriteBatchNode::createWithTexture(spr);
+        fields->m_customLayerB5->setZOrder(m_gameLayerB5->getZOrder());
+        fields->m_customLayerB5->setUseChildIndex(true);
+        m_objectLayer->addChild(fields->m_customLayerB5);
     } // setupLayers
 
     CCNode* parentForZLayer(int zLayer, bool blending, int parentMode, int uiObject) {
