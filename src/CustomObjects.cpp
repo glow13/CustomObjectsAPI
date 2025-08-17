@@ -9,6 +9,7 @@
     m_objectID == 0x3f4
     m_hasNoAudioScale == 0x3b9
     m_hasNoEffects = 0x404
+    m_classType = 0x4d0
 */
 
 class ContainerGameObject : public CustomRingObject<ContainerGameObject> {

@@ -4,9 +4,9 @@
 using namespace geode::prelude;
 
 // Config defaults
-#define BOX_SIZE_DEFAULT {0, 0}
-#define BOX_OFFSET_DEFAULT {0, 0}
-#define SPRITE_SIZE_DEFAULT {30, 30}
+#define BOX_SIZE_DEFAULT CCSize(0, 0)
+#define BOX_OFFSET_DEFAULT CCPoint(0, 0)
+#define SPRITE_SIZE_DEFAULT CCSize(30, 30)
 #define OBJECT_TYPE_DEFAULT (GameObjectType)(-1)
 
 struct CustomObjectConfig {
@@ -39,7 +39,7 @@ struct CustomObjectConfig {
     CustomObjectConfig& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
     CustomObjectConfig& setObjectType(GameObjectType type) { objectType = type; return *this; }
 
-    void applyBoxSize(GameObject* obj) { if (!boxSize.equals(BOX_SIZE_DEFAULT)) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; } }
-    void applyBoxOffset(GameObject* obj) { if (!boxOffset.equals(BOX_OFFSET_DEFAULT)) { obj->m_customBoxOffset = boxOffset; } }
+    void applyBoxSize(GameObject* obj) { if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; } }
+    void applyBoxOffset(GameObject* obj) { if (boxOffset != BOX_OFFSET_DEFAULT) { obj->m_customBoxOffset = boxOffset; } }
     void applyObjectType(GameObject* obj) { if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType; }
 };
