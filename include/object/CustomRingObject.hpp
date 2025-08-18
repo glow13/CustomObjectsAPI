@@ -28,8 +28,8 @@ protected:
 
         m_width = 36;
         m_height = 36;
+        m_duration = 0;
         m_usesAudioScale = true;
-        m_dontIgnoreDuration = false;
         m_unk532 = true; // green hitbox
 
         config.applyBoxSize(this);
@@ -50,7 +50,6 @@ protected:
 private:
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         RingObject::customObjectSetup(p0, p1);
-        m_dontIgnoreDuration = false;
         setupCustomRing();
     } // customObjectSetup
 

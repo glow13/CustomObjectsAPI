@@ -20,7 +20,6 @@ public:
     };
 
     void setupLayers() {
-        log::info("GJBaseGameLayer::setupLayers");
         GJBaseGameLayer::setupLayers();
 
         auto manager = CustomObjectsManager::get();

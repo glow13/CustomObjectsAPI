@@ -1,5 +1,6 @@
 #pragma once
 #include <Geode/Geode.hpp>
+#include <Geode/utils/base64.hpp>
 
 using namespace geode::prelude;
 
@@ -36,10 +37,55 @@ protected:
         return true;
     } // init
 
+    int getSavedValue(std::string key, int defaultValue = 0) {
+        return (savedValues.contains(key)) ? savedValues[key] : defaultValue;
+    } // getSavedValue
+
+    int setSavedValue(std::string key, int value) {
+        int oldValue = getSavedValue(key);
+        savedValues[key] = value;
+        return oldValue;
+    } // setSavedValue
+
 private:
+    std::map<std::string, int> savedValues;
+
+    bool loadSavedValues(gd::vector<gd::string>& p0) {
+
+        // Are there any saved values to load?
+        if (p0[442].empty()) return false;
+
+        // Base64 decode the saved string
+        auto result = base64::decodeString(p0[442]);
+        if (!result.isOk()) return false;
+
+        // Parse the string and load the values
+        std::stringstream valuesString(result.unwrap());
+        std::string key, valueStr;
+
+        savedValues.clear();
+        while (std::getline(valuesString, key, ',')) {
+            std::getline(valuesString, valueStr, ',');
+            savedValues[key] = std::stoi(valueStr);
+        } // while
+
+        return true;
+    } // loadSavedValues
+
+    gd::string getSaveString(GJBaseGameLayer* p0) override {
+        std::string saveString = EffectGameObject::getSaveString(p0);
+        if (savedValues.empty()) return saveString;
+
+        std::string valuesString;
+        for (auto [key, value] : savedValues) valuesString += fmt::format("{},{},", key, value);
+        valuesString = valuesString.substr(0, valuesString.length() - 1);
+        return saveString += fmt::format(",442,{}", base64::encode(valuesString));
+    } // getSaveString
+
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         EffectGameObject::customObjectSetup(p0, p1);
         m_isTrigger = true;
+        loadSavedValues(p0);
         setupCustomTrigger();
     } // customObjectSetup
 
