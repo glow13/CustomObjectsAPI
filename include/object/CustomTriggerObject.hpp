@@ -37,18 +37,38 @@ protected:
         return true;
     } // init
 
-    int getSavedValue(std::string key, int defaultValue = 0) {
-        return (savedValues.contains(key)) ? savedValues[key] : defaultValue;
-    } // getSavedValue
+    int getSavedInt(std::string key, int defaultValue = 0) {
+        return (savedValues.contains(key)) ? std::stoi(savedValues[key]) : defaultValue;
+    } // getSavedInt
 
-    int setSavedValue(std::string key, int value) {
-        int oldValue = getSavedValue(key);
+    int setSavedInt(std::string key, int value) {
+        auto oldValue = getSavedInt(key);
+        savedValues[key] = std::to_string(value);
+        return oldValue;
+    } // setSavedInt
+
+    float getSavedFloat(std::string key, float defaultValue = 0.0f) {
+        return (savedValues.contains(key)) ? std::stof(savedValues[key]) : defaultValue;
+    } // getSavedFloat
+
+    float setSavedFloat(std::string key, double value) {
+        auto oldValue = getSavedFloat(key);
+        savedValues[key] = fmt::format("{:.2f}", value);
+        return oldValue;
+    } // setSavedFloat
+
+    std::string getSavedString(std::string key, std::string defaultValue = "") {
+        return (savedValues.contains(key)) ? savedValues[key] : defaultValue;
+    } // getSavedString
+
+    std::string setSavedString(std::string key, std::string value) {
+        auto oldValue = getSavedString(key);
         savedValues[key] = value;
         return oldValue;
-    } // setSavedValue
+    } // setSavedString
 
 private:
-    std::map<std::string, int> savedValues;
+    std::map<std::string, std::string> savedValues;
 
     bool loadSavedValues(gd::vector<gd::string>& p0) {
 
@@ -66,7 +86,7 @@ private:
         savedValues.clear();
         while (std::getline(valuesString, key, ',')) {
             std::getline(valuesString, valueStr, ',');
-            savedValues[key] = std::stoi(valueStr);
+            savedValues[key] = valueStr;
         } // while
 
         return true;

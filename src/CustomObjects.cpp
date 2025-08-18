@@ -44,7 +44,7 @@ public:
     } // setupCustomTrigger
 
     void resetCustomTrigger() override {
-        m_bouncePower = getSavedValue("bounce", 8);
+        m_bouncePower = getSavedInt("bounce", 8);
     } // resetCustomTrigger
 
     void activateCustomTrigger(GJBaseGameLayer* playLayer) override {
