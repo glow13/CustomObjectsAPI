@@ -37,35 +37,24 @@ protected:
         return true;
     } // init
 
-    int getSavedInt(std::string key, int defaultValue = 0) {
-        return (savedValues.contains(key)) ? std::stoi(savedValues[key]) : defaultValue;
-    } // getSavedInt
+    template<typename T>
+    T getSavedValue(std::string key, T defaultValue = T{}) {
+        if (!savedValues.contains(key)) return defaultValue;
+        std::stringstream valueString(savedValues[key]);
 
-    int setSavedInt(std::string key, int value) {
-        auto oldValue = getSavedInt(key);
-        savedValues[key] = std::to_string(value);
+        T value;
+        valueString >> value;
+        return value;
+    } // getSavedValue
+
+    template<typename T>
+    T setSavedValue(std::string key, T value) {
+        T oldValue = getSavedValue<T>(key);
+        std::stringstream valueString(value);
+
+        savedValues[key] = valueString.str();
         return oldValue;
-    } // setSavedInt
-
-    float getSavedFloat(std::string key, float defaultValue = 0.0f) {
-        return (savedValues.contains(key)) ? std::stof(savedValues[key]) : defaultValue;
-    } // getSavedFloat
-
-    float setSavedFloat(std::string key, double value) {
-        auto oldValue = getSavedFloat(key);
-        savedValues[key] = fmt::format("{:.2f}", value);
-        return oldValue;
-    } // setSavedFloat
-
-    std::string getSavedString(std::string key, std::string defaultValue = "") {
-        return (savedValues.contains(key)) ? savedValues[key] : defaultValue;
-    } // getSavedString
-
-    std::string setSavedString(std::string key, std::string value) {
-        auto oldValue = getSavedString(key);
-        savedValues[key] = value;
-        return oldValue;
-    } // setSavedString
+    } // setSavedValue
 
 private:
     std::map<std::string, std::string> savedValues;
@@ -106,6 +95,7 @@ private:
         EffectGameObject::customObjectSetup(p0, p1);
         m_isTrigger = true;
         loadSavedValues(p0);
+        for (auto [key, value] : savedValues) log::info("{} => {}", key, value);
         setupCustomTrigger();
     } // customObjectSetup
 
