@@ -13,18 +13,12 @@ struct CustomObjectsMod {
     std::vector<CustomObjectConfig> objects;
 
     CustomObjectsMod(geode::Mod* mod, short offset) : mod(mod), modID(mod->getID()) {
-
-        // Basic FNV hashing algorithm
-        uint32_t hash = 0x811C9DC5u + offset; // FNV offset basis
-        for (size_t i = 0; i < modID.length(); i++) {
-            hash ^= static_cast<uint8_t>(modID[i]);
-            hash *= 0x01000193u; // FNV prime
-        } // for
-
-        // Transform the hash value to be a valid object id
         uint32_t min = 10000;
         uint32_t max = INT32_MAX - 100;
-        uint64_t transform = min + ((uint64_t)hash * (max - min)) / UINT32_MAX;
+
+        // Hash the mod id for a good objectID
+        uint64_t hash = geode::utils::hash(modID);
+        uint64_t transform = min + (hash * (max - min)) / UINT32_MAX;
         objectID = transform - (transform % 100);
     } // CustomObjectsMod
 
