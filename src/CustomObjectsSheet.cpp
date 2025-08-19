@@ -1,7 +1,11 @@
 #include "CustomObjectsSheet.hpp"
 
 #include "library/rectpack2D/finders_interface.hpp"
-#include "library/stb/stb_image_write.hpp"
+
+#define LODEPNG_NO_COMPILE_DECODER
+#define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS
+#define LODEPNG_NO_COMPILE_ERROR_TEXT
+#include <lodepng.h>
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
     int csf = CCDirector::get()->getContentScaleFactor();
@@ -23,7 +27,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
 
     // Save the rendered image pixel data
     auto& s = render->m_pTexture->getContentSizeInPixels();
-    int w = s.width, h = s.height;
+    unsigned int w = s.width, h = s.height;
     auto buffer = new uint8_t[w * h * 4];
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -33,11 +37,11 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     render->release();
 
     // Flip the image
-    auto data = new uint8_t[w * h * 4];
+    std::vector<uint8_t> data(w * h * 4);
     for (int i = 0; i < h; i++) memcpy(&data[i * w * 4], &buffer[(h - i - 1) * w * 4], w * 4);
+    delete buffer;
 
-    // Write the image to the path
-    return stbi_write_png((path + name + ".png").c_str(), w, h, 4, data, w * 4);
+    return lodepng::encode((path + name + ".png"), data, w, h) == 0;
 } // saveSpritesheetImage
 
 bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path) const {

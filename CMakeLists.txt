@@ -20,10 +20,19 @@ else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
-set(GEODE_BINDINGS_REPO_PATH "${CMAKE_SOURCE_DIR}/build/_deps/bindings-src")
-
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+# add lodepng library
+CPMAddPackage(
+  NAME lodepng
+  GITHUB_REPOSITORY lvandeve/lodepng
+  GIT_TAG 344b4b4
+  DOWNLOAD_ONLY ON
+)
+add_library(lodepng STATIC ${lodepng_SOURCE_DIR}/lodepng.cpp)
+target_include_directories(lodepng PUBLIC ${lodepng_SOURCE_DIR})
+target_link_libraries(${PROJECT_NAME} lodepng)
 
 setup_geode_mod(${PROJECT_NAME})
