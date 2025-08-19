@@ -60,13 +60,13 @@ protected:
 private:
     std::map<std::string, std::string> savedValues;
 
-    bool loadSavedValues(gd::vector<gd::string>& p0) {
+    bool loadSavedValuesFromString(std::string saveString) {
 
         // Are there any saved values to load?
-        if (p0[442].empty()) return false;
+        if (saveString.empty()) return false;
 
         // Base64 decode the saved string
-        auto result = base64::decodeString(p0[442]);
+        auto result = base64::decodeString(saveString);
         if (!result.isOk()) return false;
 
         // Parse the string and load the values
@@ -80,7 +80,7 @@ private:
         } // while
 
         return true;
-    } // loadSavedValues
+    } // loadSavedValuesFromString
 
     gd::string getSaveString(GJBaseGameLayer* p0) override {
         std::string saveString = EffectGameObject::getSaveString(p0);
@@ -89,13 +89,14 @@ private:
         std::string valuesString;
         for (auto [key, value] : savedValues) valuesString += fmt::format("{},{},", key, value);
         valuesString = valuesString.substr(0, valuesString.length() - 1);
-        return saveString += fmt::format(",442,{}", base64::encode(valuesString));
+        return saveString += fmt::format(",500,{}", base64::encode(valuesString));
     } // getSaveString
 
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         EffectGameObject::customObjectSetup(p0, p1);
+        loadSavedValuesFromString(p0[500]);
+
         m_isTrigger = true;
-        loadSavedValues(p0);
         setupCustomTrigger();
     } // customObjectSetup
 
