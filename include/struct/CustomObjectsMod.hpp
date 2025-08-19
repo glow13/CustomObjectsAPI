@@ -12,12 +12,12 @@ struct CustomObjectsMod {
     int objectID;
     std::vector<CustomObjectConfig> objects;
 
-    CustomObjectsMod(geode::Mod* mod, short offset) : mod(mod), modID(mod->getID()) {
+    CustomObjectsMod(geode::Mod* mod, byte offset) : mod(mod), modID(mod->getID()) {
         uint32_t min = 10000;
         uint32_t max = INT32_MAX - 100;
 
         // Hash the mod id for a good objectID
-        uint64_t hash = geode::utils::hash(modID);
+        uint64_t hash = geode::utils::hash(modID + (char)offset);
         uint64_t transform = min + (hash * (max - min)) / UINT32_MAX;
         objectID = transform - (transform % 100);
     } // CustomObjectsMod

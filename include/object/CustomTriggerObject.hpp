@@ -51,6 +51,7 @@ protected:
     ValueType setSavedValue(std::string key, ValueType value) {
         ValueType oldValue = getSavedValue<ValueType>(key);
         std::stringstream valueString;
+        valueString.precision(2);
         valueString << value;
 
         savedValues[key] = valueString.str();
