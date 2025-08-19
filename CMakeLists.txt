@@ -35,4 +35,13 @@ add_library(lodepng STATIC ${lodepng_SOURCE_DIR}/lodepng.cpp)
 target_include_directories(lodepng PUBLIC ${lodepng_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} lodepng)
 
+# add rectpack2d library
+CPMAddPackage(
+  NAME rectpack2d
+  GITHUB_REPOSITORY TeamHypersomnia/rectpack2D
+  GIT_TAG 2f53fac
+  DOWNLOAD_ONLY ON
+)
+target_include_directories(${PROJECT_NAME} PUBLIC ${rectpack2d_SOURCE_DIR}/src/rectpack2D)
+
 setup_geode_mod(${PROJECT_NAME})

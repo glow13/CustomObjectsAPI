@@ -1,6 +1,6 @@
 #include "CustomObjectsSheet.hpp"
 
-#include "library/rectpack2D/finders_interface.hpp"
+#include <finders_interface.h>
 
 #define LODEPNG_NO_COMPILE_DECODER
 #define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS
