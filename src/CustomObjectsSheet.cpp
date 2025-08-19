@@ -39,7 +39,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     // Flip the image
     std::vector<uint8_t> data(w * h * 4);
     for (int i = 0; i < h; i++) memcpy(&data[i * w * 4], &buffer[(h - i - 1) * w * 4], w * 4);
-    delete buffer;
+    delete[] buffer;
 
     return lodepng::encode((path + name + ".png"), data, w, h) == 0;
 } // saveSpritesheetImage

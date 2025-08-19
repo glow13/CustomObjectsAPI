@@ -37,19 +37,19 @@ protected:
         return true;
     } // init
 
-    template<typename T>
-    T getSavedValue(std::string key, T defaultValue = T{}) {
+    template<typename ValueType>
+    ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
         if (!savedValues.contains(key)) return defaultValue;
         std::stringstream valueString(savedValues[key]);
 
-        T value;
+        ValueType value;
         valueString >> value;
         return value;
     } // getSavedValue
 
-    template<typename T>
-    T setSavedValue(std::string key, T value) {
-        T oldValue = getSavedValue<T>(key);
+    template<typename ValueType>
+    ValueType setSavedValue(std::string key, ValueType value) {
+        ValueType oldValue = getSavedValue<ValueType>(key);
         std::stringstream valueString(value);
 
         savedValues[key] = valueString.str();
