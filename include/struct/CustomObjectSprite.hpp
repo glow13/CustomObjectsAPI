@@ -1,21 +1,26 @@
 #pragma once
 #include <Geode/Geode.hpp>
+#include <rect_structs.h>
 
 using namespace geode::prelude;
 
-enum Quality : unsigned int;
+enum Quality : int;
+
+#define SPRITE_BUFFER 2
 
 struct CustomObjectSprite {
     std::string frame;
     std::string sourceFrame;
-    CCPoint pos;
-    CCSize size;
-    bool rotated;
+    rectpack2D::rect_xywhf rect;
 
-    CustomObjectSprite() : frame(""), sourceFrame(""), pos(CCPoint(0, 0)), size(CCSize(30, 30)), rotated(false) {}
-    CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) : frame(frame), sourceFrame(sourceFrame), pos(CCPoint(0, 0)), size(size * quality), rotated(false) {}
+    CustomObjectSprite() : frame(""), sourceFrame(""), rect({0, 0, 30 + SPRITE_BUFFER, 30 + SPRITE_BUFFER, false}) {}
+    CustomObjectSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
+    CustomObjectSprite(std::string frame, std::string sourceFrame, rectpack2D::rect_wh size, Quality quality) : frame(frame), sourceFrame(sourceFrame), rect({0, 0, size.w * quality + SPRITE_BUFFER, size.h * quality + SPRITE_BUFFER, false}) {}
 
-    std::string sizeString() const { return "{" + fmt::format("{},{}", rotated ? size.height : size.width, rotated ? size.width : size.height) + "}"; }
-    std::string rectString() const { return "{{" + fmt::format("{},{}", pos.x, pos.y) + "}," + sizeString() + "}"; }
-    std::string rotatedString() const { return rotated ? "<true/>" : "<false/>"; }
+    std::string sizeString() const { return "{" + fmt::format("{},{}", (rect.flipped ? rect.h : rect.w) - SPRITE_BUFFER, (rect.flipped ? rect.w : rect.h) - SPRITE_BUFFER) + "}"; }
+    std::string rectString() const { return "{{" + fmt::format("{},{}", rect.x, rect.y) + "}," + sizeString() + "}"; }
+    std::string rotatedString() const { return rect.flipped ? "<true/>" : "<false/>"; }
+
+    auto& get_rect() { return rect; }
+    const auto& get_rect() const { return rect; }
 };

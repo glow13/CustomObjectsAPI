@@ -50,7 +50,8 @@ protected:
     template<typename ValueType>
     ValueType setSavedValue(std::string key, ValueType value) {
         ValueType oldValue = getSavedValue<ValueType>(key);
-        std::stringstream valueString(value);
+        std::stringstream valueString;
+        valueString << value;
 
         savedValues[key] = valueString.str();
         return oldValue;
@@ -95,7 +96,6 @@ private:
         EffectGameObject::customObjectSetup(p0, p1);
         m_isTrigger = true;
         loadSavedValues(p0);
-        for (auto [key, value] : savedValues) log::info("{} => {}", key, value);
         setupCustomTrigger();
     } // customObjectSetup
 

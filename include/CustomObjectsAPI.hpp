@@ -6,7 +6,7 @@
 
 using namespace geode::prelude;
 
-enum Quality : unsigned int {
+enum Quality : int {
     LOW = 1,
     MEDIUM = 2,
     HIGH = 4

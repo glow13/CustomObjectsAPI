@@ -1,10 +1,10 @@
 #include "CustomObjectsSheet.hpp"
 
-#include <finders_interface.h>
-
 #define LODEPNG_NO_COMPILE_DECODER
 #define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS
 #define LODEPNG_NO_COMPILE_ERROR_TEXT
+
+#include <finders_interface.h>
 #include <lodepng.h>
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
@@ -14,14 +14,15 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
 
     // Add each sprite to the rendered image
     for (auto obj : spritesCache) {
-        auto rotatedSize = (obj.rotated ? CCSize(obj.size.height, obj.size.width) : obj.size) / csf;
+        auto rotatedWidth = ((obj.rect.flipped ? obj.rect.h : obj.rect.w) - SPRITE_BUFFER) / csf;
+        auto rotatedHeight = ((obj.rect.flipped ? obj.rect.w : obj.rect.h) - SPRITE_BUFFER) / csf;
 
         auto spr = CCSprite::createWithSpriteFrameName(obj.sourceFrame.c_str());
-        spr->setPosition(CCPoint(obj.pos.x, sheetSize.height - obj.pos.y) / csf);
-        spr->setAnchorPoint(obj.rotated ? CCPoint(0, 0) : CCPoint(0, 1));
-        spr->setScaleX((rotatedSize.width) / spr->getContentWidth());
-        spr->setScaleY((rotatedSize.height) / spr->getContentHeight());
-        spr->setRotation(obj.rotated ? 90 : 0);
+        spr->setPosition(CCPoint(obj.rect.x, sheetSize.height - obj.rect.y) / csf);
+        spr->setAnchorPoint(obj.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
+        spr->setScaleX(rotatedWidth / spr->getContentWidth());
+        spr->setScaleY(rotatedHeight / spr->getContentHeight());
+        spr->setRotation(obj.rect.flipped ? 90 : 0);
         spr->visit();
     } // for
 
@@ -84,15 +85,15 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObjectConfig>
 
     // Initialize sprites vector and find side lengths
     for (auto [id, obj] : objects) {
-        auto spr = CustomObjectSprite(obj.frame, obj.sourceFrame, obj.spriteSize, quality);
+        auto spr = CustomObjectSprite(obj.frame, obj.sourceFrame, {(int)obj.spriteSize.width, (int)obj.spriteSize.height}, quality);
 
         // Check if this sprite is already present
         if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite other) {
-            return spr.sourceFrame == other.sourceFrame && spr.size == other.size;
+            return spr.sourceFrame == other.sourceFrame && spr.rect.w == other.rect.w && spr.rect.h == other.rect.h;
         }) < sprites.end()) continue;
 
         sprites.emplace_back(spr);
-        totalArea += spr.size.width * spr.size.height;
+        totalArea += spr.rect.w * spr.rect.h;
     } // for
 
     // Run the bin packing algorithm
@@ -114,33 +115,16 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObjectConfig>
 
 CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) {
     using namespace rectpack2D;
-    auto rectangles = std::vector<rect_xywhf>(sprites.size());
 
     float totalWidth = 0;
-    for (auto spr : sprites) {
-        rectangles.emplace_back(rect_xywhf(0, 0, spr.size.width + 2, spr.size.height + 2, false));
-        totalWidth += std::max(spr.size.width, spr.size.height);
-    } // for
+    for (auto spr : sprites) totalWidth += std::max(spr.rect.w, spr.rect.h);
 
-    auto size = find_best_packing<empty_spaces<true>>(rectangles, make_finder_input(
+    auto size = find_best_packing<empty_spaces<true>>(sprites, make_finder_input(
         totalWidth / 2, -4,
         [](rect_xywhf&) { return callback_result::CONTINUE_PACKING; },
         [](rect_xywhf&) { return callback_result::ABORT_PACKING; },
         flipping_option::ENABLED
     ));
 
-    for (auto &spr : sprites) for (int i = 0; i < rectangles.size(); i++) {
-        if (spr.size.width == rectangles[i].w - 2 && spr.size.height == rectangles[i].h - 2) {
-            spr.pos = CCPoint(rectangles[i].x, rectangles[i].y);
-        } else if (spr.size.width == rectangles[i].h - 2 && spr.size.height == rectangles[i].w - 2) {
-            spr.pos = CCPoint(rectangles[i].x, rectangles[i].y);
-            spr.size.swap();
-            spr.rotated = true;
-        } else continue;
-
-        rectangles.erase(rectangles.begin() + i);
-        break;
-    } // for
-
-    return CCSize(std::ceil((size.w - 2) / 4), std::ceil((size.h - 2) / 4)) * 4;
+    return CCSize(std::ceil(size.w / 4), std::ceil(size.h / 4)) * 4;
 } // binPacking
