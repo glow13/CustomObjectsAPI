@@ -20,6 +20,8 @@ void CustomObjectsManager::processRegisteredMods() {
         std::vector<CustomObjectConfig> objects;
 
         for (auto obj : mod.objects) {
+            obj.regenerateFrames();
+
             objects.emplace_back(obj);
             customObjectsCache[obj.id] = obj;
         } // for

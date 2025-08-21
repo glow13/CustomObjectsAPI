@@ -22,13 +22,11 @@ struct CustomObjectsMod {
         objectID = transform - (transform % 100);
     } // CustomObjectsMod
 
-    CustomObjectConfig& registerCustomObject(std::string spr, std::string detail, CCSize size, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) {
+    CustomObjectConfig& registerCustomObject(std::string spr, std::string detail, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) {
         int id = objectID + objects.size();
         log::debug("Registered custom object with id {}", id);
-        return objects.emplace_back(CustomObjectConfig(spr, detail, modID, id, size, create));
+        return objects.emplace_back(CustomObjectConfig(spr, detail, modID, id, create));
     } // registerCustomObject
 
-    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, "", CCSize(30, 30), create); }
-    CustomObjectConfig& registerCustomObject(std::string spr, CCSize size, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, "", size, create); }
-    CustomObjectConfig& registerCustomObject(std::string spr, std::string detail, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, detail, CCSize(30, 30), create); }
+    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, "", create); }
 };
