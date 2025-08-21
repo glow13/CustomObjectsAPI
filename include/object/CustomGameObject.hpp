@@ -16,6 +16,7 @@ public:
 
 protected:
     virtual void setupCustomObject() {}
+    virtual void resetCustomObject() {}
 
     bool init(CustomObjectConfig config) {
         if (!GameObject::init(config.frame.c_str())) return false;
@@ -27,6 +28,7 @@ protected:
         config.applyBoxSize(this);
         config.applyBoxOffset(this);
         config.applyObjectType(this);
+        config.applyCustomRender(this);
 
         setupCustomObject();
         autorelease();
@@ -39,6 +41,11 @@ private:
         GameObject::customObjectSetup(p0, p1);
         setupCustomObject();
     } // customObjectSetup
+
+    void resetObject() override {
+        GameObject::resetObject();
+        resetCustomObject();
+    } // resetObject
 };
 
 class CustomGameObjectBase : public CustomGameObject<CustomGameObjectBase> {};

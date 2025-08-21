@@ -85,6 +85,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObjectConfig>
 
     // Initialize sprites vector and find side lengths
     for (auto [id, obj] : objects) {
+        if (obj.customRender) continue;
         auto spr = CustomObjectSprite(obj.frame, obj.sourceFrame, {(int)obj.spriteSize.width, (int)obj.spriteSize.height}, quality);
 
         // Check if this sprite is already present

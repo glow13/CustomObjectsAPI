@@ -34,6 +34,7 @@ protected:
 
         config.applyBoxSize(this);
         config.applyBoxOffset(this);
+        config.applyCustomRender(this);
 
         setupCustomRing();
         autorelease();
