@@ -15,7 +15,9 @@ struct CustomObjectSprite {
 
     CustomObjectSprite() : frame(""), sourceFrame(""), rect({0, 0, 30 + SPRITE_BUFFER, 30 + SPRITE_BUFFER, false}) {}
     CustomObjectSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
-    CustomObjectSprite(std::string frame, std::string sourceFrame, rectpack2D::rect_wh size, Quality quality) : frame(frame), sourceFrame(sourceFrame), rect({0, 0, size.w * quality + SPRITE_BUFFER, size.h * quality + SPRITE_BUFFER, false}) {}
+    CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) : frame(frame), sourceFrame(sourceFrame) {
+        this->rect = {0, 0, (int)size.width * quality + SPRITE_BUFFER, (int)size.height * quality + SPRITE_BUFFER, false};
+    } // CustomObjectSprite
 
     std::string sizeString() const { return "{" + fmt::format("{},{}", (rect.flipped ? rect.h : rect.w) - SPRITE_BUFFER, (rect.flipped ? rect.w : rect.h) - SPRITE_BUFFER) + "}"; }
     std::string rectString() const { return "{{" + fmt::format("{},{}", rect.x, rect.y) + "}," + sizeString() + "}"; }

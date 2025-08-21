@@ -10,6 +10,7 @@
     m_hasNoAudioScale == 0x3b9
     m_hasNoEffects = 0x404
     m_classType = 0x4d0
+    2944
 */
 
 class ContainerGameObject : public CustomRingObject<ContainerGameObject> {
@@ -67,12 +68,14 @@ $execute {
     mod->registerCustomObject("block-4.png"_spr);
     mod->registerCustomObject("block-5.png"_spr);
     mod->registerCustomObject("block-6.png"_spr);
-    mod->registerCustomObject("block-7.png"_spr, {60, 30});
-    mod->registerCustomObject("block-8.png"_spr, {60, 30});
-    mod->registerCustomObject("block-9.png"_spr, {60, 30});
-    mod->registerCustomObject("block-10.png"_spr, {60, 60});
-    mod->registerCustomObject("block-11.png"_spr, {60, 60});
-    mod->registerCustomObject("block-12.png"_spr, {60, 60});
+    mod->registerCustomObject("block-7.png"_spr, CCSize(60, 30));
+    mod->registerCustomObject("block-8.png"_spr, CCSize(60, 30));
+    mod->registerCustomObject("block-9.png"_spr, CCSize(60, 30));
+    mod->registerCustomObject("block-10.png"_spr, CCSize(60, 60));
+    mod->registerCustomObject("block-11.png"_spr, CCSize(60, 60));
+    mod->registerCustomObject("block-12.png"_spr, CCSize(60, 60));
 
     mod->registerCustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
+    mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png", CCSize(60, 60)).setObjectType(GameObjectType::Decoration);
+    mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).useCustomRender();
 }

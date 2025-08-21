@@ -14,17 +14,25 @@ struct CustomObjectConfig {
     int id;
     std::string frame;
     std::string sourceFrame;
+    std::string detailFrame;
+    std::string detailSourceFrame;
     std::function<GameObject*(CustomObjectConfig)> createFunction;
 
-    GameObject* create() { return createFunction(*this); }
+    CustomObjectConfig() : frame(""), sourceFrame(""), detailFrame(""), detailSourceFrame(""), id(0), spriteSize(SPRITE_SIZE_DEFAULT) {}
+    CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, CCSize size, std::function<GameObject*(CustomObjectConfig)> create) {
+        if (!frame.empty()) {
+            auto frameName = frame.substr(frame.find("/") + 1);
+            this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, frameName);
+            this->sourceFrame = frame;
+        } // if
 
-    CustomObjectConfig() : frame(""), sourceFrame(""), id(0), spriteSize(SPRITE_SIZE_DEFAULT) {}
-    CustomObjectConfig(std::string frame, std::string mod, int id, CCSize size, std::function<GameObject*(CustomObjectConfig)> create) {
-        auto name = frame.substr(frame.find("/") + 1);
-        this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, name);
+        if(!detail.empty()) {
+            auto detailName = detail.substr(detail.find("/") + 1);
+            this->detailFrame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, detailName);
+            this->detailSourceFrame = detail;
+        } // if
 
         this->id = id;
-        this->sourceFrame = frame;
         this->spriteSize = size;
         this->createFunction = create;
     } // CustomObjectConfig
@@ -40,10 +48,12 @@ struct CustomObjectConfig {
     CustomObjectConfig& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
     CustomObjectConfig& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
     CustomObjectConfig& setObjectType(GameObjectType type) { objectType = type; return *this; }
-    CustomObjectConfig& setCustomRender(bool render) { customRender = render; return *this; }
+    CustomObjectConfig& useCustomRender() { customRender = true; frame = sourceFrame; detailFrame = detailSourceFrame; return *this; }
 
     void applyBoxSize(GameObject* obj) { if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; } }
     void applyBoxOffset(GameObject* obj) { if (boxOffset != BOX_OFFSET_DEFAULT) { obj->m_customBoxOffset = boxOffset; } }
     void applyObjectType(GameObject* obj) { if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType; }
-    void applyCustomRender(GameObject* obj) { if (customRender != CUSTOM_RENDER_DEFAULT) obj->m_parentMode = 4; frame = sourceFrame; }
+    void applyCustomRender(GameObject* obj) { if(customRender != CUSTOM_RENDER_DEFAULT) obj->m_parentMode = 4; }
+
+    GameObject* create() { return createFunction(*this); }
 };

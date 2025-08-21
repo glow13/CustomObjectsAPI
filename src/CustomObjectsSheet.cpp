@@ -86,15 +86,25 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObjectConfig>
     // Initialize sprites vector and find side lengths
     for (auto [id, obj] : objects) {
         if (obj.customRender) continue;
-        auto spr = CustomObjectSprite(obj.frame, obj.sourceFrame, {(int)obj.spriteSize.width, (int)obj.spriteSize.height}, quality);
 
-        // Check if this sprite is already present
-        if (std::find_if(sprites.begin(), sprites.end(), [spr](CustomObjectSprite other) {
-            return spr.sourceFrame == other.sourceFrame && spr.rect.w == other.rect.w && spr.rect.h == other.rect.h;
-        }) < sprites.end()) continue;
+        auto main = CustomObjectSprite(obj.frame, obj.sourceFrame, obj.spriteSize, quality);
+        auto detail = CustomObjectSprite(obj.detailFrame, obj.detailSourceFrame, obj.spriteSize, quality);
 
-        sprites.emplace_back(spr);
-        totalArea += spr.rect.w * spr.rect.h;
+        // Check if we should add the main sprite
+        if (!main.frame.empty() && std::find_if(sprites.begin(), sprites.end(), [main](CustomObjectSprite other) {
+            return main.sourceFrame == other.sourceFrame && main.rect.w == other.rect.w && main.rect.h == other.rect.h;
+        }) == sprites.end()) {
+            sprites.emplace_back(main);
+            totalArea += main.rect.w * main.rect.h;
+        } // if
+
+        // Check if we should add the detail sprite
+        if (!detail.frame.empty() && std::find_if(sprites.begin(), sprites.end(), [detail](CustomObjectSprite other) {
+            return detail.sourceFrame == other.sourceFrame && detail.rect.w == other.rect.w && detail.rect.h == other.rect.h;
+        }) == sprites.end()) {
+            sprites.emplace_back(detail);
+            totalArea += detail.rect.w * detail.rect.h;
+        } // if
     } // for
 
     // Run the bin packing algorithm

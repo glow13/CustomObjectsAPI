@@ -30,6 +30,8 @@ protected:
         config.applyObjectType(this);
         config.applyCustomRender(this);
 
+        if (!config.detailFrame.empty()) addCustomColorChild(config.detailFrame);
+
         setupCustomObject();
         autorelease();
 
