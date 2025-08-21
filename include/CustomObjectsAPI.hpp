@@ -29,6 +29,7 @@ public:
 
     std::string getCacheDirectory();
     std::string getSpritesheetQualityName();
+    Quality getTextureQuality() { int q = (int)CCDirector::get()->getLoadedTextureQuality(); return (q == 3) ? Quality::HIGH : (Quality)q; }
 
     int getObjectCount() { return customObjectsCache.size(); }
     int getModObjectCount(std::string id);

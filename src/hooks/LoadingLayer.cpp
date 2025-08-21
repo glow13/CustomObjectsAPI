@@ -23,17 +23,17 @@ class $modify(LoadingLayer) {
 
             log::info("Cache is outdated, generating the custom object spritesheets...");
 
-            manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
-            manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
-            manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
+            auto sheetName = manager->getSpritesheetQualityName();
+            manager->addSpritesheetToCache(sheetName, manager->getTextureQuality());
 
             std::vector<std::string> objs;
             manager->forEachCustomObject([&objs](auto obj) { objs.emplace_back(obj.frame); });
-            Mod::get()->setSavedValue<std::vector<std::string>>("custom-objects", objs);
+            Mod::get()->setSavedValue<std::vector<std::string>>(sheetName, objs);
 
         } else if (m_loadStep == 10) {
             auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
             auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
+            texture->setAliasTexParameters();
 
             auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
             CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);

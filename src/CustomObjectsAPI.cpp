@@ -35,11 +35,11 @@ std::string CustomObjectsManager::getCacheDirectory() {
 } // getCacheDirectory
 
 std::string CustomObjectsManager::getSpritesheetQualityName() {
-    switch (GameManager::sharedState()->m_texQuality) {
-        case 1: return "CustomObjects";
-        case 2: return "CustomObjects-hd";
-        case 3: return "CustomObjects-uhd";
-        default: return "CustomObjects-hd";
+    switch (getTextureQuality()) {
+        case Quality::LOW: return "CustomObjects";
+        case Quality::MEDIUM: return "CustomObjects-hd";
+        case Quality::HIGH: return "CustomObjects-uhd";
+        default: return "CustomObjects-uhd";
     } // switch
 } // getSpritesheetImagePath
 
@@ -56,7 +56,8 @@ void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomOb
 } // forEachCustomObject
 
 bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() {
-    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>("custom-objects");
+    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(getSpritesheetQualityName());
+
     if (customObjectsCache.size() != cache.size()) return false;
 
     for (auto [id, obj] : customObjectsCache) {
