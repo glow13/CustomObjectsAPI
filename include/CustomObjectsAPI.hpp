@@ -24,7 +24,7 @@ private:
 public:
     static CustomObjectsManager* get();
 
-    CustomObjectsMod* registerCustomObjectsMod(geode::Mod* mod, byte offset = 0);
+    CustomObjectsMod* registerCustomObjectsMod(geode::Mod* mod, char offset = 0);
     void processRegisteredMods();
 
     std::string getCacheDirectory();

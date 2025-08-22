@@ -36,7 +36,7 @@ class $modify(EditorUI) {
         auto obj1 = static_cast<EffectGameObject*>(objects->objectAtIndex(0));
         auto obj2 = static_cast<EffectGameObject*>(objects->objectAtIndex(1));
 
-        if (obj1) log::info("{}", obj1->getSaveString(GJBaseGameLayer::get()));
+        if (obj1 && actuallyDoSomething) log::info("{}", obj1->getSaveString(GJBaseGameLayer::get()));
         if (!obj1 || !obj2 || !actuallyDoSomething) return EditorUI::copyObjects(objects, copyColors, sort);
 
         $compare1(m_someOtherIndex);

@@ -10,7 +10,7 @@
     m_hasNoAudioScale == 0x3b9
     m_hasNoEffects = 0x404
     m_classType = 0x4d0
-    2944
+    m_colorSprite = 0x368
 */
 
 class ContainerGameObject : public CustomRingObject<ContainerGameObject> {

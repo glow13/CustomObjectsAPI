@@ -6,7 +6,7 @@ CustomObjectsManager* CustomObjectsManager::get() {
     return s_manager;
 } // get
 
-CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, byte offset) {
+CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
     auto registeredMod = CustomObjectsMod(mod, offset);
     registeredMods.emplace_back(registeredMod);
     return &registeredMods.back();
