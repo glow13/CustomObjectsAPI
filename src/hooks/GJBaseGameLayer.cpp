@@ -77,7 +77,7 @@ public:
     } // setupLayers
 
     CCNode* parentForZLayer(int zLayer, bool blend, int parent, int ui) {
-        if (parent != 10) return GJBaseGameLayer::parentForZLayer(zLayer, (blend && parent != 4), parent, ui);
+        if (parent != 10 || ui) return GJBaseGameLayer::parentForZLayer(zLayer, blend, parent, ui);
 
         if (!blend) switch(static_cast<ZLayer>(zLayer)) {
             case ZLayer::T4: return m_fields->m_customLayerT4;

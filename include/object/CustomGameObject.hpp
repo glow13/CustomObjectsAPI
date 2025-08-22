@@ -48,6 +48,16 @@ private:
         GameObject::resetObject();
         resetCustomObject();
     } // resetObject
+
+    void addMainSpriteToParent(bool p0) override {
+        bool disableBlend = (m_parentMode == 4);
+        m_colorZLayerRelated = m_colorZLayerRelated || disableBlend;
+
+        GameObject::addMainSpriteToParent(p0);
+
+        m_shouldBlendBase = m_shouldBlendBase && !disableBlend;
+        m_shouldBlendDetail = m_shouldBlendDetail && !disableBlend;
+    } // addMainSpriteToParent
 };
 
 class CustomGameObjectBase : public CustomGameObject<CustomGameObjectBase> {};
