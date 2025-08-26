@@ -13,7 +13,7 @@
     m_colorSprite = 0x368
 */
 
-class ContainerGameObject : public CustomRingObject<ContainerGameObject> {
+class $object(ContainerGameObject, CustomRingObject) {
 public:
     float m_bouncePower = 1;
 
@@ -34,7 +34,7 @@ public:
     } // onJump
 };
 
-class SmileGameObject : public CustomTriggerObject<SmileGameObject> {
+class $object(SmileGameObject, CustomTriggerObject) {
 public:
     int m_bouncePower;
 
