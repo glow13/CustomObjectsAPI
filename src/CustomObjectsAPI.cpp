@@ -20,7 +20,7 @@ void CustomObjectsManager::processRegisteredMods() {
         std::vector<CustomObjectConfig> objects;
 
         for (auto obj : mod.objects) {
-            obj.regenerateFrames();
+            obj.generateFrames();
 
             objects.emplace_back(obj);
             customObjectsCache[obj.id] = obj;
@@ -45,12 +45,18 @@ std::string CustomObjectsManager::getSpritesheetQualityName() {
     } // switch
 } // getSpritesheetImagePath
 
+Quality CustomObjectsManager::getTextureQuality() {
+    int quality = (int)CCDirector::get()->getLoadedTextureQuality();
+    return (quality == 3) ? Quality::HIGH : (Quality)quality;
+} // getTextureQuality
+
 int CustomObjectsManager::getModObjectCount(std::string id) {
     return (modCustomObjectsCache.contains(id)) ? modCustomObjectsCache[id].size() : 0;
 } // getModObjectCount
 
 void CustomObjectsManager::printModObjectCount() {
     for (auto [mod, objs] : modCustomObjectsCache) log::info("Mod \"{}\" registered {} custom objects", mod, objs.size());
+    for (auto [id, obj] : customObjectsCache) log::info("{} {}", obj.frame, obj.sourceFrame);
 } // printModObjectCount
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig)> operation) const {

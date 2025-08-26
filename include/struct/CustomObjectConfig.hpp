@@ -12,6 +12,7 @@ using namespace geode::prelude;
 
 struct CustomObjectConfig {
     int id;
+    std::string mod;
     std::string frame;
     std::string sourceFrame;
     std::string detailFrame;
@@ -19,36 +20,25 @@ struct CustomObjectConfig {
     std::function<GameObject*(CustomObjectConfig)> createFunction;
 
     CustomObjectConfig() : frame(""), sourceFrame(""), detailFrame(""), detailSourceFrame(""), id(0), spriteSize(SPRITE_SIZE_DEFAULT) {}
-    CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : id(id), spriteSize(SPRITE_SIZE_DEFAULT), createFunction(create) {
-        if (!frame.empty()) {
-            auto frameName = frame.substr(frame.find("/") + 1);
-            this->frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, spriteSize.width, spriteSize.height, frameName);
-            this->sourceFrame = frame;
+    CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : sourceFrame(frame), detailSourceFrame(detail), mod(mod), id(id), spriteSize(SPRITE_SIZE_DEFAULT), createFunction(create) {}
+
+    void generateFrames() {
+        if (customRender) {
+            frame = sourceFrame;
+            detailFrame = detailSourceFrame;
+            return;
         } // if
 
-        if(!detail.empty()) {
-            auto detailName = detail.substr(detail.find("/") + 1);
-            this->detailFrame = fmt::format("custom-objects/{}/{}/{}/{}", mod, spriteSize.width, spriteSize.height, detailName);
-            this->detailSourceFrame = detail;
-        } // if
-    } // CustomObjectConfig
-
-    void regenerateFrames() {
-        if (customRender) return;
-        if (spriteSize == SPRITE_SIZE_DEFAULT) return;
-
-        if (!frame.empty()) {
+        if (!sourceFrame.empty()) {
             auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
-            auto prefix = frame.substr(0, frame.find("/", frame.find("/") + 1));
-            frame = fmt::format("{}/{}/{}/{}", prefix, spriteSize.width, spriteSize.height, frameName);
+            frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, spriteSize.width, spriteSize.height, frameName);
         } // if
 
-        if(!detailFrame.empty()) {
+        if(!detailSourceFrame.empty()) {
             auto detailName = detailSourceFrame.substr(detailSourceFrame.find("/") + 1);
-            auto prefix = detailFrame.substr(0, detailFrame.find("/", detailFrame.find("/") + 1));
-            detailFrame = fmt::format("{}/{}/{}/{}", prefix, spriteSize.width, spriteSize.height, detailName);
+            detailFrame = fmt::format("custom-objects/{}/{}/{}/{}", mod, spriteSize.width, spriteSize.height, detailName);
         } // if
-    } // regenerateFrames
+    } // generateFrames
 
     // Config variables
     CCSize boxSize = BOX_SIZE_DEFAULT;

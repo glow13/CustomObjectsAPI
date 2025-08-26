@@ -176,7 +176,7 @@ class $modify(EditorUI) {
         $compare1(m_opacityMod);
         $compare1(m_slopeUphill);
         $compare1(m_slopeDirection);
-        $compare1(m_maybeShouldFixSlopes);
+        $compare1(m_slopeIsHazard);
         $compare1(m_opacityMod2);
         $compare2(m_baseColor);
         $compare2(m_detailColor);
