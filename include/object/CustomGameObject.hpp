@@ -1,44 +1,37 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "CustomObjectUtils.hpp"
+
 using namespace geode::prelude;
 
-template <class T>
-class CustomGameObject : public GameObject {
+template <class ObjectType>
+class CustomGameObject : public CustomObjectUtils<ObjectType, GameObject> {
 public:
-    static T* create(CustomObjectConfig config) {
-        auto obj = new T();
-        if (obj->init(config)) return obj;
-
-        delete obj;
-        return nullptr;
-    } // create
-
-protected:
-    virtual void setupCustomObject() {}
-    virtual void resetCustomObject() {}
-
     bool init(CustomObjectConfig config) {
         if (!GameObject::init(config.frame.c_str())) return false;
 
-        m_objectID = config.id;
-        m_parentMode = 10;
-        m_objectType = GameObjectType::Solid;
+        this->m_objectID = config.id;
+        this->m_parentMode = 10;
+        this->m_objectType = GameObjectType::Solid;
 
         config.applyBoxSize(this);
         config.applyBoxOffset(this);
         config.applyObjectType(this);
         config.applyCustomRender(this);
 
-        if (!config.detailFrame.empty()) addCustomColorChild(config.detailFrame);
+        if (!config.detailFrame.empty()) this->addCustomColorChild(config.detailFrame);
 
         setupCustomObject();
-        autorelease();
+        this->autorelease();
 
         return true;
     } // init
 
-private:
+protected:
+    virtual void setupCustomObject() {}
+    virtual void resetCustomObject() {}
+
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         GameObject::customObjectSetup(p0, p1);
         setupCustomObject();
@@ -50,13 +43,13 @@ private:
     } // resetObject
 
     void addMainSpriteToParent(bool p0) override {
-        bool disableBlend = (m_parentMode == 4);
-        m_colorZLayerRelated = m_colorZLayerRelated || disableBlend;
+        bool disableBlend = (this->m_parentMode == 4);
+        this->m_colorZLayerRelated = this->m_colorZLayerRelated || disableBlend;
 
         GameObject::addMainSpriteToParent(p0);
 
-        m_shouldBlendBase = m_shouldBlendBase && !disableBlend;
-        m_shouldBlendDetail = m_shouldBlendDetail && !disableBlend;
+        this->m_shouldBlendBase = this->m_shouldBlendBase && !disableBlend;
+        this->m_shouldBlendDetail = this->m_shouldBlendDetail && !disableBlend;
     } // addMainSpriteToParent
 };
 

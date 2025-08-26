@@ -2,41 +2,37 @@
 #include <Geode/Geode.hpp>
 #include <Geode/utils/base64.hpp>
 
+#include "CustomObjectUtils.hpp"
+
 using namespace geode::prelude;
 
-template <class T>
-class CustomTriggerObject : public EffectGameObject {
+template <class ObjectType>
+class CustomTriggerObject : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
-    static T* create(CustomObjectConfig config) {
-        auto obj = new T();
-        if (obj->init(config)) return obj;
-
-        delete obj;
-        return nullptr;
-    } // create
-
-protected:
-    virtual void setupCustomTrigger() {}
-    virtual void resetCustomTrigger() {}
-    virtual void activateCustomTrigger(GJBaseGameLayer* playLayer) {}
-
     bool init(CustomObjectConfig config) {
         if (!EffectGameObject::init(config.frame.c_str())) return false;
 
-        m_objectID = config.id;
-        m_parentMode = 10;
-        m_objectType = GameObjectType::Modifier;
-        m_isTrigger = true;
+        this->m_objectID = config.id;
+        this->m_parentMode = 10;
+        this->m_objectType = GameObjectType::Modifier;
+        this->m_isTrigger = true;
 
         config.applyBoxSize(this);
         config.applyBoxOffset(this);
         config.applyCustomRender(this);
 
         setupCustomTrigger();
-        autorelease();
+        this->autorelease();
 
         return true;
     } // init
+
+protected:
+    virtual void setupCustomTrigger() {}
+    virtual void resetCustomTrigger() {}
+    virtual void activateCustomTrigger(GJBaseGameLayer* playLayer) {}
+
+    std::map<std::string, std::string> savedValues;
 
     template<typename ValueType>
     ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
@@ -58,9 +54,6 @@ protected:
         savedValues[key] = valueString.str();
         return oldValue;
     } // setSavedValue
-
-private:
-    std::map<std::string, std::string> savedValues;
 
     bool loadSavedValuesFromString(std::string saveString) {
 
@@ -97,8 +90,9 @@ private:
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         EffectGameObject::customObjectSetup(p0, p1);
         loadSavedValuesFromString(p0[500]);
+        this->setDontDraw(PlayLayer::get());
 
-        m_isTrigger = true;
+        this->m_isTrigger = true;
         setupCustomTrigger();
     } // customObjectSetup
 
