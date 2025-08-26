@@ -1,6 +1,8 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "CustomObjectUtils.hpp"
+
 using namespace geode::prelude;
 
 template <class ObjectType>
@@ -23,16 +25,15 @@ public:
         config.applyBoxOffset(this);
         config.applyCustomRender(this);
 
-        setupCustomRing();
+        this->setupCustomObject();
         this->autorelease();
 
         return true;
     } // init
 
 protected:
-    virtual void setupCustomRing() { createRingParticles(); }
-    virtual void pressCustomRing(PlayerObject* player) {}
-    virtual void resetCustomRing() {}
+    virtual void setupCustomObject() override { createRingParticles(); }
+    virtual void pressCustomRing(PlayerObject*) {}
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createRingParticles() {
@@ -40,16 +41,7 @@ protected:
         return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createRingParticle
 
-    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
-        RingObject::customObjectSetup(p0, p1);
-        setupCustomRing();
-    } // customObjectSetup
-
-    void resetObject() override {
-        RingObject::resetObject();
-        resetCustomRing();
-    } // resetObject
-
+private:
     void activatedByPlayer(PlayerObject* player) override {
         RingObject::activatedByPlayer(player);
         pressCustomRing(player);

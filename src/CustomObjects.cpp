@@ -17,7 +17,7 @@ class ContainerGameObject : public CustomRingObject<ContainerGameObject> {
 public:
     float m_bouncePower = 1;
 
-    void setupCustomRing() override {
+    void setupCustomObject() override {
         if (auto particle = createRingParticles()) {
             particle->setStartColor(ccColor4F{ 0, 0, 0, 255 });
             particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
@@ -25,26 +25,26 @@ public:
         } // if
     } // setupCustomRing
 
+    void resetCustomObject() override { m_bouncePower = 1; }
+
     void pressCustomRing(PlayerObject* player) override {
         player->propellPlayer(m_bouncePower * 0.35, true, 12);
         player->animatePlatformerJump(1.0f);
         m_bouncePower += 0.1;
     } // onJump
-
-    void resetCustomRing() override { m_bouncePower = 1; }
 };
 
 class SmileGameObject : public CustomTriggerObject<SmileGameObject> {
 public:
     int m_bouncePower;
 
-    void setupCustomTrigger() override {
+    void setupCustomObject() override {
         m_isTouchTriggered = true;
         m_isMultiTriggered = true;
         m_duration = 0;
     } // setupCustomTrigger
 
-    void resetCustomTrigger() override {
+    void resetCustomObject() override {
         m_bouncePower = getSavedValue<int>("bounce", 8);
     } // resetCustomTrigger
 
