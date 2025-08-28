@@ -6,19 +6,18 @@
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomRingObject : public CustomObjectUtils<ObjectType, RingObject> {
+class CustomPadObject : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
     bool init(CustomObjectConfig config) {
-        if (!RingObject::init(config.frame.c_str())) return false;
+        if (!EffectGameObject::init(config.frame.c_str())) return false;
 
         this->m_objectID = config.id;
         this->m_parentMode = 10;
-        this->m_objectType = GameObjectType::CustomRing;
+        this->m_objectType = GameObjectType::PinkJumpPad;
 
-        this->m_width = 36;
-        this->m_height = 36;
+        this->m_width = 25;
+        this->m_height = 5;
         this->m_duration = 0;
-        this->m_usesAudioScale = true;
         this->m_unk532 = true; // green hitbox
 
         config.applyBoxSize(this);
@@ -32,20 +31,20 @@ public:
     } // init
 
 protected:
-    virtual void setupCustomObject() override { createRingParticles(); }
-    virtual void pressCustomRing(PlayerObject*) {}
+    virtual void setupCustomObject() override { createPadParticles(); }
+    virtual void touchCustomPad(PlayerObject*) {}
 
     // Returns nullptr if in the editor
-    CCParticleSystemQuad* createRingParticles() {
+    CCParticleSystemQuad* createPadParticles() {
         if (!PlayLayer::get() || this->m_hasNoParticles) return nullptr;
-        return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
-    } // createRingParticles
+        return this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+    } // createPadParticles
 
 private:
     void activatedByPlayer(PlayerObject* player) override {
-        RingObject::activatedByPlayer(player);
-        pressCustomRing(player);
+        EffectGameObject::activatedByPlayer(player);
+        touchCustomPad(player);
     } // activatedByPlayer
 };
 
-class CustomRingObjectBase : public CustomRingObject<CustomRingObjectBase> {};
+class CustomPadObjectBase : public CustomPadObject<CustomPadObjectBase> {};

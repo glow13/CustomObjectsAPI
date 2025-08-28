@@ -3,6 +3,7 @@
 #include "object/CustomGameObject.hpp"
 #include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"
+#include "object/CustomPadObject.hpp"
 
 /*
     m_objectType == 0x388
@@ -23,7 +24,7 @@ public:
             particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
             particle->setBlendFunc(kCCBlendFuncDisable);
         } // if
-    } // setupCustomRing
+    } // setupCustomObject
 
     void resetCustomObject() override { m_bouncePower = 1; }
 
@@ -31,7 +32,7 @@ public:
         player->propellPlayer(m_bouncePower * 0.35, true, 12);
         player->animatePlatformerJump(1.0f);
         m_bouncePower += 0.1;
-    } // onJump
+    } // pressCustomRing
 };
 
 class $object(SmileGameObject, CustomTriggerObject) {
@@ -42,16 +43,35 @@ public:
         m_isTouchTriggered = true;
         m_isMultiTriggered = true;
         m_duration = 0;
-    } // setupCustomTrigger
+    } // setupCustomObject
 
     void resetCustomObject() override {
         m_bouncePower = getSavedValue<int>("bounce", 8);
-    } // resetCustomTrigger
+    } // resetCustomObject
 
     void activateCustomTrigger(GJBaseGameLayer* playLayer) override {
         playLayer->m_player1->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
     } // activateCustomTrigger
+};
+
+class $object(TestPad, CustomPadObject) {
+    void setupCustomObject() override {
+        m_parentMode = 0;
+        srand(time(0));
+        if (auto particle = createPadParticles()) {
+            particle->setStartColor(ccColor4F{ 255, 0, 255, 255 });
+            particle->setEndColor(ccColor4F{ 255, 0, 255, 255 });
+        } // if
+
+        if (!PlayLayer::get() || m_hasNoGlow) return;
+        createGlow("bump_03_glow_001.png");
+        setGlowColor(ccColor3B{ 255, 0, 255 });
+    } // setupCustomObject
+
+    void touchCustomPad(PlayerObject* player) override {
+        if (rand() % 50 == 0) GJBaseGameLayer::get()->destroyPlayer(player, this);
+    } // touchCustomPad
 };
 
 $execute {
@@ -78,4 +98,6 @@ $execute {
     mod->registerCustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
     mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png").setSize(60, 60).setObjectType(GameObjectType::Decoration);
     mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).useCustomRender();
+
+    mod->registerCustomObject("bump_03_001.png", TestPad::create).setSize(25, 5).useCustomRender();
 }
