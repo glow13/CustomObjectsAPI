@@ -40,6 +40,11 @@ protected:
         return this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createPadParticles
 
+    void bumpPlayer(PlayerObject* player, float power, GameObjectType type) {
+        player->m_lastPortalPos = this->getPosition();
+        player->bumpPlayer(power, (int)type, this->m_hasNoEffects, this);
+    } // bumpPlayer
+
 private:
     void activatedByPlayer(PlayerObject* player) override {
         EffectGameObject::activatedByPlayer(player);

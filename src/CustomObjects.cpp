@@ -70,6 +70,7 @@ class $object(TestPad, CustomPadObject) {
     } // setupCustomObject
 
     void touchCustomPad(PlayerObject* player) override {
+        bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
         if (rand() % 50 == 0) GJBaseGameLayer::get()->destroyPlayer(player, this);
     } // touchCustomPad
 };
