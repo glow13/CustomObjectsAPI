@@ -33,8 +33,8 @@ private:
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         CustomObjectUtils<ObjectType, EffectGameObject>::customObjectSetup(p0, p1);
         this->setDontDraw(PlayLayer::get());
+        this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
-        this->setupCustomObject();
     } // customObjectSetup
 
     void triggerObject(GJBaseGameLayer* p0, int, gd::vector<int> const*) override {

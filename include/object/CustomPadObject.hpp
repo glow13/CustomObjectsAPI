@@ -13,7 +13,7 @@ public:
 
         this->m_objectID = config.id;
         this->m_parentMode = 10;
-        this->m_objectType = GameObjectType::PinkJumpPad;
+        this->m_objectType = GameObjectType::YellowJumpPad;
 
         this->m_width = 25;
         this->m_height = 5;
@@ -40,12 +40,19 @@ protected:
         return this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createPadParticles
 
-    void bumpPlayer(PlayerObject* player, float power, GameObjectType type) {
+    // Copies the behaviour of a regular pad, with adjustable bump strength
+    void bumpPlayer(PlayerObject* player, float power, GameObjectType effectType = GameObjectType::YellowJumpPad) {
+        player->m_lastActivatedPortal = this;
         player->m_lastPortalPos = this->getPosition();
-        player->bumpPlayer(power, (int)type, this->m_hasNoEffects, this);
+        player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
     } // bumpPlayer
 
 private:
+    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
+        CustomObjectUtils<ObjectType, EffectGameObject>::customObjectSetup(p0, p1);
+        this->m_dontIgnoreDuration = false;
+    } // customObjectSetup
+
     void activatedByPlayer(PlayerObject* player) override {
         EffectGameObject::activatedByPlayer(player);
         touchCustomPad(player);
