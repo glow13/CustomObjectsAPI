@@ -47,7 +47,6 @@ protected:
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         ObjectBase::customObjectSetup(p0, p1);
         loadSavedValuesFromString(p0[500]);
-        this->m_dontIgnoreDuration = false;
         setupCustomObject();
     } // customObjectSetup
 

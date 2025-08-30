@@ -33,7 +33,7 @@ public:
 
 protected:
     virtual void setupCustomObject() override { createRingParticles(); }
-    virtual void pressCustomRing(PlayerObject*) {}
+    virtual void pressCustomRing(PlayerObject* player) {}
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createRingParticles() {

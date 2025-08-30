@@ -12,6 +12,8 @@
     m_hasNoEffects = 0x404
     m_classType = 0x4d0
     m_colorSprite = 0x368
+    m_isTouchTriggered = 0x5b0
+    m_isMultiTriggered = 0x670
 */
 
 class $object(ContainerGameObject, CustomRingObject) {

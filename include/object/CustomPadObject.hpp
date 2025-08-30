@@ -13,12 +13,17 @@ public:
 
         this->m_objectID = config.id;
         this->m_parentMode = 10;
-        this->m_objectType = GameObjectType::YellowJumpPad;
+        this->m_objectType = GameObjectType::Modifier;
 
         this->m_width = 25;
         this->m_height = 5;
         this->m_duration = 0;
         this->m_unk532 = true; // green hitbox
+
+        this->m_isTrigger = false;
+        this->m_isSpawnTriggered = false;
+        this->m_isTouchTriggered = true;
+        this->m_isMultiTriggered = false;
 
         config.applyBoxSize(this);
         config.applyBoxOffset(this);
@@ -32,7 +37,7 @@ public:
 
 protected:
     virtual void setupCustomObject() override { createPadParticles(); }
-    virtual void touchCustomPad(PlayerObject*) {}
+    virtual void touchCustomPad(PlayerObject* player) {}
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createPadParticles() {
@@ -48,15 +53,11 @@ protected:
     } // bumpPlayer
 
 private:
-    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
-        CustomObjectUtils<ObjectType, EffectGameObject>::customObjectSetup(p0, p1);
-        this->m_dontIgnoreDuration = false;
-    } // customObjectSetup
-
-    void activatedByPlayer(PlayerObject* player) override {
-        EffectGameObject::activatedByPlayer(player);
-        touchCustomPad(player);
-    } // activatedByPlayer
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
+        auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
+        level->m_effectManager->removeTriggeredID(this->m_uniqueID, player->m_uniqueID);
+        if (level->canBeActivatedByPlayer(player, this)) touchCustomPad(player);
+    } // triggerObject
 };
 
 class CustomPadObjectBase : public CustomPadObject<CustomPadObjectBase> {};

@@ -105,9 +105,4 @@ public:
             default: return m_fields->m_customBlendingLayerB1;
         } // switch
     } // parentForZLayer
-
-    void bumpPlayer(PlayerObject* p0, EffectGameObject* p1) {
-        if (p1->m_objectID < 10000) GJBaseGameLayer::bumpPlayer(p0, p1);
-        else if (canBeActivatedByPlayer(p0, p1)) p1->activatedByPlayer(p0);
-    } // bumpPlayer
 };
