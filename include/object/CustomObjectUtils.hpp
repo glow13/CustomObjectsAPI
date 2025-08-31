@@ -23,6 +23,21 @@ protected:
     virtual void setupCustomObject() {}
     virtual void resetCustomObject() {}
 
+    bool commonSetup(CustomObjectConfig config) {
+        auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
+        if (!ObjectBase::init(frame.c_str())) return false;
+
+        this->m_objectType = GameObjectType::Decoration;
+        this->m_objectID = config.id;
+        this->m_parentMode = 10;
+
+        if (config.frame.empty()) this->setDontDraw(true);
+        if (!config.detailFrame.empty()) this->addCustomColorChild(config.detailFrame);
+
+        this->autorelease();
+        return true;
+    } // commonSetup
+
     template<typename ValueType>
     ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
         if (!savedValues.contains(key)) return defaultValue;

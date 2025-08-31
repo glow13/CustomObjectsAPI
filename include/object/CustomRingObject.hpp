@@ -9,10 +9,7 @@ template <class ObjectType>
 class CustomRingObject : public CustomObjectUtils<ObjectType, RingObject> {
 public:
     bool init(CustomObjectConfig config) {
-        if (!RingObject::init(config.frame.c_str())) return false;
-
-        this->m_objectID = config.id;
-        this->m_parentMode = 10;
+        if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::CustomRing;
 
         this->m_width = 36;
@@ -26,8 +23,6 @@ public:
         config.applyCustomRender(this);
 
         this->setupCustomObject();
-        this->autorelease();
-
         return true;
     } // init
 

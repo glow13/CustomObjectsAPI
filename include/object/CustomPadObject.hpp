@@ -9,10 +9,7 @@ template <class ObjectType>
 class CustomPadObject : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
     bool init(CustomObjectConfig config) {
-        if (!EffectGameObject::init(config.frame.c_str())) return false;
-
-        this->m_objectID = config.id;
-        this->m_parentMode = 10;
+        if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::Modifier;
 
         this->m_width = 25;
@@ -30,8 +27,6 @@ public:
         config.applyCustomRender(this);
 
         this->setupCustomObject();
-        this->autorelease();
-
         return true;
     } // init
 

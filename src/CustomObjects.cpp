@@ -59,7 +59,6 @@ public:
 
 class $object(TestPad, CustomPadObject) {
     void setupCustomObject() override {
-        m_parentMode = 0;
         srand(time(0));
         if (auto particle = createPadParticles()) {
             particle->setStartColor(ccColor4F{ 255, 0, 255, 255 });
@@ -102,5 +101,5 @@ $execute {
     mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png").setSize(60, 60).setObjectType(GameObjectType::Decoration);
     mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).useCustomRender();
 
-    mod->registerCustomObject("bump_03_001.png", TestPad::create).setSize(25, 5).useCustomRender();
+    mod->registerCustomObject("bump_03_001.png", TestPad::create).setSize(25, 5).useCustomRender(0);
 }
