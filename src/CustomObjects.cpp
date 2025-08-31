@@ -4,6 +4,7 @@
 #include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"
 #include "object/CustomPadObject.hpp"
+#include "object/CustomRotateObject.hpp"
 
 /*
     m_objectType == 0x388
@@ -76,6 +77,20 @@ class $object(TestPad, CustomPadObject) {
     } // touchCustomPad
 };
 
+class $object(SawbladeObject, CustomRotateObject) {
+    void setupCustomObject() override {
+        setDontDraw(true);
+        addCustomChild("blade_02_001.png", CCPoint(0, 0), 0);
+        m_objectRadius = 21.87;
+
+        if (!PlayLayer::get() || m_hasNoGlow) return;
+
+        createGlow("blade_02_glow_001.png");
+        auto glow = addInternalGlowChild("blade_02_glow_001.png", CCPoint(0, 0));
+        m_glowSprite->setDontDraw(true);
+    } // setupCustomObject
+};
+
 $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
@@ -102,4 +117,5 @@ $execute {
     mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).useCustomRender();
 
     mod->registerCustomObject("bump_03_001.png", TestPad::create).setSize(25, 5).useCustomRender(0);
+    mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).setSize(40, 40).setObjectType(GameObjectType::Hazard).useCustomRender(0);
 }
