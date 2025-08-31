@@ -117,5 +117,5 @@ $execute {
     mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).useCustomRender();
 
     mod->registerCustomObject("bump_03_001.png", TestPad::create).setSize(25, 5).useCustomRender(0);
-    mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).setSize(40, 40).setObjectType(GameObjectType::Hazard).useCustomRender(0);
+    mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).setObjectType(GameObjectType::Hazard).useCustomRender(0);
 }
