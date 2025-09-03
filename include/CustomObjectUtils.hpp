@@ -4,8 +4,8 @@
 
 using namespace geode::prelude;
 
-#define OBJECT1(ObjectType) ObjectType : public CustomGameObject<ObjectType>
-#define OBJECT2(ObjectType, ObjectBase) ObjectType : public ObjectBase<ObjectType>
+#define OBJECT1(ObjectType) ObjectType : public CustomGameObjectBase<ObjectType>
+#define OBJECT2(ObjectType, ObjectBase) ObjectType : public ObjectBase ## Base<ObjectType>
 #define $object(...) GEODE_INVOKE(GEODE_CONCAT(OBJECT, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__)
 
 template <class ObjectType, class ObjectBase>

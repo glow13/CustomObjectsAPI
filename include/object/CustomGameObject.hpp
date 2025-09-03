@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomGameObject : public CustomObjectUtils<ObjectType, GameObject> {
+class CustomGameObjectBase : public CustomObjectUtils<ObjectType, GameObject> {
 public:
     bool init(CustomObjectConfig config) {
         if (!this->commonSetup(config)) return false;
@@ -23,4 +23,4 @@ public:
     } // init
 };
 
-class CustomGameObjectBase : public CustomGameObject<CustomGameObjectBase> {};
+class CustomGameObject : public CustomGameObjectBase<CustomGameObject> {};

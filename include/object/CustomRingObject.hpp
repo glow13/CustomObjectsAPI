@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomRingObject : public CustomObjectUtils<ObjectType, RingObject> {
+class CustomRingObjectBase : public CustomObjectUtils<ObjectType, RingObject> {
 public:
     bool init(CustomObjectConfig config) {
         if (!this->commonSetup(config)) return false;
@@ -43,4 +43,4 @@ private:
     } // activatedByPlayer
 };
 
-class CustomRingObjectBase : public CustomRingObject<CustomRingObjectBase> {};
+class CustomRingObject : public CustomRingObjectBase<CustomRingObject> {};

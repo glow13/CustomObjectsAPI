@@ -94,7 +94,7 @@ $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
 
-    mod->registerCustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
+    mod->registerCustomObject("frown-block.png"_spr).boxSize(20, 20).objectType(GameObjectType::Hazard);
     mod->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
     mod->registerCustomObject("container.png"_spr, ContainerGameObject::create);
 
@@ -104,17 +104,17 @@ $execute {
     mod->registerCustomObject("block-4.png"_spr);
     mod->registerCustomObject("block-5.png"_spr);
     mod->registerCustomObject("block-6.png"_spr);
-    mod->registerCustomObject("block-7.png"_spr).setSize(60, 30);
-    mod->registerCustomObject("block-8.png"_spr).setSize(60, 30);
-    mod->registerCustomObject("block-9.png"_spr).setSize(60, 30);
-    mod->registerCustomObject("block-10.png"_spr).setSize(60, 60);
-    mod->registerCustomObject("block-11.png"_spr).setSize(60, 60);
-    mod->registerCustomObject("block-12.png"_spr).setSize(60, 60);
+    mod->registerCustomObject("block-7.png"_spr).spriteSize(60, 30);
+    mod->registerCustomObject("block-8.png"_spr).spriteSize(60, 30);
+    mod->registerCustomObject("block-9.png"_spr).spriteSize(60, 30);
+    mod->registerCustomObject("block-10.png"_spr).spriteSize(60, 60);
+    mod->registerCustomObject("block-11.png"_spr).spriteSize(60, 60);
+    mod->registerCustomObject("block-12.png"_spr).spriteSize(60, 60);
 
-    mod->registerCustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
-    mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png").setSize(60, 60).setObjectType(GameObjectType::Decoration);
-    mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).useCustomRender();
+    mod->registerCustomObject("spike_01_001.png").boxSize(5, 20).objectType(GameObjectType::Hazard);
+    mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png").spriteSize(60, 60).objectType(GameObjectType::Decoration);
+    mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").objectType(GameObjectType::Decoration).customRender();
 
-    mod->registerCustomObject("bump_03_001.png", TestPad::create).setSize(25, 5).useCustomRender(0);
-    mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).setBoxRadius(22).setObjectType(GameObjectType::Hazard).useCustomRender(0);
+    mod->registerCustomObject("bump_03_001.png", TestPad::create).spriteSize(25, 5).customRender(0);
+    mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).boxRadius(22).objectType(GameObjectType::Hazard).customRender(0);
 }

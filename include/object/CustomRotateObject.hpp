@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomRotateObject : public CustomObjectUtils<ObjectType, EnhancedGameObject> {
+class CustomRotateObjectBase : public CustomObjectUtils<ObjectType, EnhancedGameObject> {
 public:
     bool init(CustomObjectConfig config) {
         if (!this->commonSetup(config)) return false;
@@ -27,4 +27,4 @@ public:
     } // init
 };
 
-class CustomRotateObjectBase : public CustomRotateObject<CustomRotateObjectBase> {};
+class CustomRotateObject : public CustomRotateObjectBase<CustomRotateObject> {};

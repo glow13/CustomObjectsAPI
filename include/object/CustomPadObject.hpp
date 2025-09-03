@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomPadObject : public CustomObjectUtils<ObjectType, EffectGameObject> {
+class CustomPadObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
     bool init(CustomObjectConfig config) {
         if (!this->commonSetup(config)) return false;
@@ -55,4 +55,4 @@ private:
     } // triggerObject
 };
 
-class CustomPadObjectBase : public CustomPadObject<CustomPadObjectBase> {};
+class CustomPadObject : public CustomPadObjectBase<CustomPadObject> {};

@@ -22,11 +22,11 @@ struct CustomObjectsMod {
         objectID = transform - (transform % 100);
     } // CustomObjectsMod
 
-    CustomObjectConfig& registerCustomObject(std::string spr, std::string detail, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) {
+    CustomObjectConfig& registerCustomObject(std::string spr, std::string detail, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) {
         int id = objectID + objects.size();
         log::debug("Registered custom object with id {}", id);
         return objects.emplace_back(CustomObjectConfig(spr, detail, modID, id, create));
     } // registerCustomObject
 
-    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObjectBase::create) { return registerCustomObject(spr, "", create); }
+    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, "", create); }
 };
