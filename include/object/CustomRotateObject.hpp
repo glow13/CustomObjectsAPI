@@ -12,13 +12,13 @@ public:
         if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::Decoration;
 
-        this->m_objectRadius = 15;
+        this->m_objectRadius = this->m_width / 2;
         this->m_hasCustomRotation = true;
         this->m_rotationDelta = 360;
         this->m_rotationAngle = 360;
         this->m_unk421 = true; // glow match background
 
-        config.applyBoxOffset(this);
+        config.applyBoxRadius(this);
         config.applyObjectType(this);
         config.applyCustomRender(this);
 

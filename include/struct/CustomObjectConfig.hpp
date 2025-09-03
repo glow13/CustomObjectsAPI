@@ -3,14 +3,6 @@
 
 using namespace geode::prelude;
 
-// Config defaults
-#define BOX_SIZE_DEFAULT CCSize(0, 0)
-#define BOX_OFFSET_DEFAULT CCPoint(0, 0)
-#define SPRITE_SIZE_DEFAULT CCSize(30, 30)
-#define OBJECT_TYPE_DEFAULT (GameObjectType)(-1)
-#define CUSTOM_RENDER_DEFAULT false
-#define PARENT_MODE_DEFAULT 4
-
 struct CustomObjectConfig {
     int id;
     std::string mod;
@@ -20,8 +12,8 @@ struct CustomObjectConfig {
     std::string detailSourceFrame;
     std::function<GameObject*(CustomObjectConfig)> createFunction;
 
-    CustomObjectConfig() : frame(""), sourceFrame(""), detailFrame(""), detailSourceFrame(""), id(0), spriteSize(SPRITE_SIZE_DEFAULT) {}
-    CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : sourceFrame(frame), detailSourceFrame(detail), mod(mod), id(id), spriteSize(SPRITE_SIZE_DEFAULT), createFunction(create) {}
+    CustomObjectConfig() : frame(""), sourceFrame(""), detailFrame(""), detailSourceFrame(""), id(0), spriteSize(CCSize(30, 30)) {}
+    CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : sourceFrame(frame), detailSourceFrame(detail), mod(mod), id(id), spriteSize(CCSize(30, 30)), createFunction(create) {}
 
     void generateFrames() {
         if (customRender) {
@@ -41,9 +33,19 @@ struct CustomObjectConfig {
         } // if
     } // generateFrames
 
+    // Config defaults
+    #define BOX_SIZE_DEFAULT CCSize(0, 0)
+    #define BOX_OFFSET_DEFAULT CCPoint(0, 0)
+    #define BOX_RADIUS_DEFAULT 15
+    #define SPRITE_SIZE_DEFAULT CCSize(30, 30)
+    #define OBJECT_TYPE_DEFAULT (GameObjectType)(-1)
+    #define CUSTOM_RENDER_DEFAULT false
+    #define PARENT_MODE_DEFAULT 4
+
     // Config variables
     CCSize boxSize = BOX_SIZE_DEFAULT;
     CCPoint boxOffset = BOX_OFFSET_DEFAULT;
+    int boxRadius = BOX_RADIUS_DEFAULT;
     CCSize spriteSize = SPRITE_SIZE_DEFAULT;
     GameObjectType objectType = OBJECT_TYPE_DEFAULT;
     bool customRender = CUSTOM_RENDER_DEFAULT;
@@ -52,11 +54,13 @@ struct CustomObjectConfig {
     CustomObjectConfig& setSize(int w, int h) { spriteSize = CCSize(w, h); return *this; }
     CustomObjectConfig& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
     CustomObjectConfig& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
+    CustomObjectConfig& setBoxRadius(int radius) { boxRadius = radius; return *this; }
     CustomObjectConfig& setObjectType(GameObjectType type) { objectType = type; return *this; }
     CustomObjectConfig& useCustomRender(int parent = 4) { customRender = true; frame = sourceFrame; detailFrame = detailSourceFrame; parentMode = parent; return *this; }
 
     void applyBoxSize(GameObject* obj) { if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; } }
-    void applyBoxOffset(GameObject* obj) { if (boxOffset != BOX_OFFSET_DEFAULT) { obj->m_customBoxOffset = boxOffset; } }
+    void applyBoxOffset(GameObject* obj) { if (boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffset; }
+    void applyBoxRadius(GameObject* obj) { if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius; }
     void applyObjectType(GameObject* obj) { if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType; }
     void applyCustomRender(GameObject* obj) { if(customRender != CUSTOM_RENDER_DEFAULT) obj->m_parentMode = parentMode; }
 

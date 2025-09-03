@@ -14,6 +14,7 @@ public:
 
         config.applyBoxSize(this);
         config.applyBoxOffset(this);
+        config.applyBoxRadius(this);
         config.applyObjectType(this);
         config.applyCustomRender(this);
 
