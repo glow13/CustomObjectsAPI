@@ -18,9 +18,7 @@ public:
         this->m_rotationAngle = 360;
         this->m_unk421 = true; // glow match background
 
-        config.applyBoxRadius(this);
-        config.applyObjectType(this);
-        config.applyCustomRender(this);
+        this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
 
         this->setupCustomObject();
         return true;

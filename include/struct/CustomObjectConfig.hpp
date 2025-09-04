@@ -3,6 +3,16 @@
 
 using namespace geode::prelude;
 
+enum Config : int {
+    SPRITE_SIZE,
+    BOX_SIZE,
+    BOX_OFFSET,
+    BOX_RADIUS,
+    OBJECT_TYPE,
+    CUSTOM_RENDER,
+    PARENT_MODE
+};
+
 struct CustomObjectConfig {
     int id;
     std::string mod;
@@ -14,6 +24,8 @@ struct CustomObjectConfig {
 
     CustomObjectConfig() : frame(""), sourceFrame(""), detailFrame(""), detailSourceFrame(""), id(0), spriteSizeConfig(CCSize(30, 30)) {}
     CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : sourceFrame(frame), detailSourceFrame(detail), mod(mod), id(id), spriteSizeConfig(CCSize(30, 30)), createFunction(create) {}
+
+    GameObject* create() { return createFunction(*this); }
 
     void generateFrames() {
         if (customRenderConfig) {
@@ -58,11 +70,35 @@ struct CustomObjectConfig {
     CustomObjectConfig& objectType(GameObjectType type) { objectTypeConfig = type; return *this; }
     CustomObjectConfig& customRender(int parent = 4) { customRenderConfig = true; frame = sourceFrame; detailFrame = detailSourceFrame; parentModeConfig = parent; return *this; }
 
-    void applyBoxSize(GameObject* obj) { if (boxSizeConfig != BOX_SIZE_DEFAULT) { obj->m_width = boxSizeConfig.width; obj->m_height = boxSizeConfig.height; } }
-    void applyBoxOffset(GameObject* obj) { if (boxOffsetConfig != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffsetConfig; }
-    void applyBoxRadius(GameObject* obj) { if (boxRadiusConfig != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadiusConfig; }
-    void applyObjectType(GameObject* obj) { if (objectTypeConfig != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectTypeConfig; }
-    void applyCustomRender(GameObject* obj) { if(customRenderConfig != CUSTOM_RENDER_DEFAULT) obj->m_parentMode = parentModeConfig; }
+    bool applyConfigOption(GameObject* obj, Config option) {
+        switch (option) {
+            case Config::BOX_SIZE:
+            if (boxSizeConfig != BOX_SIZE_DEFAULT) {
+                obj->m_width = boxSizeConfig.width;
+                obj->m_height = boxSizeConfig.height;
+            } return true;
 
-    GameObject* create() { return createFunction(*this); }
+            case Config::BOX_OFFSET:
+            if (boxOffsetConfig != BOX_OFFSET_DEFAULT) {
+                obj->m_customBoxOffset = boxOffsetConfig;
+            } return true;
+
+            case Config::BOX_RADIUS:
+            if (boxRadiusConfig != BOX_RADIUS_DEFAULT) {
+                obj->m_objectRadius = boxRadiusConfig;
+            } return true;
+
+            case Config::OBJECT_TYPE:
+            if (objectTypeConfig != OBJECT_TYPE_DEFAULT) {
+                obj->m_objectType = objectTypeConfig;
+            } return true;
+
+            case Config::CUSTOM_RENDER:
+            if(customRenderConfig != CUSTOM_RENDER_DEFAULT) {
+                obj->m_parentMode = parentModeConfig;
+            } return true;
+
+            default: return false;
+        } // switch
+    } // applyConfigOption
 };

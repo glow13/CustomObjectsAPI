@@ -18,9 +18,7 @@ public:
         this->m_usesAudioScale = true;
         this->m_unk532 = true; // green hitbox
 
-        config.applyBoxSize(this);
-        config.applyBoxOffset(this);
-        config.applyCustomRender(this);
+        this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CUSTOM_RENDER);
 
         this->setupCustomObject();
         return true;

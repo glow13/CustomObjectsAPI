@@ -14,9 +14,7 @@ public:
 
         this->m_isTrigger = true;
 
-        config.applyBoxSize(this);
-        config.applyBoxOffset(this);
-        config.applyCustomRender(this);
+        this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
 
         this->setupCustomObject();
         return true;

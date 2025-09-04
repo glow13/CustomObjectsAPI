@@ -12,11 +12,7 @@ public:
         if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::Solid;
 
-        config.applyBoxSize(this);
-        config.applyBoxOffset(this);
-        config.applyBoxRadius(this);
-        config.applyObjectType(this);
-        config.applyCustomRender(this);
+        this->applyConfig(config, BOX_SIZE, BOX_OFFSET, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
 
         this->setupCustomObject();
         return true;

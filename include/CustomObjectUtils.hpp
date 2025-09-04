@@ -38,6 +38,16 @@ protected:
         return true;
     } // commonSetup
 
+    bool applyConfig(CustomObjectConfig config, std::convertible_to<int> auto... options) {
+        bool success = true;
+
+        (..., [this, &config, &success] (Config option) {
+            if (!config.applyConfigOption(this, option)) success = false;
+        }(options));
+
+        return success;
+    } // applyConfig
+
     template<typename ValueType>
     ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
         if (!savedValues.contains(key)) return defaultValue;

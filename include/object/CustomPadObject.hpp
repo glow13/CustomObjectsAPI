@@ -22,9 +22,7 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        config.applyBoxSize(this);
-        config.applyBoxOffset(this);
-        config.applyCustomRender(this);
+        this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CUSTOM_RENDER);
 
         this->setupCustomObject();
         return true;
