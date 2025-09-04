@@ -19,24 +19,18 @@ public:
     } // init
 
 protected:
-    virtual void activateCustomTrigger(GJBaseGameLayer*) {}
+    virtual void activateCustomTrigger(PlayerObject* player) {}
 
 private:
-    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
-        CustomObjectUtils<ObjectType, EffectGameObject>::customObjectSetup(p0, p1);
+    void customSetup() override {
+        EffectGameObject::customSetup();
         this->setDontDraw(PlayLayer::get());
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
-    } // customObjectSetup
+    } // customSetup
 
-    void firstSetup() override {
-        CustomObjectUtils<ObjectType, EffectGameObject>::firstSetup();
-        this->m_dontIgnoreDuration = true;
-        this->m_isTrigger = true;
-    } // firstSetup
-
-    void triggerObject(GJBaseGameLayer* p0, int, gd::vector<int> const*) override {
-        activateCustomTrigger(p0);
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
+        activateCustomTrigger((level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1);
     } // triggerObject
 };
 

@@ -52,8 +52,8 @@ public:
         m_bouncePower = getSavedValue<int>("bounce", 8);
     } // resetCustomObject
 
-    void activateCustomTrigger(GJBaseGameLayer* playLayer) override {
-        playLayer->m_player1->setYVelocity(m_bouncePower, 1);
+    void activateCustomTrigger(PlayerObject* player) override {
+        player->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
     } // activateCustomTrigger
 };

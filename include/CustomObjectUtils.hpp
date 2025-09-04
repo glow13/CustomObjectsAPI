@@ -69,22 +69,6 @@ protected:
         return oldValue;
     } // setSavedValue
 
-    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
-        ObjectBase::customObjectSetup(p0, p1);
-        loadSavedValuesFromString(p0[500]);
-        setupCustomObject();
-    } // customObjectSetup
-
-    void resetObject() override {
-        ObjectBase::resetObject();
-        resetCustomObject();
-    } // resetObject
-
-    void firstSetup() override {
-        ObjectBase::firstSetup();
-        setupCustomObject();
-    } // firstSetup
-
 private:
     std::map<std::string, std::string> savedValues;
 
@@ -129,4 +113,20 @@ private:
         this->m_shouldBlendBase = this->m_shouldBlendBase && !disableBlend;
         this->m_shouldBlendDetail = this->m_shouldBlendDetail && !disableBlend;
     } // addMainSpriteToParent
+
+    void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
+        ObjectBase::customObjectSetup(p0, p1);
+        loadSavedValuesFromString(p0[500]);
+        setupCustomObject();
+    } // customObjectSetup
+
+    void resetObject() override {
+        ObjectBase::resetObject();
+        resetCustomObject();
+    } // resetObject
+
+    void firstSetup() override {
+        ObjectBase::firstSetup();
+        setupCustomObject();
+    } // firstSetup
 };
