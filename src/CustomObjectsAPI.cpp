@@ -56,7 +56,6 @@ int CustomObjectsManager::getModObjectCount(std::string id) {
 
 void CustomObjectsManager::printModObjectCount() {
     for (auto [mod, objs] : modCustomObjectsCache) log::info("Mod \"{}\" registered {} custom objects", mod, objs.size());
-    for (auto [id, obj] : customObjectsCache) log::info("{} {}", obj.frame, obj.sourceFrame);
 } // printModObjectCount
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig)> operation) const {

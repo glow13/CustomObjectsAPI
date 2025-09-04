@@ -12,12 +12,10 @@ public:
         if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::Modifier;
 
+        this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
 
-        this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
-
-        this->setupCustomObject();
-        return true;
+        return this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
     } // init
 
 protected:
@@ -30,6 +28,12 @@ private:
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
     } // customObjectSetup
+
+    void firstSetup() override {
+        CustomObjectUtils<ObjectType, EffectGameObject>::firstSetup();
+        this->m_dontIgnoreDuration = true;
+        this->m_isTrigger = true;
+    } // firstSetup
 
     void triggerObject(GJBaseGameLayer* p0, int, gd::vector<int> const*) override {
         activateCustomTrigger(p0);

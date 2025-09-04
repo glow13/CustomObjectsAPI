@@ -80,6 +80,11 @@ protected:
         resetCustomObject();
     } // resetObject
 
+    void firstSetup() override {
+        ObjectBase::firstSetup();
+        setupCustomObject();
+    } // firstSetup
+
 private:
     std::map<std::string, std::string> savedValues;
 
