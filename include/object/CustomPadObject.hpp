@@ -37,8 +37,6 @@ protected:
 
     // Copies the behaviour of a regular pad, with adjustable bump strength
     void bumpPlayer(PlayerObject* player, float power, GameObjectType effectType = GameObjectType::YellowJumpPad) {
-        player->m_lastActivatedPortal = this;
-        player->m_lastPortalPos = this->getPosition();
         player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
     } // bumpPlayer
 
@@ -46,7 +44,13 @@ private:
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
         level->m_effectManager->removeTriggeredID(this->m_uniqueID, player->m_uniqueID);
-        if (level->canBeActivatedByPlayer(player, this)) touchCustomPad(player);
+
+        if (level->canBeActivatedByPlayer(player, this)) {
+            player->m_lastActivatedPortal = this;
+            player->m_lastPortalPos = this->getPosition();
+            this->activatedByPlayer(player);
+            touchCustomPad(player);
+        } // if
     } // triggerObject
 };
 

@@ -4,6 +4,7 @@
 #include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"
 #include "object/CustomPadObject.hpp"
+#include "object/CustomPortalObject.hpp"
 #include "object/CustomRotateObject.hpp"
 
 /*
@@ -90,6 +91,36 @@ class $object(SawbladeObject, CustomRotateObject) {
     } // setupCustomObject
 };
 
+class $object(TestPortal, CustomPortalObject) {
+    void setupCustomObject() override {
+        addPortalBackSprite("portal_18_back_001.png", CCPoint(0, 0), 0);
+        srand(time(0));
+
+        m_cameraIsFreeMode = true;
+
+        if (auto particle = createPortalParticles()) {
+            particle->setStartColor(ccColor4F{ 255, 255, 0, 255 });
+            particle->setEndColor(ccColor4F{ 255, 255, 0, 0 });
+        } // if
+    } // setupCustomObject
+
+    void touchCustomPortal(PlayerObject* player) override {
+        GameObjectType type;
+        switch (rand() % 6) {
+            case 0: type = GameObjectType::ShipPortal; break;
+            case 1: type = GameObjectType::CubePortal; break;
+            case 2: type = GameObjectType::BallPortal; break;
+            case 3: type = GameObjectType::UfoPortal; break;
+            case 4: type = GameObjectType::RobotPortal; break;
+            case 5: type = GameObjectType::SpiderPortal; break;
+            default: type = GameObjectType::CubePortal; break;
+        } // switch
+
+        switchPlayerMode(player->m_gameLayer, player, type);
+        playShineEffect(type);
+    } // touchCustomPortal
+};
+
 $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
@@ -117,4 +148,6 @@ $execute {
 
     mod->registerCustomObject("bump_03_001.png", TestPad::create).spriteSize(25, 5).customRender(0);
     mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).boxRadius(22).objectType(GameObjectType::Hazard).customRender(0);
+
+    mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).customRender(1);
 }
