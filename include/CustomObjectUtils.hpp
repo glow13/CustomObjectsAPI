@@ -114,6 +114,12 @@ private:
         this->m_shouldBlendDetail = this->m_shouldBlendDetail && !disableBlend;
     } // addMainSpriteToParent
 
+    void setStartPos(cocos2d::CCPoint p0) override {
+        if (auto editor = LevelEditorLayer::get()) {
+            ObjectBase::setStartPos((editor->m_editorUI) ? p0 + this->m_unk464 : p0);
+        } else ObjectBase::setStartPos(p0);
+    } // setStartPos
+
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         ObjectBase::customObjectSetup(p0, p1);
         loadSavedValuesFromString(p0[500]);

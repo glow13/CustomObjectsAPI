@@ -22,7 +22,7 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CUSTOM_RENDER);
+        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
     } // init
 
 protected:

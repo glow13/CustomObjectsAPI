@@ -18,7 +18,7 @@ public:
         this->m_usesAudioScale = true;
         this->m_unk532 = true; // green hitbox
 
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CUSTOM_RENDER);
+        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
     } // init
 
 protected:

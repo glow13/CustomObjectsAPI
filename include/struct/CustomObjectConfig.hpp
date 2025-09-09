@@ -8,6 +8,7 @@ using namespace geode::prelude;
 #define BOX_OFFSET_DEFAULT CCPoint(0, 0)
 #define BOX_RADIUS_DEFAULT 15
 #define SPRITE_SIZE_DEFAULT CCSize(30, 30)
+#define CREATE_OFFSET_DEFAULT CCPoint(0, 0)
 #define OBJECT_TYPE_DEFAULT (GameObjectType)(-1)
 #define PARENT_MODE_DEFAULT 10
 
@@ -16,6 +17,7 @@ enum Config : int {
     BOX_SIZE,
     BOX_OFFSET,
     BOX_RADIUS,
+    CREATE_OFFSET,
     OBJECT_TYPE,
     CUSTOM_RENDER,
     PARENT_MODE
@@ -58,6 +60,7 @@ struct CustomObjectConfig {
     CCSize boxSizeConfig = BOX_SIZE_DEFAULT;
     CCPoint boxOffsetConfig = BOX_OFFSET_DEFAULT;
     int boxRadiusConfig = BOX_RADIUS_DEFAULT;
+    CCPoint createOffsetConfig = CREATE_OFFSET_DEFAULT;
     GameObjectType objectTypeConfig = OBJECT_TYPE_DEFAULT;
     int parentModeConfig = PARENT_MODE_DEFAULT;
 
@@ -65,6 +68,7 @@ struct CustomObjectConfig {
     CustomObjectConfig& boxSize(int w, int h) { boxSizeConfig = CCSize(w, h); return *this; }
     CustomObjectConfig& boxOffset(int x, int y) { boxOffsetConfig = CCPoint(x, y); return *this; }
     CustomObjectConfig& boxRadius(int radius) { boxRadiusConfig = radius; return *this; }
+    CustomObjectConfig& createOffset(int x, int y) { createOffsetConfig = CCPoint(x, y); return *this; }
     CustomObjectConfig& objectType(GameObjectType type) { objectTypeConfig = type; return *this; }
     CustomObjectConfig& customRender(int parent = 4) { frame = sourceFrame; detailFrame = detailSourceFrame; parentModeConfig = parent; return *this; }
 
@@ -84,6 +88,11 @@ struct CustomObjectConfig {
             case Config::BOX_RADIUS:
             if (boxRadiusConfig != BOX_RADIUS_DEFAULT) {
                 obj->m_objectRadius = boxRadiusConfig;
+            } return true;
+
+            case Config::CREATE_OFFSET:
+            if (createOffsetConfig != CREATE_OFFSET_DEFAULT) {
+                obj->m_unk464 = createOffsetConfig;
             } return true;
 
             case Config::OBJECT_TYPE:

@@ -100,7 +100,7 @@ class $object(TestPortal, CustomPortalObject) {
 
         if (auto particle = createPortalParticles()) {
             particle->setStartColor(ccColor4F{ 255, 255, 0, 255 });
-            particle->setEndColor(ccColor4F{ 255, 255, 0, 0 });
+            particle->setEndColor(ccColor4F{ 255, 255, 0, 255 });
         } // if
     } // setupCustomObject
 
@@ -146,7 +146,7 @@ $execute {
     mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png").spriteSize(60, 60).objectType(GameObjectType::Decoration);
     mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").objectType(GameObjectType::Decoration).customRender();
 
-    mod->registerCustomObject("bump_03_001.png", TestPad::create).spriteSize(25, 5).customRender(0);
+    mod->registerCustomObject("bump_03_001.png", TestPad::create).spriteSize(25, 5).customRender(0).createOffset(0, -13);
     mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).boxRadius(22).objectType(GameObjectType::Hazard).customRender(0);
 
     mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).customRender(1);

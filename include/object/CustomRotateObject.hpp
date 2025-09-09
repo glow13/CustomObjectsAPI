@@ -18,7 +18,7 @@ public:
         this->m_rotationAngle = 360;
         this->m_unk421 = true; // glow match background
 
-        return this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
+        return this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CREATE_OFFSET, CUSTOM_RENDER);
     } // init
 };
 

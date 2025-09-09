@@ -12,7 +12,7 @@ public:
         if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::Solid;
 
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, BOX_RADIUS, OBJECT_TYPE, CUSTOM_RENDER);
+        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, BOX_RADIUS, CREATE_OFFSET, OBJECT_TYPE, CUSTOM_RENDER);
     } // init
 };
 

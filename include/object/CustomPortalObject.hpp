@@ -18,6 +18,7 @@ public:
         this->m_unk532 = true; // green hitbox
         this->m_zFixedZLayer = true;
         this->m_defaultZLayer = ZLayer::T1;
+        this->m_unk31c = CCPoint(-5, 0); // particle offset
 
         this->m_isTrigger = false;
         this->m_isSpawnTriggered = false;
@@ -25,6 +26,7 @@ public:
         this->m_isMultiTriggered = false;
 
         return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CUSTOM_RENDER);
+        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
     } // init
 
 protected:
@@ -115,7 +117,6 @@ private:
 
     void setPosition(cocos2d::CCPoint const& p0) override {
         this->EffectGameObject::setPosition(p0);
-        if (this->m_particle) this->m_particle->setPositionX(this->m_particle->getPositionX() - 5);
         if (this->m_portalBack) this->m_portalBack->setPosition(p0);
     } // setPosition
 
