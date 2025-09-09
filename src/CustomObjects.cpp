@@ -93,9 +93,7 @@ class $object(SawbladeObject, CustomRotateObject) {
 
 class $object(TestPortal, CustomPortalObject) {
     void setupCustomObject() override {
-        addPortalBackSprite("portal_18_back_001.png", CCPoint(0, 0), 0);
         srand(time(0));
-
         m_cameraIsFreeMode = true;
 
         if (auto particle = createPortalParticles()) {
@@ -149,5 +147,5 @@ $execute {
     mod->registerCustomObject("bump_03_001.png", TestPad::create).spriteSize(25, 5).customRender(0).createOffset(0, -13);
     mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).boxRadius(22).objectType(GameObjectType::Hazard).customRender(0);
 
-    mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).customRender(1);
+    mod->registerCustomObject("portal_18_front_001.png", "portal_18_back_001.png", TestPortal::create).customRender(1);
 }

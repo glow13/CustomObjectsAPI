@@ -9,8 +9,12 @@ template <class ObjectType>
 class CustomPortalObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
     bool init(CustomObjectConfig config) {
-        if (!this->commonSetup(config)) return false;
+        auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
+        if (!EffectGameObject::init(frame.c_str())) return false;
+
         this->m_objectType = GameObjectType::Modifier;
+        this->m_objectID = config.id;
+        this->m_parentMode = 10;
 
         this->m_width = 34;
         this->m_height = 86;
@@ -25,7 +29,10 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CUSTOM_RENDER);
+        if (config.frame.empty()) this->setDontDraw(true);
+        if (!config.detailFrame.empty()) this->addPortalBackSprite(config.detailFrame, CCPoint(0, 0), -90);
+
+        this->autorelease();
         return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
     } // init
 
