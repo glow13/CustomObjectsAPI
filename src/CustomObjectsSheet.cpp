@@ -85,10 +85,10 @@ CustomObjectsSheet* CustomObjectsSheet::create(std::map<int, CustomObjectConfig>
 
     // Initialize sprites vector and find side lengths
     for (auto [id, config] : objects) {
-        if (config.parentModeConfig != PARENT_MODE_DEFAULT) continue;
+        if (config.parentMode != PARENT_MODE_DEFAULT) continue;
 
-        auto main = CustomObjectSprite(config.frame, config.sourceFrame, config.spriteSizeConfig, quality);
-        auto detail = CustomObjectSprite(config.detailFrame, config.detailSourceFrame, config.spriteSizeConfig, quality);
+        auto main = CustomObjectSprite(config.frame, config.sourceFrame, config.spriteSize, quality);
+        auto detail = CustomObjectSprite(config.detailFrame, config.detailSourceFrame, config.spriteSize, quality);
 
         // Check if we should add the main sprite
         if (!main.frame.empty() && std::find_if(sprites.begin(), sprites.end(), [main](CustomObjectSprite other) {
