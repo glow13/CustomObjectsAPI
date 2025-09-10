@@ -8,7 +8,7 @@ using namespace geode::prelude;
 template <class ObjectType>
 class CustomPortalObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
-    bool init(CustomObjectConfig config) {
+    bool init(const CustomObjectConfig& config) {
         auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
         if (!EffectGameObject::init(frame.c_str())) return false;
 

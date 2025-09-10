@@ -8,7 +8,7 @@ using namespace geode::prelude;
 template <class ObjectType>
 class CustomRotateObjectBase : public CustomObjectUtils<ObjectType, EnhancedGameObject> {
 public:
-    bool init(CustomObjectConfig config) {
+    bool init(const CustomObjectConfig& config) {
         if (!this->commonSetup(config)) return false;
         this->m_objectType = GameObjectType::Decoration;
 

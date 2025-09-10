@@ -22,7 +22,7 @@ enum Config : int {
 template <class ObjectType, class ObjectBase>
 class CustomObjectUtils : public ObjectBase {
 public:
-    static ObjectType* create(CustomObjectConfig config) {
+    static ObjectType* create(const CustomObjectConfig& config) {
         auto obj = new ObjectType();
         if (obj->init(config)) return obj;
 
@@ -34,7 +34,7 @@ protected:
     virtual void setupCustomObject() {}
     virtual void resetCustomObject() {}
 
-    bool commonSetup(CustomObjectConfig config) {
+    bool commonSetup(const CustomObjectConfig& config) {
         auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
         if (!ObjectBase::init(frame.c_str())) return false;
 
@@ -49,7 +49,7 @@ protected:
         return true;
     } // commonSetup
 
-    bool applyConfig(CustomObjectConfig config, std::convertible_to<int> auto... options) {
+    bool applyConfig(const CustomObjectConfig& config, std::convertible_to<int> auto... options) {
         bool success = true;
         (..., [this, &config, &success] (Config option) {
             switch (option) {
