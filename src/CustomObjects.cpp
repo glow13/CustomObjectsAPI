@@ -117,6 +117,12 @@ class $object(TestPortal, CustomPortalObject) {
     } // touchCustomPortal
 };
 
+class $object(TestCollectible, CustomCollectibleObject) {
+    void touchCustomCollectible(PlayerObject* player) {
+        log::info("COLLECTED ME!!!!!!!");
+    } // touchCustomCollectible
+};
+
 $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
@@ -146,4 +152,5 @@ $execute {
     mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
 
     mod->registerCustomObject("portal_18_front_001.png", "portal_18_back_001.png", TestPortal::create).setCustomRender(1);
+    mod->registerCustomObject("d_key01_001.png", "d_key01_color_001.png", TestCollectible::create).setCustomRender(0);
 }
