@@ -10,8 +10,8 @@ class CustomPadObjectBase : public CustomObjectUtils<ObjectType, EffectGameObjec
 public:
     bool init(const CustomObjectConfig& config) {
         if (!this->commonSetup(config)) return false;
-        this->m_objectType = GameObjectType::Modifier;
 
+        this->m_objectType = GameObjectType::Modifier;
         this->m_width = 25;
         this->m_height = 5;
         this->m_duration = 0;
@@ -22,7 +22,7 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
+        return true;
     } // init
 
 protected:

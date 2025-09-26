@@ -11,11 +11,8 @@ public:
     bool init(const CustomObjectConfig& config) {
         auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
         if (!EffectGameObject::init(frame.c_str())) return false;
-
+        
         this->m_objectType = GameObjectType::Modifier;
-        this->m_objectID = config.id;
-        this->m_parentMode = 10;
-
         this->m_width = 34;
         this->m_height = 86;
         this->m_duration = 0;
@@ -33,7 +30,7 @@ public:
         if (!config.detailFrame.empty()) this->addPortalBackSprite(config.detailFrame, CCPoint(0, 0), -90);
 
         this->autorelease();
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
+        return true;
     } // init
 
 protected:

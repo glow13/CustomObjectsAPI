@@ -10,15 +10,14 @@ class CustomRotateObjectBase : public CustomObjectUtils<ObjectType, EnhancedGame
 public:
     bool init(const CustomObjectConfig& config) {
         if (!this->commonSetup(config)) return false;
-        this->m_objectType = GameObjectType::Decoration;
 
         this->m_objectRadius = this->m_width / 2;
         this->m_hasCustomRotation = true;
         this->m_rotationDelta = 360;
         this->m_rotationAngle = 360;
-        this->m_unk421 = true; // glow match background
+        this->m_customGlowColor = true; // glow color lbg
 
-        return this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CREATE_OFFSET, CUSTOM_RENDER);
+        return true;
     } // init
 };
 

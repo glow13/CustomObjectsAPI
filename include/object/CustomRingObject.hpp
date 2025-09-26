@@ -10,15 +10,15 @@ class CustomRingObjectBase : public CustomObjectUtils<ObjectType, RingObject> {
 public:
     bool init(const CustomObjectConfig& config) {
         if (!this->commonSetup(config)) return false;
+        
         this->m_objectType = GameObjectType::CustomRing;
-
         this->m_width = 36;
         this->m_height = 36;
         this->m_duration = 0;
         this->m_usesAudioScale = true;
         this->m_unk532 = true; // green hitbox
 
-        return this->applyConfig(config, BOX_SIZE, BOX_OFFSET, CREATE_OFFSET, CUSTOM_RENDER);
+        return true;
     } // init
 
 protected:

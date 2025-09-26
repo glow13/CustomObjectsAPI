@@ -10,12 +10,12 @@ class CustomTriggerObjectBase : public CustomObjectUtils<ObjectType, EffectGameO
 public:
     bool init(const CustomObjectConfig& config) {
         if (!this->commonSetup(config)) return false;
-        this->m_objectType = GameObjectType::Modifier;
 
+        this->m_objectType = GameObjectType::Modifier;
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
 
-        return this->applyConfig(config, BOX_RADIUS, OBJECT_TYPE, CREATE_OFFSET, CUSTOM_RENDER);
+        return true;
     } // init
 
 protected:

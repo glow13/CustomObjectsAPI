@@ -45,7 +45,23 @@ public:
     CustomObjectConfig(std::string frame, std::string detail, std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : sourceFrame(frame), detailSourceFrame(detail), mod(mod), id(id), spriteSize(SPRITE_SIZE_DEFAULT), createFunction(create) {}
 
     // Create an instance of the custom game object represented by this config struct
-    GameObject* create() { return createFunction(*this); }
+    GameObject* create() {
+        GameObject* obj = createFunction(*this);
+
+        // Setup custom object values
+        obj->m_parentMode = 10;
+        obj->m_objectID = id;
+
+        // Apply object config
+        if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; }
+        if (boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffset;
+        if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius;
+        if (createOffset != CREATE_OFFSET_DEFAULT) obj->m_unk464 = createOffset;
+        if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType;
+        if (parentMode != PARENT_MODE_DEFAULT) obj->m_parentMode = parentMode;
+
+        return obj;
+    } // create
 
     // Create the custom object frame names based on the mod and sprite size
     void generateFrames() {
