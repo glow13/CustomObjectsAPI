@@ -9,8 +9,18 @@ template <class ObjectType>
 class CustomRotateObjectBase : public CustomObjectUtils<ObjectType, EnhancedGameObject> {
 public:
     bool init(const CustomObjectConfig& config) {
-        if (!this->commonSetup(config)) return false;
+       if (!this->commonSetup(config, false)) return false;
 
+        this->setDontDraw(true);
+        this->addCustomChild(config.frame.c_str(), CCPoint(0, 0), 0);
+
+        if (!config.detailFrame.empty()) {
+            auto detail = this->addCustomColorChild(config.detailFrame);
+            this->addInternalCustomColorChild(config.detailFrame.c_str(), CCPoint(0, 0), 0);
+            detail->setDontDraw(true);
+        } // if
+
+        this->m_objectType = GameObjectType::Decoration;
         this->m_objectRadius = this->m_width / 2;
         this->m_hasCustomRotation = true;
         this->m_rotationDelta = 360;

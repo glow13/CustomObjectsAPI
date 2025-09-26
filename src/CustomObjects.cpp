@@ -81,9 +81,6 @@ class $object(TestPad, CustomPadObject) {
 
 class $object(SawbladeObject, CustomRotateObject) {
     void setupCustomObject() override {
-        setDontDraw(true);
-        addCustomChild("blade_02_001.png", CCPoint(0, 0), 0);
-
         if (!PlayLayer::get() || m_hasNoGlow) return;
 
         createGlow("blade_02_glow_001.png");

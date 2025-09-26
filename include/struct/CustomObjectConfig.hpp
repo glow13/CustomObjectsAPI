@@ -16,11 +16,15 @@ struct CustomObjectConfig {
 public:
     int id;
     std::string mod;
+    std::function<GameObject*(CustomObjectConfig)> createFunction;
+
+    // Sprite frame names
     std::string frame;
     std::string sourceFrame;
     std::string detailFrame;
     std::string detailSourceFrame;
-    std::function<GameObject*(CustomObjectConfig)> createFunction;
+    std::string glowFrame;
+    std::string glowSourceFrame;
 
     // Config variables
     CCSize spriteSize = SPRITE_SIZE_DEFAULT;

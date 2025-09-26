@@ -13,7 +13,10 @@ class CustomObjectUtils : public ObjectBase {
 public:
     static ObjectType* create(const CustomObjectConfig& config) {
         auto obj = new ObjectType();
-        if (obj->init(config)) return obj;
+        if (obj->init(config)) {
+            obj->autorelease();
+            return obj;
+        } // if
 
         delete obj;
         return nullptr;
@@ -23,16 +26,18 @@ protected:
     virtual void setupCustomObject() {}
     virtual void resetCustomObject() {}
 
-    bool commonSetup(const CustomObjectConfig& config) {
-        auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
-        if (!ObjectBase::init(frame.c_str())) return false;
+    bool commonSetup(const CustomObjectConfig& config, bool addSprites = true) {
+        if (!ObjectBase::init(config.frame.c_str())) return false;
 
-        this->m_objectType = GameObjectType::Decoration;
-
+        // Add sprites to custom object
+        if (!addSprites) return true;
         if (config.frame.empty()) this->setDontDraw(true);
         if (!config.detailFrame.empty()) this->addCustomColorChild(config.detailFrame);
 
-        this->autorelease();
+        // Add glow to custom object
+        if (!PlayLayer::get() || this->m_hasNoGlow) return true;
+        if (!config.glowFrame.empty()) this->createGlow(config.glowFrame.c_str());
+
         return true;
     } // commonSetup
 

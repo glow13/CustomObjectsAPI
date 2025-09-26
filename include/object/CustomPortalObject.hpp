@@ -9,8 +9,7 @@ template <class ObjectType>
 class CustomPortalObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
     bool init(const CustomObjectConfig& config) {
-        auto frame = (config.frame.empty()) ? config.detailFrame : config.frame;
-        if (!EffectGameObject::init(frame.c_str())) return false;
+        if (!this->commonSetup(config, false)) return false;
         
         this->m_objectType = GameObjectType::Modifier;
         this->m_width = 34;
@@ -29,7 +28,6 @@ public:
         if (config.frame.empty()) this->setDontDraw(true);
         if (!config.detailFrame.empty()) this->addPortalBackSprite(config.detailFrame, CCPoint(0, 0), -90);
 
-        this->autorelease();
         return true;
     } // init
 
