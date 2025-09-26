@@ -27,7 +27,7 @@ protected:
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createRingParticles() {
-        if (!PlayLayer::get() || this->m_hasNoParticles) return nullptr;
+        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
         return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createRingParticles
 

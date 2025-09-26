@@ -68,7 +68,7 @@ class $object(TestPad, CustomPadObject) {
             particle->setEndColor(ccColor4F{ 255, 0, 255, 255 });
         } // if
 
-        if (!PlayLayer::get() || m_hasNoGlow) return;
+        if (this->m_editorEnabled || m_hasNoGlow) return;
         createGlow("bump_03_glow_001.png");
         setGlowColor(ccColor3B{ 255, 0, 255 });
     } // setupCustomObject
@@ -81,7 +81,7 @@ class $object(TestPad, CustomPadObject) {
 
 class $object(SawbladeObject, CustomRotateObject) {
     void setupCustomObject() override {
-        if (!PlayLayer::get() || m_hasNoGlow) return;
+        if (this->m_editorEnabled || m_hasNoGlow) return;
 
         createGlow("blade_02_glow_001.png");
         auto glow = addInternalGlowChild("blade_02_glow_001.png", CCPoint(0, 0));

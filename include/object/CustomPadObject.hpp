@@ -31,7 +31,7 @@ protected:
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createPadParticles() {
-        if (!PlayLayer::get() || this->m_hasNoParticles) return nullptr;
+        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
         return this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createPadParticles
 

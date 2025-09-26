@@ -46,7 +46,7 @@ protected:
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createPortalParticles() {
-        if (!PlayLayer::get() || this->m_hasNoParticles) return nullptr;
+        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
         return this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createPortalParticles
 

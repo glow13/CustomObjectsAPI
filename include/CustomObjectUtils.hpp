@@ -35,7 +35,7 @@ protected:
         if (!config.detailFrame.empty()) this->addCustomColorChild(config.detailFrame);
 
         // Add glow to custom object
-        if (!PlayLayer::get() || this->m_hasNoGlow) return true;
+        if (this->m_editorEnabled || this->m_hasNoGlow) return true;
         if (!config.glowFrame.empty()) this->createGlow(config.glowFrame.c_str());
 
         return true;
