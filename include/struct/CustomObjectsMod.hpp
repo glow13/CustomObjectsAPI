@@ -10,6 +10,7 @@ struct CustomObjectsMod {
     std::string modID;
 
     int objectID;
+    std::vector<CustomSpriteConfig> sprites;
     std::vector<CustomObjectConfig> objects;
 
     CustomObjectsMod(geode::Mod* mod, char offset) : mod(mod), modID(mod->getID()) {
@@ -22,11 +23,26 @@ struct CustomObjectsMod {
         objectID = transform - (transform % 100);
     } // CustomObjectsMod
 
-    CustomObjectConfig& registerCustomObject(std::string spr, std::string detail, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) {
+    CustomObjectConfig& registerCustomObject(std::string spr, int sprWidth, int sprHeight, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) {
         int id = objectID + objects.size();
         log::debug("Registered custom object with id {}", id);
-        return objects.emplace_back(CustomObjectConfig(spr, detail, modID, id, create));
+
+        auto config = CustomObjectConfig(modID, id, create);
+        config.mainSprite = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
+        return objects.emplace_back(config);
     } // registerCustomObject
 
-    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, "", create); }
+    CustomObjectConfig& registerCustomObject(std::string spr, int sprSize, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, sprSize, sprSize, create); }
+    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, 30, 30, create); }
+
+    CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
+        log::debug("Registered custom sprite \"{}\"", spr);
+
+        auto config = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
+        if (!config.sourceFrame.empty()) config.generateFrame();
+        return sprites.emplace_back(config);
+    } // registerCustomSprite
+
+    CustomSpriteConfig& registerCustomSprite(std::string spr, int sprSize) { return registerCustomSprite(spr, sprSize, sprSize); }
+    CustomSpriteConfig& registerCustomSprite(std::string spr) { return registerCustomSprite(spr, 30, 30); }
 };

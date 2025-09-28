@@ -68,8 +68,6 @@ class $object(TestPad, CustomPadObject) {
             particle->setEndColor(ccColor4F{ 255, 0, 255, 255 });
         } // if
 
-        if (this->m_editorEnabled || m_hasNoGlow) return;
-        createGlow("bump_03_glow_001.png");
         setGlowColor(ccColor3B{ 255, 0, 255 });
     } // setupCustomObject
 
@@ -77,16 +75,6 @@ class $object(TestPad, CustomPadObject) {
         bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
         if (rand() % 50 == 0) GJBaseGameLayer::get()->destroyPlayer(player, this);
     } // touchCustomPad
-};
-
-class $object(SawbladeObject, CustomRotateObject) {
-    void setupCustomObject() override {
-        if (this->m_editorEnabled || m_hasNoGlow) return;
-
-        createGlow("blade_02_glow_001.png");
-        auto glow = addInternalGlowChild("blade_02_glow_001.png", CCPoint(0, 0));
-        m_glowSprite->setDontDraw(true);
-    } // setupCustomObject
 };
 
 class $object(TestPortal, CustomPortalObject) {
@@ -137,20 +125,20 @@ $execute {
     mod->registerCustomObject("block-4.png"_spr);
     mod->registerCustomObject("block-5.png"_spr);
     mod->registerCustomObject("block-6.png"_spr);
-    mod->registerCustomObject("block-7.png"_spr).setSpriteSize(60, 30);
-    mod->registerCustomObject("block-8.png"_spr).setSpriteSize(60, 30);
-    mod->registerCustomObject("block-9.png"_spr).setSpriteSize(60, 30);
-    mod->registerCustomObject("block-10.png"_spr).setSpriteSize(60, 60);
-    mod->registerCustomObject("block-11.png"_spr).setSpriteSize(60, 60);
-    mod->registerCustomObject("block-12.png"_spr).setSpriteSize(60, 60);
+    mod->registerCustomObject("block-7.png"_spr, 60, 30);
+    mod->registerCustomObject("block-8.png"_spr, 60, 30);
+    mod->registerCustomObject("block-9.png"_spr, 60, 30);
+    mod->registerCustomObject("block-10.png"_spr, 60);
+    mod->registerCustomObject("block-11.png"_spr, 60);
+    mod->registerCustomObject("block-12.png"_spr, 60);
 
-    mod->registerCustomObject("spike_01_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
-    mod->registerCustomObject("block005_02_001.png", "block005_02_color_001.png").setSpriteSize(60, 60).setObjectType(GameObjectType::Decoration);
-    mod->registerCustomObject("player_134_001.png", "player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
+    mod->registerCustomObject("spike_01_001.png").setGlowSprite("spike_01_glow_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
+    mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png").setObjectType(GameObjectType::Decoration);
+    mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
 
-    mod->registerCustomObject("bump_03_001.png", TestPad::create).setSpriteSize(25, 5).setCustomRender(0).setCreateOffset(0, -13);
-    mod->registerCustomObject("blade_02_001.png", SawbladeObject::create).setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
+    mod->registerCustomObject("bump_03_001.png", TestPad::create).setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13);
+    mod->registerCustomObject("blade_02_001.png", CustomRotateObject::create).setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
 
-    mod->registerCustomObject("portal_18_front_001.png", "portal_18_back_001.png", TestPortal::create).setCustomRender(1);
-    mod->registerCustomObject("d_key01_001.png", "d_key01_color_001.png", TestCollectible::create).setCustomRender(0);
+    mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).setDetailSprite("portal_18_back_001.png").setCustomRender(1);
+    mod->registerCustomObject("d_key01_001.png", TestCollectible::create).setDetailSprite("d_key01_color_001.png").setCustomRender(0);
 }

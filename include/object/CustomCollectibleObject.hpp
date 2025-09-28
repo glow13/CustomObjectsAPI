@@ -20,8 +20,8 @@ public:
         this->m_duration = 0;
         this->m_unk31c = CCPoint(0, -5); // particle offset
 
-        auto main = this->addCustomChild(config.frame, CCPoint(0, 0), 0);
-        auto detail = this->addCustomColorChild(config.detailFrame);
+        auto main = this->addCustomChild(config.mainSprite, CCPoint(0, 0), 0);
+        auto detail = this->addCustomColorChild(config.detailSprite);
         detail->setPosition(main->getPosition());
         detail->removeFromParent();
         main->addChild(detail);

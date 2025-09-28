@@ -1,6 +1,7 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "struct/CustomSpriteConfig.hpp"
 #include "struct/CustomObjectConfig.hpp"
 #include "struct/CustomObjectsMod.hpp"
 
@@ -18,8 +19,8 @@ private:
 
     std::vector<CustomObjectsMod> registeredMods;
 
+    std::vector<CustomSpriteConfig> customSpritesCache;
     std::map<int, CustomObjectConfig> customObjectsCache;
-    std::map<std::string, std::vector<CustomObjectConfig>> modCustomObjectsCache;
 
 public:
     static CustomObjectsManager* get();
@@ -32,7 +33,6 @@ public:
     Quality getTextureQuality();
 
     int getObjectCount() { return customObjectsCache.size(); }
-    int getModObjectCount(std::string id);
     void printModObjectCount();
 
     CustomObjectConfig getCustomObjectByID(int id) { return customObjectsCache[id]; }

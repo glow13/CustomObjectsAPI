@@ -25,8 +25,8 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        if (config.frame.empty()) this->setDontDraw(true);
-        if (!config.detailFrame.empty()) this->addPortalBackSprite(config.detailFrame, CCPoint(0, 0), -90);
+        if (!config.mainSprite) this->setDontDraw(true);
+        if (config.detailSprite) this->addPortalBackSprite(config.detailSprite, CCPoint(0, 0), -90);
 
         return true;
     } // init

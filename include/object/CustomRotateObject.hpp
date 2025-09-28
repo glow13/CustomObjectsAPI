@@ -12,12 +12,18 @@ public:
        if (!this->commonSetup(config, false)) return false;
 
         this->setDontDraw(true);
-        this->addCustomChild(config.frame.c_str(), CCPoint(0, 0), 0);
+        this->addCustomChild(config.mainSprite, CCPoint(0, 0), 0);
 
-        if (!config.detailFrame.empty()) {
-            auto detail = this->addCustomColorChild(config.detailFrame);
-            this->addInternalCustomColorChild(config.detailFrame.c_str(), CCPoint(0, 0), 0);
+        if (config.detailSprite) {
+            auto detail = this->addCustomColorChild(config.detailSprite);
+            this->addInternalCustomColorChild(config.detailSprite, CCPoint(0, 0), 0);
             detail->setDontDraw(true);
+        } // if
+
+        if (config.glowSprite && !this->m_editorEnabled && !this->m_hasNoGlow) {
+            this->createGlow(config.glowSprite);
+            auto glow = this->addInternalGlowChild(config.glowSprite, CCPoint(0, 0));
+            this->m_glowSprite->setDontDraw(true);
         } // if
 
         this->m_objectType = GameObjectType::Decoration;

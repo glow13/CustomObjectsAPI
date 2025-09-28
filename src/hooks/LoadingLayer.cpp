@@ -24,11 +24,7 @@ class $modify(LoadingLayer) {
             log::info("Cache is outdated, generating the custom object spritesheets...");
 
             auto sheetName = manager->getSpritesheetQualityName();
-            manager->addSpritesheetToCache(sheetName, manager->getTextureQuality());
-
-            std::vector<std::string> objs;
-            manager->forEachCustomObject([&objs](auto obj) { objs.emplace_back(obj.frame); });
-            Mod::get()->setSavedValue<std::vector<std::string>>(sheetName, objs);
+            manager->addSpritesheetToCache(sheetName, manager->getTextureQuality());            
 
         } else if (m_loadStep == 10) {
             auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
@@ -40,7 +36,7 @@ class $modify(LoadingLayer) {
 
             auto toolbox = ObjectToolbox::sharedState();
             manager->forEachCustomObject([this, toolbox](auto obj) {
-                toolbox->m_allKeys.insert(std::pair(obj.id, obj.frame));
+                toolbox->m_allKeys.insert(std::pair(obj.id, obj.mainSprite.frame));
             });
         } // if
     } // loadAssets
