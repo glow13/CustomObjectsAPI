@@ -17,5 +17,4 @@ public:
 
 private:
     static CCSize binPacking(std::vector<CustomObjectSprite> &sprites);
-    std::string sizeString() const { return "{" + fmt::format("{},{}", sheetSize.width, sheetSize.height) + "}"; }
 };

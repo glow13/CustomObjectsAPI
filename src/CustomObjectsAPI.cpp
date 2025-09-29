@@ -22,20 +22,23 @@ void CustomObjectsManager::processRegisteredMods() {
                 obj.mainSprite.frame = obj.mainSprite.sourceFrame;
                 obj.detailSprite.frame = obj.detailSprite.sourceFrame;
                 obj.glowSprite.frame = obj.glowSprite.sourceFrame;
-                continue;
+            } else {
+                obj.mainSprite.generateFrame();
+                obj.detailSprite.generateFrame();
+                obj.glowSprite.generateFrame();
+
+                if (obj.mainSprite) customSpritesCache.emplace_back(obj.mainSprite);
+                if (obj.detailSprite) customSpritesCache.emplace_back(obj.detailSprite);
+                if (obj.glowSprite) customSpritesCache.emplace_back(obj.glowSprite);
             } // if
 
-            obj.mainSprite.generateFrame();
-            obj.detailSprite.generateFrame();
-            obj.glowSprite.generateFrame();
-
-            if (obj.mainSprite) customSpritesCache.emplace_back(obj.mainSprite);
-            if (obj.detailSprite) customSpritesCache.emplace_back(obj.detailSprite);
-            if (obj.glowSprite) customSpritesCache.emplace_back(obj.glowSprite);
+            customObjectsCache[obj.id] = obj;
         } // for
 
-        for (auto obj : mod.objects) customObjectsCache[obj.id] = obj;
-        for (auto spr : mod.sprites) customSpritesCache.emplace_back(spr);
+        for (auto& spr : mod.sprites) {
+            spr.generateFrame();
+            customSpritesCache.emplace_back(spr);
+        } // for
     } // for
 } // processRegisteredMods
 

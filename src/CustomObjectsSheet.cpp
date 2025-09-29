@@ -68,10 +68,12 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
         file << "\t\t\t<key>textureRotated</key>\n\t\t\t"+spr.rotatedString()+"\n\t\t</dict>\n";
     } // for
 
+    auto sizeString = fmt::format("{},{}", sheetSize.width, sheetSize.height);
+
     file << "\t</dict>\n\t<key>metadata</key>\n\t<dict>\n";
     file << "\t\t<key>format</key>\n\t\t<integer>3</integer>\n";
     file << "\t\t<key>realTextureFileName</key>\n\t\t<string>"+name+".png</string>\n";
-    file << "\t\t<key>size</key>\n\t\t<string>"+sizeString()+"</string>\n";
+    file << "\t\t<key>size</key>\n\t\t<string>{"+sizeString+"}</string>\n";
     file << "\t\t<key>textureFileName</key>\n\t\t<string>"+name+".png</string>\n";
     file << "\t</dict>\n</dict>\n</plist>";
 

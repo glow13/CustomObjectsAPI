@@ -37,9 +37,7 @@ struct CustomObjectsMod {
 
     CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
         log::debug("Registered custom sprite \"{}\"", spr);
-
         auto config = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
-        if (!config.sourceFrame.empty()) config.generateFrame();
         return sprites.emplace_back(config);
     } // registerCustomSprite
 
