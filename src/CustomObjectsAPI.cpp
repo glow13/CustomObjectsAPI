@@ -22,6 +22,10 @@ void CustomObjectsManager::processRegisteredMods() {
                 obj.mainSprite.frame = obj.mainSprite.sourceFrame;
                 obj.detailSprite.frame = obj.detailSprite.sourceFrame;
                 obj.glowSprite.frame = obj.glowSprite.sourceFrame;
+
+                obj.mainSprite.custom = false;
+                obj.detailSprite.custom = false;
+                obj.glowSprite.custom = false;
             } else {
                 obj.mainSprite.generateFrame();
                 obj.detailSprite.generateFrame();
@@ -37,7 +41,7 @@ void CustomObjectsManager::processRegisteredMods() {
 
         for (auto& spr : mod.sprites) {
             spr.generateFrame();
-            customSpritesCache.emplace_back(spr);
+            if (spr) customSpritesCache.emplace_back(spr);
         } // for
     } // for
 } // processRegisteredMods

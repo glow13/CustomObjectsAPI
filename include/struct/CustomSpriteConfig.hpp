@@ -10,22 +10,29 @@ using namespace geode::prelude;
 
 struct CustomSpriteConfig {
 public:
-    std::string mod;
     std::string frame;
     std::string sourceFrame;
+    std::string mod;
     CCSize size;
+    bool custom;
 
-    CustomSpriteConfig() {}
-    CustomSpriteConfig(std::string frame, std::string mod, CCSize size) : sourceFrame(frame), mod(mod), size(size) {}
+    CustomSpriteConfig() : frame(""), sourceFrame(""), mod(""), size(CCSize(0, 0)), custom(true) {}
+    CustomSpriteConfig(std::string frame, std::string mod, CCSize size) : sourceFrame(frame), mod(mod), size(size), custom(true) {}
 
     operator std::string() const { return frame; }
     operator const char*() const { return frame.c_str(); }
-    operator bool() const { return !frame.empty(); }
-
-    bool isCustomRender() const { return frame == sourceFrame; }
+    operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
 
     void generateFrame() {
         if (sourceFrame.empty()) return;
+
+        if (size.isZero()) {
+            auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
+            auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
+            if (source) size = source->getOriginalSize();
+            else return;
+        } // if
+
         auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
         frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, frameName);
     } // generateFrame

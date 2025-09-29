@@ -33,7 +33,7 @@ struct CustomObjectsMod {
     } // registerCustomObject
 
     CustomObjectConfig& registerCustomObject(std::string spr, int sprSize, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, sprSize, sprSize, create); }
-    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, 30, 30, create); }
+    CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create = CustomGameObject::create) { return registerCustomObject(spr, 0, 0, create); }
 
     CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
         log::debug("Registered custom sprite \"{}\"", spr);
@@ -42,5 +42,5 @@ struct CustomObjectsMod {
     } // registerCustomSprite
 
     CustomSpriteConfig& registerCustomSprite(std::string spr, int sprSize) { return registerCustomSprite(spr, sprSize, sprSize); }
-    CustomSpriteConfig& registerCustomSprite(std::string spr) { return registerCustomSprite(spr, 30, 30); }
+    CustomSpriteConfig& registerCustomSprite(std::string spr) { return registerCustomSprite(spr, 0, 0); }
 };
