@@ -26,7 +26,7 @@ public:
         this->m_isMultiTriggered = false;
 
         if (!config.mainSprite) this->setDontDraw(true);
-        if (config.detailSprite) this->addPortalBackSprite(config.detailSprite.frame, CCPoint(0, 0), -90);
+        if (config.detailSprite) this->addPortalBackSprite(config.detailSprite, CCPoint(0, 0), -90);
 
         return true;
     } // init
@@ -36,7 +36,7 @@ protected:
     virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {}
 
     // Returns nullptr if in the editor
-    CCSprite* addPortalBackSprite(std::string frame, CCPoint offset, int zOrder) {
+    CCSprite* addPortalBackSprite(gd::string frame, CCPoint offset, int zOrder) {
         if (auto level = PlayLayer::get()) {
             auto parent = static_cast<CCSprite*>(static_cast<CCNode*>(level->m_game2LayerB0));
             this->m_portalBack = this->addInternalChild(parent, frame, offset, zOrder);

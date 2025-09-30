@@ -27,16 +27,16 @@ protected:
     virtual void resetCustomObject() {}
 
     bool commonSetup(const CustomObjectConfig& config, bool addSprites = true) {
-        if (!ObjectBase::init(config.mainSprite.c_str())) return false;
+        if (!ObjectBase::init(config.mainSprite)) return false;
 
         // Add sprites to custom object
         if (!addSprites) return true;
         if (!config.mainSprite) this->setDontDraw(true);
-        if (config.detailSprite) this->addCustomColorChild(config.detailSprite.frame);
+        if (config.detailSprite) this->addCustomColorChild(config.detailSprite);
 
         // Add glow to custom object
         if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config.glowSprite) this->createGlow(config.glowSprite.frame);
+        if (config.glowSprite) this->createGlow(config.glowSprite);
 
         return true;
     } // commonSetup

@@ -19,8 +19,9 @@ public:
     CustomSpriteConfig() : frame(""), sourceFrame(""), mod(""), size(CCSize(0, 0)), custom(true) {}
     CustomSpriteConfig(std::string frame, std::string mod, CCSize size) : sourceFrame(frame), mod(mod), size(size), custom(true) {}
 
+    operator gd::string() const { return frame; }
+    operator const char*() const { return frame.c_str(); }
     operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
-    const char* c_str() const { return frame.c_str(); }
 
     void generateFrame() {
         if (sourceFrame.empty()) return;

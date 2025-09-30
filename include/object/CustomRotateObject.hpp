@@ -12,17 +12,17 @@ public:
        if (!this->commonSetup(config, false)) return false;
 
         this->setDontDraw(true);
-        this->addCustomChild(config.mainSprite.frame, CCPoint(0, 0), 0);
+        this->addCustomChild(config.mainSprite, CCPoint(0, 0), 0);
 
         if (config.detailSprite) {
-            auto detail = this->addCustomColorChild(config.detailSprite.frame);
-            this->addInternalCustomColorChild(config.detailSprite.frame, CCPoint(0, 0), 0);
+            auto detail = this->addCustomColorChild(config.detailSprite);
+            this->addInternalCustomColorChild(config.detailSprite, CCPoint(0, 0), 0);
             detail->setDontDraw(true);
         } // if
 
         if (config.glowSprite && !this->m_editorEnabled && !this->m_hasNoGlow) {
-            this->createGlow(config.glowSprite.frame);
-            auto glow = this->addInternalGlowChild(config.glowSprite.frame, CCPoint(0, 0));
+            this->createGlow(config.glowSprite);
+            auto glow = this->addInternalGlowChild(config.glowSprite, CCPoint(0, 0));
             this->m_glowSprite->setDontDraw(true);
         } // if
 
