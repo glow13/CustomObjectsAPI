@@ -27,16 +27,16 @@ protected:
     virtual void resetCustomObject() {}
 
     bool commonSetup(const CustomObjectConfig& config, bool addSprites = true) {
-        if (!ObjectBase::init(config.mainSprite)) return false;
+        if (!ObjectBase::init(config.mainSprite.c_str())) return false;
 
         // Add sprites to custom object
         if (!addSprites) return true;
         if (!config.mainSprite) this->setDontDraw(true);
-        if (config.detailSprite) this->addCustomColorChild(config.detailSprite);
+        if (config.detailSprite) this->addCustomColorChild(config.detailSprite.frame);
 
         // Add glow to custom object
         if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config.glowSprite) this->createGlow(config.glowSprite);
+        if (config.glowSprite) this->createGlow(config.glowSprite.frame);
 
         return true;
     } // commonSetup
@@ -113,7 +113,8 @@ private:
 
         if (this->m_parentMode == 10 && activated != this->m_isActivated && !this->m_isInvisible && this->m_glowSprite) {
             this->m_glowSprite->removeFromParent();
-            auto parent = this->parentForZLayer((int)this->getObjectZLayer(), true, 10);
+            auto zLayer = (this->m_zLayer != ZLayer::Default) ? this->m_zLayer : this->m_defaultZLayer;
+            auto parent = this->parentForZLayer((int)zLayer, true, 10);
             parent->addChild(this->m_glowSprite, -1000);
         } // if
     } // activateObject

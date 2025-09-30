@@ -26,7 +26,7 @@ public:
         this->m_isMultiTriggered = false;
 
         if (!config.mainSprite) this->setDontDraw(true);
-        if (config.detailSprite) this->addPortalBackSprite(config.detailSprite, CCPoint(0, 0), -90);
+        if (config.detailSprite) this->addPortalBackSprite(config.detailSprite.frame, CCPoint(0, 0), -90);
 
         return true;
     } // init

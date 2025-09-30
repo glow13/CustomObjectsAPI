@@ -79,8 +79,8 @@ bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() {
 
     if (customSpritesCache.size() != cache.size()) return false;
 
-    for (std::string spr : customSpritesCache) {
-        if (std::find(cache.begin(), cache.end(), spr) == cache.end()) return false;
+    for (auto spr : customSpritesCache) {
+        if (std::find(cache.begin(), cache.end(), spr.frame) == cache.end()) return false;
     } // for
 
     return true;
@@ -99,7 +99,7 @@ void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quali
 
     // Save the frames in the sprite cache
     std::vector<std::string> sprites;
-    for (std::string spr : customSpritesCache) sprites.emplace_back(spr);
+    for (auto spr : customSpritesCache) sprites.emplace_back(spr.frame);
     Mod::get()->setSavedValue<std::vector<std::string>>(name, sprites);
 
     if (saved) log::info("Saved spritesheet to \"{}\"", path + name + ".png");
