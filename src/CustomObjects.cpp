@@ -106,7 +106,7 @@ class $object(TestPortal, CustomPortalObject) {
 };
 
 class $object(TestCollectible, CustomCollectibleObject) {
-    void touchCustomCollectible(PlayerObject* player) {
+    void touchCustomCollectible(GJBaseGameLayer* level, PlayerObject* player) override {
         log::info("COLLECTED ME!!!!!!!");
     } // touchCustomCollectible
 };
