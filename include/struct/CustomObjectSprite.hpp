@@ -13,16 +13,14 @@ struct CustomObjectSprite {
     std::string sourceFrame;
     rectpack2D::rect_xywhf rect;
 
-    CustomObjectSprite() : frame(""), sourceFrame(""), rect({0, 0, 30 + SPRITE_BUFFER, 30 + SPRITE_BUFFER, false}) {}
-    CustomObjectSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
-    CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) : frame(frame), sourceFrame(sourceFrame) {
-        this->rect = {0, 0, (int)size.width * quality + SPRITE_BUFFER, (int)size.height * quality + SPRITE_BUFFER, false};
-    } // CustomObjectSprite
+    CustomObjectSprite();
+    CustomObjectSprite(const rectpack2D::rect_xywhf& rect);
+    CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality);
 
-    std::string sizeString() const { return "{" + fmt::format("{},{}", (rect.flipped ? rect.h : rect.w) - SPRITE_BUFFER, (rect.flipped ? rect.w : rect.h) - SPRITE_BUFFER) + "}"; }
-    std::string rectString() const { return "{{" + fmt::format("{},{}", rect.x, rect.y) + "}," + sizeString() + "}"; }
-    std::string rotatedString() const { return rect.flipped ? "<true/>" : "<false/>"; }
+    std::string sizeString() const;
+    std::string rectString() const;
+    std::string rotatedString() const;
 
-    auto& get_rect() { return rect; }
-    const auto& get_rect() const { return rect; }
+    inline auto& get_rect() { return rect; }
+    inline const auto& get_rect() const { return rect; }
 };

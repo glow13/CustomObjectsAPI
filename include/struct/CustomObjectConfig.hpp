@@ -24,19 +24,6 @@ public:
     CustomSpriteConfig detailSprite;
     CustomSpriteConfig glowSprite;
 
-    // Set sprite frames
-    CustomObjectConfig& setMainSprite(std::string frame, int w, int h) { mainSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
-    CustomObjectConfig& setMainSprite(std::string frame, int size) { mainSprite = CustomSpriteConfig(frame, mod, CCSize(size, size)); return *this; }
-    CustomObjectConfig& setMainSprite(std::string frame) { mainSprite = CustomSpriteConfig(frame, mod, mainSprite.size); return *this; }
-
-    CustomObjectConfig& setDetailSprite(std::string frame, int w, int h) { detailSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
-    CustomObjectConfig& setDetailSprite(std::string frame, int size) { detailSprite = CustomSpriteConfig(frame, mod, CCSize(size, size)); return *this; }
-    CustomObjectConfig& setDetailSprite(std::string frame) { detailSprite = CustomSpriteConfig(frame, mod, mainSprite.size); return *this; }
-
-    CustomObjectConfig& setGlowSprite(std::string frame, int w, int h) { glowSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
-    CustomObjectConfig& setGlowSprite(std::string frame, int size) { glowSprite = CustomSpriteConfig(frame, mod, CCSize(size, size)); return *this; }
-    CustomObjectConfig& setGlowSprite(std::string frame) { glowSprite = CustomSpriteConfig(frame, mod, mainSprite.size); return *this; }
-
     // Config variables
     CCSize boxSize = BOX_SIZE_DEFAULT;
     CCPoint boxOffset = BOX_OFFSET_DEFAULT;
@@ -45,36 +32,30 @@ public:
     GameObjectType objectType = OBJECT_TYPE_DEFAULT;
     int parentMode = PARENT_MODE_DEFAULT;
 
-    // Set config options
-    CustomObjectConfig& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
-    CustomObjectConfig& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
-    CustomObjectConfig& setBoxRadius(int radius) { boxRadius = radius; return *this; }
-    CustomObjectConfig& setCreateOffset(int x, int y) { createOffset = CCPoint(x, y); return *this; }
-    CustomObjectConfig& setObjectType(GameObjectType type) { objectType = type; return *this; }
-    CustomObjectConfig& setCustomRender(int parent = 4) { parentMode = parent; return *this; }
-
-    bool isCustomRender() { return parentMode != PARENT_MODE_DEFAULT; }
-
-    // Config constructors
     CustomObjectConfig() {}
-    CustomObjectConfig(std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) : mod(mod), id(id), createFunction(create) {}
+    CustomObjectConfig(std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create);
+
+    CustomObjectConfig& setMainSprite(std::string frame, int w, int h);
+    CustomObjectConfig& setDetailSprite(std::string frame, int w, int h);
+    CustomObjectConfig& setGlowSprite(std::string frame, int w, int h);
+
+    CustomObjectConfig& setBoxSize(int w, int h);
+    CustomObjectConfig& setBoxOffset(int x, int y);
+    CustomObjectConfig& setBoxRadius(int radius);
+    CustomObjectConfig& setCreateOffset(int x, int y);
+    CustomObjectConfig& setObjectType(GameObjectType type);
+    CustomObjectConfig& setCustomRender(int parent = 4);
+
+    // Inline helper functions for sprite frames
+    inline CustomObjectConfig& setMainSprite(std::string frame, int size) { return setMainSprite(frame, size, size); }
+    inline CustomObjectConfig& setMainSprite(std::string frame) { return setMainSprite(frame, 0, 0); }
+    inline CustomObjectConfig& setDetailSprite(std::string frame, int size) { return setDetailSprite(frame, size, size); }
+    inline CustomObjectConfig& setDetailSprite(std::string frame) { return setDetailSprite(frame, 0, 0); }
+    inline CustomObjectConfig& setGlowSprite(std::string frame, int size) { return setGlowSprite(frame, size, size); }
+    inline CustomObjectConfig& setGlowSprite(std::string frame) { return setGlowSprite(frame, 0, 0); }
+
+    inline bool isCustomRender() { return parentMode != PARENT_MODE_DEFAULT; }
 
     // Create an instance of the custom game object represented by this config struct
-    GameObject* create() {
-        GameObject* obj = createFunction(*this);
-
-        // Setup custom object values
-        obj->m_parentMode = 10;
-        obj->m_objectID = id;
-
-        // Apply object config
-        if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; }
-        if (boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffset;
-        if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius;
-        if (createOffset != CREATE_OFFSET_DEFAULT) obj->m_unk464 = createOffset;
-        if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType;
-        if (parentMode != PARENT_MODE_DEFAULT) obj->m_parentMode = parentMode;
-
-        return obj;
-    } // create
+    GameObject* create();
 };

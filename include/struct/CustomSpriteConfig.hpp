@@ -16,21 +16,12 @@ public:
     CCSize size;
     bool custom;
 
-    CustomSpriteConfig() : frame(""), sourceFrame(""), mod(""), size(CCSize(0, 0)), custom(true) {}
-    CustomSpriteConfig(std::string frame, std::string mod, CCSize size) : sourceFrame(frame), mod(mod), size(size), custom(true) {}
+    CustomSpriteConfig();
+    CustomSpriteConfig(std::string frame, std::string mod, CCSize size);
 
-    operator gd::string() const { return frame; }
-    operator const char*() const { return frame.c_str(); }
-    operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
+    inline operator gd::string() const { return frame; }
+    inline operator const char*() const { return frame.c_str(); }
+    inline operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
 
-    void generateFrame() {
-        if (sourceFrame.empty()) return;
-        auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
-        frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, (int)size.width, (int)size.height, frameName);
-
-        if (!size.isZero()) return;
-        auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
-        auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
-        if (source) size = source->getOriginalSize();
-    } // generateFrame
+    void generateFrame();
 };
