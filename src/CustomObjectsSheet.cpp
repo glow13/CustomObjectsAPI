@@ -42,6 +42,13 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     for (int i = 0; i < h; i++) memcpy(&data[i * w * 4], &buffer[(h - i - 1) * w * 4], w * 4);
     delete[] buffer;
 
+    // Reverse premultiply alpha
+    for (long i = 0; i < w * h * 4; i++) {
+        if ((i + 1) % 4 == 0) continue;
+        float a = data[i - (i % 4) + 3] / 255.0f;
+        data[i] = (uint8_t)(data[i] / (a > 0 ? a : 1));
+    } // for
+
     return lodepng::encode((path + name + ".png"), data, w, h) == 0;
 } // saveSpritesheetImage
 

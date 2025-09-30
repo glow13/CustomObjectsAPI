@@ -29,7 +29,7 @@ class $modify(LoadingLayer) {
         } else if (m_loadStep == 10) {
             auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
             auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
-            texture->setAliasTexParameters();
+            // texture->setAliasTexParameters();
 
             auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
             CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);

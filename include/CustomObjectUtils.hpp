@@ -107,6 +107,17 @@ private:
         this->m_shouldBlendDetail = this->m_shouldBlendDetail && !disableBlend;
     } // addMainSpriteToParent
 
+    void activateObject() override {
+        bool activated = this->m_isActivated;
+        ObjectBase::activateObject();
+
+        if (this->m_parentMode == 10 && activated != this->m_isActivated && !this->m_isInvisible && this->m_glowSprite) {
+            this->m_glowSprite->removeFromParent();
+            auto parent = this->parentForZLayer((int)this->getObjectZLayer(), true, 10);
+            parent->addChild(this->m_glowSprite, -1000);
+        } // if
+    } // activateObject
+
     void setStartPos(cocos2d::CCPoint p0) override {
         if (auto editor = LevelEditorLayer::get()) {
             ObjectBase::setStartPos((editor->m_editorUI) ? p0 + this->m_unk464 : p0);
