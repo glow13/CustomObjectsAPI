@@ -1,4 +1,4 @@
-#include "CustomObjectsAPI.hpp"
+#include "CustomObjectsManager.hpp"
 #include "CustomObjectsSheet.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {

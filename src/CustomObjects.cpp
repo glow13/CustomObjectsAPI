@@ -1,4 +1,4 @@
-#include "CustomObjectsAPI.hpp"
+#include "CustomObjectsManager.hpp"
 
 #include "object/CustomGameObject.hpp"
 #include "object/CustomTriggerObject.hpp"

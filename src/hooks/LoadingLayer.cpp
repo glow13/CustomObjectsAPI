@@ -1,7 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/LoadingLayer.hpp>
 
-#include "CustomObjectsAPI.hpp"
+#include "CustomObjectsManager.hpp"
 
 using namespace geode::prelude;
 
