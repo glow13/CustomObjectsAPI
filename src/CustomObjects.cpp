@@ -33,7 +33,7 @@ public:
 
     void resetCustomObject() override { m_bouncePower = 1; }
 
-    void pressCustomRing(PlayerObject* player) override {
+    void pressCustomRing(GJBaseGameLayer* level, PlayerObject* player) override {
         player->propellPlayer(m_bouncePower * 0.35, true, 12);
         player->animatePlatformerJump(1.0f);
         m_bouncePower += 0.1;
@@ -54,7 +54,7 @@ public:
         m_bouncePower = getSavedValue<int>("bounce", 8);
     } // resetCustomObject
 
-    void activateCustomTrigger(PlayerObject* player) override {
+    void activateCustomTrigger(GJBaseGameLayer* level, PlayerObject* player) override {
         player->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
     } // activateCustomTrigger
@@ -71,7 +71,7 @@ class $object(TestPad, CustomPadObject) {
         setGlowColor(ccColor3B{ 255, 0, 255 });
     } // setupCustomObject
 
-    void touchCustomPad(PlayerObject* player) override {
+    void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) override {
         bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
         if (rand() % 50 == 0) GJBaseGameLayer::get()->destroyPlayer(player, this);
     } // touchCustomPad
@@ -88,7 +88,7 @@ class $object(TestPortal, CustomPortalObject) {
         } // if
     } // setupCustomObject
 
-    void touchCustomPortal(PlayerObject* player) override {
+    void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) override {
         GameObjectType type;
         switch (rand() % 6) {
             case 0: type = GameObjectType::ShipPortal; break;
@@ -100,7 +100,7 @@ class $object(TestPortal, CustomPortalObject) {
             default: type = GameObjectType::CubePortal; break;
         } // switch
 
-        switchPlayerMode(player->m_gameLayer, player, type);
+        switchPlayerMode(level, player, type);
         playShineEffect(type);
     } // touchCustomPortal
 };

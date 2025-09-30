@@ -27,7 +27,7 @@ public:
 
 protected:
     virtual void setupCustomObject() override { createPadParticles(); }
-    virtual void touchCustomPad(PlayerObject* player) {}
+    virtual void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) {}
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createPadParticles() {
@@ -49,7 +49,7 @@ private:
             player->m_lastActivatedPortal = this;
             player->m_lastPortalPos = this->getPosition();
             this->activatedByPlayer(player);
-            touchCustomPad(player);
+            touchCustomPad(level, player);
         } // if
     } // triggerObject
 };

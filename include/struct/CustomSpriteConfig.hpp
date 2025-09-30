@@ -34,6 +34,6 @@ public:
         } // if
 
         auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
-        frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, size.width, size.height, frameName);
+        frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, (int)size.width, (int)size.height, frameName);
     } // generateFrame
 };

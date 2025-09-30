@@ -31,13 +31,13 @@ public:
     } // init
 
 protected:
-    virtual void touchCustomCollectible(PlayerObject* player) {}
+    virtual void touchCustomCollectible(GJBaseGameLayer* level, PlayerObject* player) {}
 
 private:
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const* p2) override {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
         this->EffectGameObject::triggerObject(level, playerID, p2);
-        this->touchCustomCollectible(player);
+        this->touchCustomCollectible(level, player);
     } // triggerObject
 };
 

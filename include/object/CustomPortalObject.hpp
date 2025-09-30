@@ -33,7 +33,7 @@ public:
 
 protected:
     virtual void setupCustomObject() override { createPortalParticles(); }
-    virtual void touchCustomPortal(PlayerObject* player) {}
+    virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {}
 
     // Returns nullptr if in the editor
     CCSprite* addPortalBackSprite(std::string frame, CCPoint offset, int zOrder) {
@@ -113,7 +113,7 @@ private:
             player->m_lastActivatedPortal = this;
             player->m_lastPortalPos = this->getPosition();
             this->activatedByPlayer(player);
-            touchCustomPortal(player);
+            touchCustomPortal(level, player);
         } // if
     } // triggerObject
 
