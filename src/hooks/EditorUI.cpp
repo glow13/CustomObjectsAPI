@@ -44,10 +44,10 @@ class $modify(EditorUI) {
         $compare1(m_outerSectionIndex);
         $compare1(m_middleSectionIndex);
         $compare1(m_hasExtendedCollision);
-        $compare2(m_maybeGroupColor);
+        $compare2(m_groupColor);
         $compare1(m_unk280);
         $compare1(m_unk281);
-        $compare1(m_blackChildRelated);
+        $compare1(m_blackChildOpacity);
         $compare1(m_unk288);
         $compare1(m_editorEnabled);
         $compare1(m_isGroupDisabled);
@@ -223,8 +223,8 @@ class $modify(EditorUI) {
         $compare1(m_activateTriggerInEditor);
         $compare1(m_isStartPos);
         $compare1(m_isHighDetail);
-        $compare2(m_unk4E0);
-        $compare2(m_unk4E8);
+        $compare2(m_mainActionSprite);
+        $compare2(m_detailActionSprite);
         $compare2(m_goEffectManager);
         $compare1(m_unk4F8);
         $compare1(m_isDecoration);
@@ -249,8 +249,8 @@ class $modify(EditorUI) {
         $compare1(m_mainColorKeyIndex);
         $compare1(m_detailColorKeyIndex);
         $compare1(m_areaOpacityRelated);
-        $compare1(m_areaOpacityRelated2);
-        $compare1(m_areaOpacityRelated3);
+        $compare1(m_areaOpacityValue);
+        $compare1(m_areaOpacityIndex);
         $compare1(m_unk52C);
         $compare1(m_unk530);
         $compare1(m_isUIObject);
