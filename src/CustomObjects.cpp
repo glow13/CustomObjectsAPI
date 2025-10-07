@@ -144,7 +144,5 @@ $execute {
     mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).setDetailSprite("portal_18_back_001.png").setCustomRender(1);
     mod->registerCustomObject("d_key01_001.png", TestCollectible::create).setDetailSprite("d_key01_color_001.png").setCustomRender(0);
 
-    auto anim = mod->registerCustomObject("cat_001.png"_spr, CustomAnimatedObject::create).setCustomRender();
-
-    GameManager::sharedState()->addGameAnimation(anim.id, 94, 0.03, "cat"_spr, "cat"_spr, 1);
+    mod->registerCustomObject("cat_001.png"_spr, CustomAnimatedObject::create).setFramesCount(94).setFrameTime(0.03).setCustomRender();
 }

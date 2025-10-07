@@ -10,6 +10,8 @@ CustomObjectConfig& CustomObjectConfig::setBoxRadius(int radius) { boxRadius = r
 CustomObjectConfig& CustomObjectConfig::setCreateOffset(int x, int y) { createOffset = CCPoint(x, y); return *this; }
 CustomObjectConfig& CustomObjectConfig::setObjectType(GameObjectType type) { objectType = type; return *this; }
 CustomObjectConfig& CustomObjectConfig::setCustomRender(int parent) { parentMode = parent; return *this; }
+CustomObjectConfig& CustomObjectConfig::setFramesCount(int frames) { framesCount = frames; return *this; }
+CustomObjectConfig& CustomObjectConfig::setFrameTime(float time) { frameTime = time; return *this; }
 
 CustomObjectConfig::CustomObjectConfig(std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create) {
     this->mod = mod;

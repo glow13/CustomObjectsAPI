@@ -12,7 +12,7 @@ public:
         if (!this->commonSetup(config)) return false;
 
         this->m_objectType = GameObjectType::Decoration;
-        this->m_hasCustomAnimation = true;
+        this->m_hasCustomAnimation = config.hasCustomAnimation();
 
         return true;
     } // init

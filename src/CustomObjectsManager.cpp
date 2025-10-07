@@ -36,6 +36,17 @@ void CustomObjectsManager::processRegisteredMods() {
                 if (obj.glowSprite) customSpritesCache.emplace_back(obj.glowSprite);
             } // if
 
+            if (obj.hasCustomAnimation()) {
+                std::string mainAnimSprite = obj.mainSprite;
+                std::string detailAnimSprite = obj.detailSprite ? obj.detailSprite : obj.mainSprite;
+
+                mainAnimSprite = mainAnimSprite.substr(0, mainAnimSprite.find("_001"));
+                detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));
+
+                auto manager = GameManager::sharedState();
+                manager->addGameAnimation(obj.id, obj.framesCount, obj.frameTime, mainAnimSprite, detailAnimSprite, 1);
+            } // if
+
             customObjectsCache[obj.id] = obj;
         } // for
 

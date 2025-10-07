@@ -23,5 +23,6 @@ public:
     inline operator const char*() const { return frame.c_str(); }
     inline operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
 
+    bool isAnimationFrame() const;
     void generateFrame();
 };

@@ -12,6 +12,8 @@ using namespace geode::prelude;
 #define CREATE_OFFSET_DEFAULT CCPoint(0, 0)
 #define OBJECT_TYPE_DEFAULT (GameObjectType)(-1)
 #define PARENT_MODE_DEFAULT 10
+#define FRAMES_COUNT_DEFAULT 0
+#define FRAME_TIME_DEFAULT 1
 
 struct CustomObjectConfig {
 public:
@@ -31,6 +33,8 @@ public:
     CCPoint createOffset = CREATE_OFFSET_DEFAULT;
     GameObjectType objectType = OBJECT_TYPE_DEFAULT;
     int parentMode = PARENT_MODE_DEFAULT;
+    int framesCount = FRAMES_COUNT_DEFAULT;
+    float frameTime = FRAME_TIME_DEFAULT;
 
     CustomObjectConfig() {}
     CustomObjectConfig(std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create);
@@ -45,6 +49,8 @@ public:
     CustomObjectConfig& setCreateOffset(int x, int y);
     CustomObjectConfig& setObjectType(GameObjectType type);
     CustomObjectConfig& setCustomRender(int parent = 4);
+    CustomObjectConfig& setFramesCount(int frames);
+    CustomObjectConfig& setFrameTime(float time);
 
     // Inline helper functions for sprite frames
     inline CustomObjectConfig& setMainSprite(std::string frame, int size) { return setMainSprite(frame, size, size); }
@@ -54,7 +60,8 @@ public:
     inline CustomObjectConfig& setGlowSprite(std::string frame, int size) { return setGlowSprite(frame, size, size); }
     inline CustomObjectConfig& setGlowSprite(std::string frame) { return setGlowSprite(frame, 0, 0); }
 
-    inline bool isCustomRender() { return parentMode != PARENT_MODE_DEFAULT; }
+    inline bool isCustomRender() const { return parentMode != PARENT_MODE_DEFAULT; }
+    inline bool hasCustomAnimation() const { return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame(); }
 
     // Create an instance of the custom game object represented by this config struct
     GameObject* create();
