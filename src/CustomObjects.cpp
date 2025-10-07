@@ -7,6 +7,7 @@
 #include "object/CustomPortalObject.hpp"
 #include "object/CustomRotateObject.hpp"
 #include "object/CustomCollectibleObject.hpp"
+#include "object/CustomAnimatedObject.hpp"
 
 /*
     m_objectType == 0x388
@@ -17,6 +18,7 @@
     m_colorSprite = 0x368
     m_isTouchTriggered = 0x5b0
     m_isMultiTriggered = 0x670
+    m_hasCustomAnimation = 0x55a
 */
 
 class $object(ContainerGameObject, CustomRingObject) {
@@ -141,4 +143,8 @@ $execute {
 
     mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).setDetailSprite("portal_18_back_001.png").setCustomRender(1);
     mod->registerCustomObject("d_key01_001.png", TestCollectible::create).setDetailSprite("d_key01_color_001.png").setCustomRender(0);
+
+    auto anim = mod->registerCustomObject("cat_001.png"_spr, CustomAnimatedObject::create).setCustomRender();
+
+    GameManager::sharedState()->addGameAnimation(anim.id, 94, 0.03, "cat"_spr, "cat"_spr, 1);
 }
