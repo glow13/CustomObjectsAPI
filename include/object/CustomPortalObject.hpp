@@ -15,10 +15,10 @@ public:
         this->m_width = 34;
         this->m_height = 86;
         this->m_duration = 0;
-        this->m_unk532 = true; // green hitbox
+        this->m_greenDebugDraw = true;
         this->m_zFixedZLayer = true;
         this->m_defaultZLayer = ZLayer::T1;
-        this->m_unk31c = CCPoint(-5, 0); // particle offset
+        this->m_particleOffset = CCPoint(-5, 0);
 
         this->m_isTrigger = false;
         this->m_isSpawnTriggered = false;

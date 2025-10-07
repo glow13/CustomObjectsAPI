@@ -16,7 +16,7 @@ public:
         this->m_height = 36;
         this->m_duration = 0;
         this->m_usesAudioScale = true;
-        this->m_unk532 = true; // green hitbox
+        this->m_greenDebugDraw = true;
 
         return true;
     } // init

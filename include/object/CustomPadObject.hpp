@@ -15,7 +15,7 @@ public:
         this->m_width = 25;
         this->m_height = 5;
         this->m_duration = 0;
-        this->m_unk532 = true; // green hitbox
+        this->m_greenDebugDraw = true;
 
         this->m_isTrigger = false;
         this->m_isSpawnTriggered = false;

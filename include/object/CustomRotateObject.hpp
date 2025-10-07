@@ -31,7 +31,7 @@ public:
         this->m_hasCustomRotation = true;
         this->m_rotationDelta = 360;
         this->m_rotationAngle = 360;
-        this->m_customGlowColor = true; // glow color lbg
+        this->m_glowColorIsLBG = true;
 
         return true;
     } // init

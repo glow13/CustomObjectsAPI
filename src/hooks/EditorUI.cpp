@@ -87,7 +87,7 @@ class $modify(EditorUI) {
         $compare1(m_hasParticles);
         $compare1(m_particleUseObjectColor);
         $compare1(m_hasColorSprite);
-        $compare2(m_unk31c);
+        $compare2(m_particleOffset);
         $compare1(m_isSomeSpriteScalable);
         $compare1(m_textureRect);
         $compare1(m_isDirty);
@@ -254,7 +254,7 @@ class $modify(EditorUI) {
         $compare1(m_unk52C);
         $compare1(m_unk530);
         $compare1(m_isUIObject);
-        $compare1(m_unk532);
+        $compare1(m_greenDebugDraw);
 
         $compare1(m_poweredOn);
         $compare1(m_state);
