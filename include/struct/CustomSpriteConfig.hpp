@@ -24,5 +24,7 @@ public:
     inline operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
 
     bool isAnimationFrame() const;
+    CustomSpriteConfig generateAnimationFrame(int i) const;
+
     void generateFrame();
 };

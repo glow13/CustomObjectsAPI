@@ -27,6 +27,15 @@ void CustomObjectsManager::processRegisteredMods() {
                 obj.detailSprite.custom = false;
                 obj.glowSprite.custom = false;
             } else {
+
+                // Register animation frames
+                if (obj.hasCustomAnimation()) {
+                    for (int i = 2; !obj.mainSprite.sourceFrame.empty() && i <= obj.framesCount; i++) 
+                        customSpritesCache.emplace_back(obj.mainSprite.generateAnimationFrame(i));
+                    for (int i = 2; !obj.detailSprite.sourceFrame.empty() && i <= obj.framesCount; i++) 
+                        customSpritesCache.emplace_back(obj.detailSprite.generateAnimationFrame(i));
+                } // if
+
                 obj.mainSprite.generateFrame();
                 obj.detailSprite.generateFrame();
                 obj.glowSprite.generateFrame();
@@ -36,9 +45,10 @@ void CustomObjectsManager::processRegisteredMods() {
                 if (obj.glowSprite) customSpritesCache.emplace_back(obj.glowSprite);
             } // if
 
+            // Setup object animation
             if (obj.hasCustomAnimation()) {
-                std::string mainAnimSprite = obj.mainSprite;
-                std::string detailAnimSprite = obj.detailSprite ? obj.detailSprite : obj.mainSprite;
+                std::string mainAnimSprite = obj.mainSprite.frame;
+                std::string detailAnimSprite = obj.detailSprite ? obj.detailSprite.frame : obj.mainSprite.frame;
 
                 mainAnimSprite = mainAnimSprite.substr(0, mainAnimSprite.find("_001"));
                 detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));

@@ -5,6 +5,17 @@ CustomSpriteConfig::CustomSpriteConfig(std::string frame, std::string mod, CCSiz
 
 bool CustomSpriteConfig::isAnimationFrame() const { return sourceFrame.find("_001") != std::string::npos; }
 
+CustomSpriteConfig CustomSpriteConfig::generateAnimationFrame(int i) const {
+    if (!isAnimationFrame() || i < 1) return *this;
+
+    auto baseFrame = sourceFrame.substr(0, sourceFrame.find("_001"));
+    auto animFrame = fmt::format("{}_{:03d}.png", baseFrame, i);
+
+    auto config = CustomSpriteConfig(animFrame, mod, size);
+    config.generateFrame();
+    return config;
+} // generateAnimationFrame
+
 void CustomSpriteConfig::generateFrame() {
     if (sourceFrame.empty()) return;
     auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
