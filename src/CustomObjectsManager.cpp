@@ -37,8 +37,8 @@ void CustomObjectsManager::processRegisteredMods() {
             } // if
 
             if (obj.hasCustomAnimation()) {
-                std::string mainAnimSprite = obj.mainSprite;
-                std::string detailAnimSprite = obj.detailSprite ? obj.detailSprite : obj.mainSprite;
+                auto mainAnimSprite = obj.mainSprite.frame;
+                auto detailAnimSprite = obj.detailSprite ? obj.detailSprite.frame : obj.mainSprite.frame;
 
                 mainAnimSprite = mainAnimSprite.substr(0, mainAnimSprite.find("_001"));
                 detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));

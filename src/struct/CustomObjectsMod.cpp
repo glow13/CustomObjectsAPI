@@ -25,8 +25,16 @@ CustomObjectConfig& CustomObjectsMod::registerCustomObject(std::string spr, int 
     return registerCustomObject(spr, sprWidth, sprHeight, CustomGameObject::create);
 } // registerCustomObject
 
-CustomSpriteConfig& CustomObjectsMod::registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
+void CustomObjectsMod::registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
     log::debug("Registered custom sprite \"{}\"", spr);
     auto config = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
-    return sprites.emplace_back(config);
+    sprites.emplace_back(config);
 } // registerCustomSprite
+
+void CustomObjectsMod::registerCustomAnimationSprites(std::string spr, int sprWidth, int sprHeight, int frames) {
+    auto baseFrame = spr.substr(0, spr.find("_001"));
+    for (int i = 1; i <= frames; i++) {
+        auto animFrame = fmt::format("{}_{:03d}.png", baseFrame, i);
+        registerCustomSprite(animFrame, sprWidth, sprHeight);
+    } // for
+} // registerCustomAnimation
