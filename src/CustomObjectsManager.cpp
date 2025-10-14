@@ -55,6 +55,13 @@ void CustomObjectsManager::processRegisteredMods() {
             if (spr) customSpritesCache.emplace_back(spr);
         } // for
     } // for
+
+    // Remove duplicate sprites
+    std::unordered_set<std::string> frames;
+    auto it = std::remove_if(customSpritesCache.begin(), customSpritesCache.end(), [&frames](auto spr) {
+        return !frames.insert(spr.frame).second;
+    });
+    customSpritesCache.erase(it, customSpritesCache.end());
 } // processRegisteredMods
 
 std::string CustomObjectsManager::getCacheDirectory() {
@@ -90,8 +97,10 @@ bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() {
 
     if (customSpritesCache.size() != cache.size()) return false;
 
-    for (auto spr : customSpritesCache) {
-        if (std::find(cache.begin(), cache.end(), spr.frame) == cache.end()) return false;
+    for (int i = 0; i < customSpritesCache.size(); i++) {
+        if (customSpritesCache[i].frame == cache[i]) continue;
+        if (std::find(cache.begin(), cache.end(), customSpritesCache[i].frame) != cache.end()) continue;
+        return false;
     } // for
 
     return true;
