@@ -139,7 +139,7 @@ $execute {
     mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
 
     mod->registerCustomObject("bump_03_001.png", TestPad::create).setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13);
-    mod->registerCustomObject("blade_02_001.png", CustomRotateObject::create).setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard);//.setCustomRender(0);
+    mod->registerCustomObject("blade_02_001.png", CustomRotateObject::create).setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
 
     mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).setDetailSprite("portal_18_back_001.png").setCustomRender(1);
     mod->registerCustomObject("d_key01_001.png", TestCollectible::create).setDetailSprite("d_key01_color_001.png").setCustomRender(0);

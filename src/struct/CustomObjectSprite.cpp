@@ -6,24 +6,21 @@ CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFram
     this->frame = frame;
     this->sourceFrame = sourceFrame;
     this->size = size * quality;
-    this->offset = CCPoint(0, 0);
-    this->quality = quality;
 
-    int scaledWidth = (int)size.width * quality + SPRITE_BUFFER;
-    int scaledHeight = (int)size.height * quality + SPRITE_BUFFER;
+    int scaledWidth = (int)size.width * quality;
+    int scaledHeight = (int)size.height * quality;
     this->rect = {0, 0, scaledWidth, scaledHeight, false};
 } // CustomObjectSprite
 
 std::string CustomObjectSprite::offString() const {
-    auto minYFlipped = size.height - (rect.h - SPRITE_BUFFER) - offset.y;
-    int offsetX = (size.width  / 2.0f) - (offset.x + (rect.w - SPRITE_BUFFER)  / 2.0f);
-    int offsetY = (size.height / 2.0f) - (minYFlipped + (rect.h - SPRITE_BUFFER) / 2.0f);
-    return "{" + fmt::format("{},{}", -offsetX, -offsetY) + "}";
+    int offsetX = (offset.x * 2 + rect.w - size.width) * 0.5;
+    int offsetY = (offset.y * 2 + rect.h - size.height) * -0.5;
+    return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
 } // offString
 
 std::string CustomObjectSprite::sizeString() const {
-    int flippedWidth = (rect.flipped ? rect.h : rect.w) - SPRITE_BUFFER;
-    int flippedHeight = (rect.flipped ? rect.w : rect.h) - SPRITE_BUFFER;
+    int flippedWidth = rect.flipped ? rect.h : rect.w;
+    int flippedHeight = rect.flipped ? rect.w : rect.h;
     return "{" + fmt::format("{},{}", flippedWidth, flippedHeight) + "}";
 } // sizeString
 
@@ -40,7 +37,6 @@ std::string CustomObjectSprite::rotatedString() const {
 } // rotatedString
 
 void CustomObjectSprite::calculateTrimRect() {
-    log::info("{}", frame);
     auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
     auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
     if (!source) return;
@@ -48,11 +44,12 @@ void CustomObjectSprite::calculateTrimRect() {
     auto oSprite = CCSprite::createWithSpriteFrame(source);
     auto oSize = source->getOriginalSize();
 
-    auto render = CCRenderTexture::create((int)size.width / quality, (int)size.height / quality);
+    int csf = CCDirector::get()->getContentScaleFactor();
+    auto render = CCRenderTexture::create((int)size.width / csf, (int)size.height / csf);
     render->beginWithClear(1, 1, 1, 0);
     oSprite->setAnchorPoint(CCPoint(0, 0));
-    oSprite->setScaleX(size.width / (float)quality / oSize.width);
-    oSprite->setScaleY(size.height / (float)quality / oSize.height);
+    oSprite->setScaleX(size.width / oSize.width / csf);
+    oSprite->setScaleY(size.height / oSize.height / csf);
     oSprite->visit();
     render->end();
 
@@ -61,8 +58,6 @@ void CustomObjectSprite::calculateTrimRect() {
     auto height = image->getHeight();
     auto data = image->getData();
     image->release();
-
-    log::info("{} {}", width, height);
 
     int maxX = 0;
     int maxY = 0;
@@ -95,7 +90,6 @@ void CustomObjectSprite::calculateTrimRect() {
     } // for
 
     offset = CCPoint(minX, minY);
-    rect.w = maxX - minX + 1 + SPRITE_BUFFER;
-    rect.h = maxY - minY + 1 + SPRITE_BUFFER;
-    log::info("{} {} | {} {}", minX, maxX, minY, maxY);
+    rect.w = maxX - minX + 1;
+    rect.h = maxY - minY + 1;
 } // calculateTrimRect

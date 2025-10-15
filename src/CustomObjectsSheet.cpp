@@ -122,8 +122,13 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
 CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) {
     using namespace rectpack2D;
 
+    // Buffer sprites
     float totalWidth = 0;
-    for (auto spr : sprites) totalWidth += std::max(spr.rect.w, spr.rect.h);
+    for (auto& spr : sprites) {
+        spr.rect.w += SPRITE_BUFFER;
+        spr.rect.h += SPRITE_BUFFER;
+        totalWidth += std::max(spr.rect.w, spr.rect.h);
+    } // for
 
     auto size = find_best_packing<empty_spaces<true>>(sprites, make_finder_input(
         totalWidth, -4,
@@ -131,6 +136,12 @@ CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) 
         [](rect_xywhf&) { return callback_result::ABORT_PACKING; },
         flipping_option::DISABLED
     ));
+
+    // Remove sprite buffer
+    for (auto& spr : sprites) {
+        spr.rect.w -= SPRITE_BUFFER;
+        spr.rect.h -= SPRITE_BUFFER;
+    } // for
 
     return CCSize(std::ceil(size.w / 4), std::ceil(size.h / 4)) * 4;
 } // binPacking

@@ -6,17 +6,13 @@ using namespace geode::prelude;
 
 enum Quality : int;
 
-#define SPRITE_BUFFER 2
-
 struct CustomObjectSprite {
     std::string frame;
     std::string sourceFrame;
-    Quality quality;
+    CCPoint offset;
+    CCSize size;
 
-    CCSize size; // actual size
-    CCPoint offset; // trimmed offset
-
-    rectpack2D::rect_xywhf rect; // trimmed size
+    rectpack2D::rect_xywhf rect;
 
     CustomObjectSprite();
     CustomObjectSprite(const rectpack2D::rect_xywhf& rect);

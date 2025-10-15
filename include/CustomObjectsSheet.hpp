@@ -6,6 +6,8 @@
 
 using namespace geode::prelude;
 
+#define SPRITE_BUFFER 2
+
 class CustomObjectsSheet : public CCNode {
 public:
     std::vector<CustomObjectSprite> spritesCache;
