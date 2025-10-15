@@ -11,14 +11,23 @@ enum Quality : int;
 struct CustomObjectSprite {
     std::string frame;
     std::string sourceFrame;
-    rectpack2D::rect_xywhf rect;
+    Quality quality;
+
+    CCSize size; // actual size
+    CCPoint offset; // trimmed offset
+
+    rectpack2D::rect_xywhf rect; // trimmed size
 
     CustomObjectSprite();
     CustomObjectSprite(const rectpack2D::rect_xywhf& rect);
     CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality);
 
+    void calculateTrimRect();
+
+    std::string offString() const;
     std::string sizeString() const;
     std::string rectString() const;
+    std::string sourceString() const;
     std::string rotatedString() const;
 
     inline auto& get_rect() { return rect; }

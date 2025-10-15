@@ -14,11 +14,11 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
 
     // Add each sprite to the rendered image
     for (auto obj : spritesCache) {
-        auto rotatedWidth = ((obj.rect.flipped ? obj.rect.h : obj.rect.w) - SPRITE_BUFFER) / csf;
-        auto rotatedHeight = ((obj.rect.flipped ? obj.rect.w : obj.rect.h) - SPRITE_BUFFER) / csf;
+        auto rotatedWidth = (obj.rect.flipped ? obj.size.height : obj.size.width) / csf;
+        auto rotatedHeight = (obj.rect.flipped ? obj.size.width : obj.size.height) / csf;
 
         auto spr = CCSprite::createWithSpriteFrameName(obj.sourceFrame.c_str());
-        spr->setPosition(CCPoint(obj.rect.x, sheetSize.height - obj.rect.y) / csf);
+        spr->setPosition(CCPoint(obj.rect.x - obj.offset.x, sheetSize.height - obj.rect.y + obj.offset.y) / csf);
         spr->setAnchorPoint(obj.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
         spr->setScaleX(rotatedWidth / spr->getContentWidth());
         spr->setScaleY(rotatedHeight / spr->getContentHeight());
@@ -68,9 +68,9 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
 
     for (auto spr : spritesCache) {
         file << "\t\t<key>"+spr.frame+"</key>\n\t\t<dict>\n";
-        file << "\t\t\t<key>spriteOffset</key>\n\t\t\t<string>{0,0}</string>\n";
+        file << "\t\t\t<key>spriteOffset</key>\n\t\t\t<string>"+spr.offString()+"</string>\n";
         file << "\t\t\t<key>spriteSize</key>\n\t\t\t<string>"+spr.sizeString()+"</string>\n";
-        file << "\t\t\t<key>spriteSourceSize</key>\n\t\t\t<string>"+spr.sizeString()+"</string>\n";
+        file << "\t\t\t<key>spriteSourceSize</key>\n\t\t\t<string>"+spr.sourceString()+"</string>\n";
         file << "\t\t\t<key>textureRect</key>\n\t\t\t<string>"+spr.rectString()+"</string>\n";
         file << "\t\t\t<key>textureRotated</key>\n\t\t\t"+spr.rotatedString()+"\n\t\t</dict>\n";
     } // for
@@ -89,12 +89,14 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
 } // saveSpritesheetPlist
 
 CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteConfig>& customSprites, Quality quality) {
+    if (customSprites.size() == 0) return nullptr;
     std::vector<CustomObjectSprite> sprites;
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
-    for (const CustomSpriteConfig& sprite : customSprites) {
+    for (const CustomSpriteConfig sprite : customSprites) {
         auto spr = CustomObjectSprite(sprite.frame, sprite.sourceFrame, sprite.size, quality);
+        spr.calculateTrimRect();
 
         sprites.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;
@@ -124,10 +126,10 @@ CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) 
     for (auto spr : sprites) totalWidth += std::max(spr.rect.w, spr.rect.h);
 
     auto size = find_best_packing<empty_spaces<true>>(sprites, make_finder_input(
-        totalWidth / 2, -4,
+        totalWidth, -4,
         [](rect_xywhf&) { return callback_result::CONTINUE_PACKING; },
         [](rect_xywhf&) { return callback_result::ABORT_PACKING; },
-        flipping_option::ENABLED
+        flipping_option::DISABLED
     ));
 
     return CCSize(std::ceil(size.w / 4), std::ceil(size.h / 4)) * 4;
