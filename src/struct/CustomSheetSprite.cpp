@@ -5,54 +5,35 @@ CustomObjectSprite::CustomObjectSprite(const rectpack2D::rect_xywhf& rect) : fra
 CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) {
     this->frame = frame;
     this->sourceFrame = sourceFrame;
-    this->size = size * quality;
 
-    int scaledWidth = (int)size.width * quality;
-    int scaledHeight = (int)size.height * quality;
-    this->rect = {0, 0, scaledWidth, scaledHeight, false};
-} // CustomObjectSprite
-
-std::string CustomObjectSprite::offString() const {
-    int offsetX = (offset.x * 2 + rect.w - size.width) * 0.5;
-    int offsetY = (offset.y * 2 + rect.h - size.height) * -0.5;
-    return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
-} // offString
-
-std::string CustomObjectSprite::sizeString() const {
-    int flippedWidth = rect.flipped ? rect.h : rect.w;
-    int flippedHeight = rect.flipped ? rect.w : rect.h;
-    return "{" + fmt::format("{},{}", flippedWidth, flippedHeight) + "}";
-} // sizeString
-
-std::string CustomObjectSprite::rectString() const {
-    return "{{" + fmt::format("{},{}", rect.x, rect.y) + "}," + sizeString() + "}";
-} // rectString
-
-std::string CustomObjectSprite::sourceString() const {
-    return "{" + fmt::format("{},{}", size.width, size.height) + "}";
-} // sourceString
-
-std::string CustomObjectSprite::rotatedString() const {
-    return rect.flipped ? "<true/>" : "<false/>";
-} // rotatedString
-
-void CustomObjectSprite::calculateTrimRect() {
+    // Find the original sprite frame
     auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
     auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
-    if (!source) return;
+    if (!source) {
+        this->size = {(int)std::ceil(size.width * (int)quality), (int)std::ceil(size.height * (int)quality)};
+        this->trim = {0, 0, this->size.w, this->size.h};
+        this->rect = {0, 0, this->size.w, this->size.h, false};
+        return;
+    } // if
 
+    // Find the original sprite and original size of the sprite
     auto oSprite = CCSprite::createWithSpriteFrame(source);
     auto oSize = source->getOriginalSize();
 
-    int csf = CCDirector::get()->getContentScaleFactor();
-    auto render = CCRenderTexture::create((int)size.width / csf, (int)size.height / csf);
+    // Set the size of the sprite, use the original size if no size was provided
+    if (size.isZero()) this->size = {(int)std::ceil(oSize.width * (int)quality), (int)std::ceil(oSize.height * (int)quality)};
+    else this->size = {(int)std::ceil(size.width * (int)quality), (int)std::ceil(size.height * (int)quality)};
+
+    // Render the sprite at the desired size
+    auto render = CCRenderTexture::create(this->size.w / quality, this->size.h / quality);
     render->beginWithClear(1, 1, 1, 0);
     oSprite->setAnchorPoint(CCPoint(0, 0));
-    oSprite->setScaleX(size.width / oSize.width / csf);
-    oSprite->setScaleY(size.height / oSize.height / csf);
+    oSprite->setScaleX(this->size.w / oSize.width / (int)quality);
+    oSprite->setScaleY(this->size.h / oSize.height / (int)quality);
     oSprite->visit();
     render->end();
 
+    // Get the raw sprite pixel data
     auto image = render->newCCImage();
     auto width = image->getWidth();
     auto height = image->getHeight();
@@ -79,17 +60,41 @@ void CustomObjectSprite::calculateTrimRect() {
 
     // Find left edge
     for (int x = 0, total = 0; x < width && minX == width; x++) {
-        for (int y = minY; y <= maxY && minX == width; y++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
+        for (int y = minY; y <= maxY; y++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
         if (total >= threshold) minX = x;
     } // for
 
     // Find right edge
     for (int x = width - 1, total = 0; x >= minX && maxX == 0; x--) {
-        for (int y = minY; y <= maxY && maxX == 0; y++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
+        for (int y = minY; y <= maxY; y++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
         if (total >= threshold) maxX = x;
     } // for
 
-    offset = CCPoint(minX, minY);
-    rect.w = maxX - minX + 1;
-    rect.h = maxY - minY + 1;
-} // calculateTrimRect
+    // Calculate the sprite trim rect and sprite sheet rect
+    int sprWidth = std::ceil((maxX - minX + 1) / (float)quality) * (int)quality;
+    int sprHeight = std::ceil((maxY - minY + 1) / (float)quality) * (int)quality;
+    this->trim = {minX, minY, sprWidth, sprHeight};
+    this->rect = {0, 0, sprWidth, sprHeight, false};
+} // CustomObjectSprite
+
+std::string CustomObjectSprite::offString() const {
+    int offsetX = (trim.x + trim.w / 2) - (size.w / 2);
+    int offsetY = (size.h / 2) - (trim.y + trim.h / 2);
+    return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
+} // offString
+
+std::string CustomObjectSprite::sizeString() const {
+    return "{" + fmt::format("{},{}", rect.w, rect.h) + "}";
+} // sizeString
+
+std::string CustomObjectSprite::rectString() const {
+    return "{{" + fmt::format("{},{}", rect.x, rect.y) + "}," + sizeString() + "}";
+} // rectString
+
+std::string CustomObjectSprite::sourceString() const {
+    return "{" + fmt::format("{},{}", size.w, size.h) + "}";
+} // sourceString
+
+std::string CustomObjectSprite::rotatedString() const {
+    return rect.flipped ? "<true/>" : "<false/>";
+} // rotatedString

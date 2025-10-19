@@ -9,9 +9,4 @@ void CustomSpriteConfig::generateFrame() {
     if (sourceFrame.empty()) return;
     auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
     frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, (int)size.width, (int)size.height, frameName);
-
-    if (!size.isZero()) return;
-    auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
-    auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
-    if (source) size = source->getOriginalSize();
 } // generateFrame

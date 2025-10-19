@@ -8,15 +8,18 @@ using namespace geode::prelude;
 
 #define SPRITE_BUFFER 2
 
+enum Quality : int;
+
 class CustomObjectsSheet : public CCNode {
 public:
     std::vector<CustomObjectSprite> spritesCache;
-    CCSize sheetSize;
+    rectpack2D::rect_wh sheetSize;
+    Quality quality;
 
     bool saveSpritesheetImage(std::string name, std::string path) const;
     bool saveSpritesheetPlist(std::string name, std::string path) const;
     static CustomObjectsSheet* create(const std::vector<CustomSpriteConfig>& customSprites, Quality quality);
 
 private:
-    static CCSize binPacking(std::vector<CustomObjectSprite> &sprites);
+    static rectpack2D::rect_wh binPacking(std::vector<CustomObjectSprite> &sprites);
 };

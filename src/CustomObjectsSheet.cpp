@@ -8,21 +8,25 @@
 #include <lodepng.h>
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
-    int csf = CCDirector::get()->getContentScaleFactor();
-    auto render = CCRenderTexture::create(sheetSize.width / csf, sheetSize.height / csf);
+    auto render = CCRenderTexture::create(sheetSize.w / quality, sheetSize.h / quality);
     render->begin();
 
-    // Add each sprite to the rendered image
-    for (auto obj : spritesCache) {
-        auto rotatedWidth = (obj.rect.flipped ? obj.size.height : obj.size.width) / csf;
-        auto rotatedHeight = (obj.rect.flipped ? obj.size.width : obj.size.height) / csf;
+    // Add each sprite to the sheet
+    for (auto sprite : spritesCache) {
+        // auto back = CCSprite::createWithSpriteFrameName("d_square_01_001.png");
+        // back->setPosition(CCPoint(sprite.rect.x, sheetSize.h - sprite.rect.y) / quality);
+        // back->setScaleX(sprite.rect.w / (back->getContentWidth() * (int)quality));
+        // back->setScaleY(sprite.rect.h / (back->getContentHeight() * (int)quality));
+        // back->setAnchorPoint(CCPoint(0, 1));
+        // back->setOpacity(50);
+        // back->visit();
 
-        auto spr = CCSprite::createWithSpriteFrameName(obj.sourceFrame.c_str());
-        spr->setPosition(CCPoint(obj.rect.x - obj.offset.x, sheetSize.height - obj.rect.y + obj.offset.y) / csf);
-        spr->setAnchorPoint(obj.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
-        spr->setScaleX(rotatedWidth / spr->getContentWidth());
-        spr->setScaleY(rotatedHeight / spr->getContentHeight());
-        spr->setRotation(obj.rect.flipped ? 90 : 0);
+        auto spr = CCSprite::createWithSpriteFrameName(sprite.sourceFrame.c_str());
+        spr->setPosition(CCPoint(sprite.rect.x - sprite.trim.x, sheetSize.h - sprite.rect.y + sprite.trim.y) / quality);
+        spr->setAnchorPoint(sprite.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
+        spr->setScaleX(sprite.size.w / (spr->getContentWidth() * (int)quality));
+        spr->setScaleY(sprite.size.h / (spr->getContentHeight() * (int)quality));
+        spr->setRotation(sprite.rect.flipped ? 90 : 0);
         spr->visit();
     } // for
 
@@ -75,7 +79,7 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
         file << "\t\t\t<key>textureRotated</key>\n\t\t\t"+spr.rotatedString()+"\n\t\t</dict>\n";
     } // for
 
-    auto sizeString = fmt::format("{},{}", sheetSize.width, sheetSize.height);
+    auto sizeString = fmt::format("{},{}", sheetSize.w, sheetSize.h);
 
     file << "\t</dict>\n\t<key>metadata</key>\n\t<dict>\n";
     file << "\t\t<key>format</key>\n\t\t<integer>3</integer>\n";
@@ -96,7 +100,6 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
     // Initialize sprites vector and find side lengths
     for (const CustomSpriteConfig sprite : customSprites) {
         auto spr = CustomObjectSprite(sprite.frame, sprite.sourceFrame, sprite.size, quality);
-        spr.calculateTrimRect();
 
         sprites.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;
@@ -104,22 +107,25 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
 
     // Run the bin packing algorithm
     auto size = CustomObjectsSheet::binPacking(sprites);
+    size.w = std::ceil(size.w / quality) * (int)quality;
+    size.h = std::ceil(size.h / quality) * (int)quality;
 
     // Create the spritesheet object
     auto sheet = new CustomObjectsSheet();
     sheet->spritesCache = sprites;
     sheet->sheetSize = size;
+    sheet->quality = quality;
     sheet->autorelease();
 
     // Calculate total coverage
-    float coverage = std::min(totalArea / (size.width * size.height) * 100, 100.0f);
-    log::debug("Generated the spritesheet with dimensions ({} x {}) and {}% total coverage", size.width, size.height, coverage);
+    float coverage = std::min(totalArea / (size.w * size.h) * 100, 100.0f);
+    log::debug("Generated the spritesheet with dimensions ({} x {}) and {}% total coverage", size.w, size.h, coverage);
 
     // Return the final spritesheet object
     return sheet;
 } // create
 
-CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) {
+rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) {
     using namespace rectpack2D;
 
     // Buffer sprites
@@ -143,5 +149,5 @@ CCSize CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) 
         spr.rect.h -= SPRITE_BUFFER;
     } // for
 
-    return CCSize(std::ceil(size.w / 4), std::ceil(size.h / 4)) * 4;
+    return {size.w - SPRITE_BUFFER, size.h - SPRITE_BUFFER};
 } // binPacking

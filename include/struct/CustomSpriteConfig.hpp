@@ -21,7 +21,7 @@ public:
 
     inline operator gd::string() const { return frame; }
     inline operator const char*() const { return frame.c_str(); }
-    inline operator bool() const { return !frame.empty() && (!custom || !size.isZero()); }
+    inline operator bool() const { return !frame.empty(); }
 
     bool isAnimationFrame() const;
     void generateFrame();

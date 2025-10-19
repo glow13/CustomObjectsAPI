@@ -9,16 +9,14 @@ enum Quality : int;
 struct CustomObjectSprite {
     std::string frame;
     std::string sourceFrame;
-    CCPoint offset;
-    CCSize size;
 
-    rectpack2D::rect_xywhf rect;
+    rectpack2D::rect_wh size; // desired final size of the sprite in the spritesheet
+    rectpack2D::rect_xywh trim; // rect that designates the size of the not transparent content in the scaled sprite
+    rectpack2D::rect_xywhf rect; // rect that designates the size and position of this sprite in the spritesheet
 
     CustomObjectSprite();
     CustomObjectSprite(const rectpack2D::rect_xywhf& rect);
     CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality);
-
-    void calculateTrimRect();
 
     std::string offString() const;
     std::string sizeString() const;
