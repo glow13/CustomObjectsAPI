@@ -1,4 +1,4 @@
-#include "struct/CustomObjectSprite.hpp"
+#include "struct/CustomSheetSprite.hpp"
 
 CustomObjectSprite::CustomObjectSprite() : frame(""), sourceFrame(""), rect({0, 0, 0, 0, false}) {}
 CustomObjectSprite::CustomObjectSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}

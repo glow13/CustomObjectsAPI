@@ -2,7 +2,7 @@
 #include <Geode/Geode.hpp>
 
 #include "struct/CustomObjectConfig.hpp"
-#include "struct/CustomObjectSprite.hpp"
+#include "struct/CustomSheetSprite.hpp"
 
 using namespace geode::prelude;
 
