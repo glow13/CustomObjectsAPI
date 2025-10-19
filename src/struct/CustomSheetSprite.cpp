@@ -84,7 +84,9 @@ std::string CustomObjectSprite::offString() const {
 } // offString
 
 std::string CustomObjectSprite::sizeString() const {
-    return "{" + fmt::format("{},{}", rect.w, rect.h) + "}";
+    int width = rect.flipped ? rect.h : rect.w;
+    int height = rect.flipped ? rect.w : rect.h;
+    return "{" + fmt::format("{},{}", width, height) + "}";
 } // sizeString
 
 std::string CustomObjectSprite::rectString() const {

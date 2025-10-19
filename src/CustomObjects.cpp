@@ -146,6 +146,4 @@ $execute {
 
     mod->registerCustomObject("cat_001.png"_spr, CustomAnimatedObject::create).setFramesCount(94).setFrameTime(0.03);
     mod->registerCustomAnimationSprites("cat_001.png"_spr, 94);
-
-    mod->registerCustomObject("cat_001.png"_spr, CustomAnimatedObject::create).setFramesCount(94).setFrameTime(0.03).setCustomRender();
 }

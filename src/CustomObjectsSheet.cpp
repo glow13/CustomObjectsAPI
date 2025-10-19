@@ -12,22 +12,17 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     render->begin();
 
     // Add each sprite to the sheet
-    for (auto sprite : spritesCache) {
-        // auto back = CCSprite::createWithSpriteFrameName("d_square_01_001.png");
-        // back->setPosition(CCPoint(sprite.rect.x, sheetSize.h - sprite.rect.y) / quality);
-        // back->setScaleX(sprite.rect.w / (back->getContentWidth() * (int)quality));
-        // back->setScaleY(sprite.rect.h / (back->getContentHeight() * (int)quality));
-        // back->setAnchorPoint(CCPoint(0, 1));
-        // back->setOpacity(50);
-        // back->visit();
+    for (auto spr : spritesCache) {
+        int offsetX = spr.rect.flipped ? spr.size.h - spr.trim.h - spr.trim.y : spr.trim.x;
+        int offsetY = spr.rect.flipped ? spr.trim.x : spr.trim.y;
 
-        auto spr = CCSprite::createWithSpriteFrameName(sprite.sourceFrame.c_str());
-        spr->setPosition(CCPoint(sprite.rect.x - sprite.trim.x, sheetSize.h - sprite.rect.y + sprite.trim.y) / quality);
-        spr->setAnchorPoint(sprite.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
-        spr->setScaleX(sprite.size.w / (spr->getContentWidth() * (int)quality));
-        spr->setScaleY(sprite.size.h / (spr->getContentHeight() * (int)quality));
-        spr->setRotation(sprite.rect.flipped ? 90 : 0);
-        spr->visit();
+        auto sprite = CCSprite::createWithSpriteFrameName(spr.sourceFrame.c_str());
+        sprite->setPosition(CCPoint(spr.rect.x - offsetX, sheetSize.h - spr.rect.y + offsetY) / quality);
+        sprite->setAnchorPoint(spr.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
+        sprite->setScaleX(spr.size.w / (sprite->getContentWidth() * (int)quality));
+        sprite->setScaleY(spr.size.h / (sprite->getContentHeight() * (int)quality));
+        sprite->setRotation(spr.rect.flipped ? 90 : 0);
+        sprite->visit();
     } // for
 
     // Save the rendered image pixel data
@@ -140,7 +135,7 @@ rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomObjectSprit
         totalWidth, -4,
         [](rect_xywhf&) { return callback_result::CONTINUE_PACKING; },
         [](rect_xywhf&) { return callback_result::ABORT_PACKING; },
-        flipping_option::DISABLED
+        flipping_option::ENABLED
     ));
 
     // Remove sprite buffer
