@@ -102,8 +102,8 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
 
     // Run the bin packing algorithm
     auto size = CustomObjectsSheet::binPacking(sprites);
-    size.w = std::ceil(size.w / quality) * (int)quality;
-    size.h = std::ceil(size.h / quality) * (int)quality;
+    size.w = std::ceil(size.w / (float)quality) * (int)quality;
+    size.h = std::ceil(size.h / (float)quality) * (int)quality;
 
     // Create the spritesheet object
     auto sheet = new CustomObjectsSheet();

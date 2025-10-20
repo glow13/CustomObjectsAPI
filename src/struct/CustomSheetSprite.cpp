@@ -38,7 +38,6 @@ CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFram
     auto width = image->getWidth();
     auto height = image->getHeight();
     auto data = image->getData();
-    image->release();
 
     int maxX = 0;
     int maxY = 0;
@@ -75,6 +74,11 @@ CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFram
     int sprHeight = std::ceil((maxY - minY + 1) / (float)quality) * (int)quality;
     this->trim = {minX, minY, sprWidth, sprHeight};
     this->rect = {0, 0, sprWidth, sprHeight, false};
+
+    // Clean up
+    oSprite->release();
+    render->release();
+    image->release();
 } // CustomObjectSprite
 
 std::string CustomObjectSprite::offString() const {
