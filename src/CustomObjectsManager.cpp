@@ -85,7 +85,9 @@ Quality CustomObjectsManager::getTextureQuality() {
 } // getTextureQuality
 
 void CustomObjectsManager::printModObjectCount() {
-    for (auto mod : registeredMods) log::info("Mod \"{}\" registered {} custom objects", mod.modID, mod.objects.size());
+    int modCount = registeredMods.size();
+    int objectCount = customObjectsCache.size();
+    log::info("A total of {} mods registered {} total custom objects", modCount, objectCount);
 } // printModObjectCount
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig)> operation) const {

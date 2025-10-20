@@ -44,7 +44,7 @@ CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFram
     int maxY = 0;
     int minX = width;
     int minY = height;
-    int threshold = 5;
+    int threshold = 4;
 
     // Find top edge
     for (int y = 0, total = 0; y < height && minY == height; y++) {
