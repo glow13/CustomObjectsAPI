@@ -1,7 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
-#include "CustomObjectsManager.hpp"
+#include "CustomSpritesManager.hpp"
 
 using namespace geode::prelude;
 
@@ -42,7 +42,7 @@ public:
     void setupLayers() {
         GJBaseGameLayer::setupLayers();
 
-        auto manager = CustomObjectsManager::get();
+        auto manager = CustomSpritesManager::get();
         auto path = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
         auto spr = CCTextureCache::sharedTextureCache()->addImage(path.c_str(), false);
 

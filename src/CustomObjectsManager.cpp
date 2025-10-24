@@ -1,5 +1,5 @@
 #include "CustomObjectsManager.hpp"
-#include "CustomObjectsSheet.hpp"
+#include "CustomSpritesManager.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();
@@ -13,7 +13,7 @@ CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod
 } // registerCustomObjectsMod
 
 void CustomObjectsManager::processRegisteredMods() {
-    customSpritesCache.clear();
+    auto spriteManager = CustomSpritesManager::get();
     customObjectsCache.clear();
 
     for (auto& mod : registeredMods) {
@@ -27,13 +27,9 @@ void CustomObjectsManager::processRegisteredMods() {
                 obj.detailSprite.custom = false;
                 obj.glowSprite.custom = false;
             } else {
-                obj.mainSprite.generateFrame();
-                obj.detailSprite.generateFrame();
-                obj.glowSprite.generateFrame();
-
-                if (obj.mainSprite) customSpritesCache.emplace_back(obj.mainSprite);
-                if (obj.detailSprite) customSpritesCache.emplace_back(obj.detailSprite);
-                if (obj.glowSprite) customSpritesCache.emplace_back(obj.glowSprite);
+                spriteManager->processCustomObjectSprite(obj.mainSprite);
+                spriteManager->processCustomObjectSprite(obj.detailSprite);
+                spriteManager->processCustomObjectSprite(obj.glowSprite);
             } // if
 
             if (obj.hasCustomAnimation()) {
@@ -51,38 +47,16 @@ void CustomObjectsManager::processRegisteredMods() {
         } // for
 
         for (auto& spr : mod.sprites) {
-            spr.generateFrame();
-            if (spr) customSpritesCache.emplace_back(spr);
+            spriteManager->processCustomObjectSprite(spr);
         } // for
     } // for
 
-    // Remove duplicate sprites
-    std::unordered_set<std::string> frames;
-    auto it = std::remove_if(customSpritesCache.begin(), customSpritesCache.end(), [&frames](auto spr) {
-        return !frames.insert(spr.frame).second;
-    });
-    customSpritesCache.erase(it, customSpritesCache.end());
+    spriteManager->processRegisteredSprites();
 } // processRegisteredMods
 
-std::string CustomObjectsManager::getCacheDirectory() {
-    auto path = Mod::get()->getSaveDir().string() + "/cache/";
-    if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
-    return path;
-} // getCacheDirectory
-
-std::string CustomObjectsManager::getSpritesheetQualityName() {
-    switch (getTextureQuality()) {
-        case Quality::LOW: return "CustomObjects";
-        case Quality::MEDIUM: return "CustomObjects-hd";
-        case Quality::HIGH: return "CustomObjects-uhd";
-        default: return "CustomObjects-uhd";
-    } // switch
-} // getSpritesheetImagePath
-
-Quality CustomObjectsManager::getTextureQuality() {
-    int quality = (int)CCDirector::get()->getLoadedTextureQuality();
-    return (quality == 3) ? Quality::HIGH : (Quality)quality;
-} // getTextureQuality
+int CustomObjectsManager::getObjectCount() {
+    return customObjectsCache.size();
+} // getObjectCount
 
 void CustomObjectsManager::printModObjectCount() {
     int modCount = registeredMods.size();
@@ -90,40 +64,14 @@ void CustomObjectsManager::printModObjectCount() {
     log::info("A total of {} mods registered {} total custom objects", modCount, objectCount);
 } // printModObjectCount
 
+bool CustomObjectsManager::containsCustomObject(int id) {
+    return customObjectsCache.contains(id);
+} // containsCustomObject
+
+CustomObjectConfig CustomObjectsManager::getCustomObjectByID(int id) {
+    return customObjectsCache[id];
+} // getCustomObjectByID
+
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig)> operation) const {
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
-
-bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() {
-    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(getSpritesheetQualityName());
-
-    if (customSpritesCache.size() != cache.size()) return false;
-
-    for (int i = 0; i < customSpritesCache.size(); i++) {
-        if (customSpritesCache[i].frame == cache[i]) continue;
-        if (std::find(cache.begin(), cache.end(), customSpritesCache[i].frame) != cache.end()) continue;
-        return false;
-    } // for
-
-    return true;
-} // isTheSpritesheetCacheUpToDate
-
-void CustomObjectsManager::addSpritesheetToCache(std::string name, Quality quality) {
-    auto spritesheet = CustomObjectsSheet::create(customSpritesCache, quality);
-    if (!spritesheet) {
-        log::error("Failed to create spritesheet!!!");
-        return;
-    } // if
-
-    auto path = getCacheDirectory();
-    bool saved = spritesheet->saveSpritesheetImage(name, path);
-    saved = saved && spritesheet->saveSpritesheetPlist(name, path);
-
-    // Save the frames in the sprite cache
-    std::vector<std::string> sprites;
-    for (auto spr : customSpritesCache) sprites.emplace_back(spr.frame);
-    Mod::get()->setSavedValue<std::vector<std::string>>(name, sprites);
-
-    if (saved) log::info("Saved spritesheet to \"{}\"", path + name + ".png");
-    else log::error("Failed to save spritesheet!!!");
-} // addSpritesheetToCache

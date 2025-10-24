@@ -1,0 +1,33 @@
+#pragma once
+#include <Geode/Geode.hpp>
+
+#include "CustomObjectsSheet.hpp"
+
+using namespace geode::prelude;
+
+enum Quality : int {
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 4
+};
+
+class CustomSpritesManager {
+private:
+    static inline CustomSpritesManager* s_manager;
+
+    std::vector<CustomSpriteConfig> customSpritesCache;
+
+public:
+    static CustomSpritesManager* get();
+
+    std::string getCacheDirectory();
+    Quality getTextureQuality();
+    std::string getSpritesheetQualityName();
+
+    void processCustomObjectSprite(CustomSpriteConfig& spr);
+    void processRegisteredSprites();
+
+    bool isTheSpritesheetCacheUpToDate();
+    void saveSpritesheetDataToCache(std::string name);
+    void addSpritesheetToCache(std::string name, Quality quality);
+};

@@ -2,6 +2,7 @@
 #include <Geode/modify/LoadingLayer.hpp>
 
 #include "CustomObjectsManager.hpp"
+#include "CustomSpritesManager.hpp"
 
 using namespace geode::prelude;
 
@@ -38,7 +39,7 @@ class $modify(LoadingLayer) {
     void checkGenerateCustomSpritesheet() {
         m_fields->m_shouldGenerateSpritesheet = false;
 
-        auto manager = CustomObjectsManager::get();
+        auto manager = CustomSpritesManager::get();
         if (Mod::get()->getSettingValue<bool>("force-generation")) {
             log::info("Forced spritesheet generation is enabled!");
         } else if (manager->isTheSpritesheetCacheUpToDate()) {
@@ -59,7 +60,7 @@ class $modify(LoadingLayer) {
 
     void generateCustomSpritesheet() {
         if (m_fields->m_shouldGenerateSpritesheet) {
-            auto manager = CustomObjectsManager::get();
+            auto manager = CustomSpritesManager::get();
             auto sheetQuality = manager->getTextureQuality();
             auto sheetName = manager->getSpritesheetQualityName();
             manager->addSpritesheetToCache(sheetName, sheetQuality);
@@ -68,16 +69,17 @@ class $modify(LoadingLayer) {
     } // generateCustomSpritesheet
 
     void loadCustomSpritesheet() {
-        auto manager = CustomObjectsManager::get();
+        auto manager = CustomSpritesManager::get();
         auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
+        auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
+
         auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
+        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);
         // texture->setAliasTexParameters();
 
-        auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
-        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);
-
         auto toolbox = ObjectToolbox::sharedState();
-        manager->forEachCustomObject([this, toolbox](auto obj) {
+        auto objectManager = CustomObjectsManager::get();
+        objectManager->forEachCustomObject([this, toolbox](auto obj) {
             toolbox->m_allKeys.insert(std::pair(obj.id, obj.mainSprite.frame));
         });
         continueLoadAssets();
