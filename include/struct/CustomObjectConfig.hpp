@@ -40,10 +40,10 @@ public:
     std::function<void(GameObject*)> resetCustomObjectFunction;
     std::function<FLAlertLayer*(EffectGameObject*, CCArray*)> editObjectFunction;
     std::function<FLAlertLayer*(EffectGameObject*, CCArray*)> editSpecialFunction;
-    std::function<GameObject*(CustomObjectConfig)> createFunction;
+    std::function<GameObject*(const CustomObjectConfig*)> createFunction;
 
     CustomObjectConfig() {}
-    CustomObjectConfig(std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create);
+    CustomObjectConfig(std::string mod, int id, std::function<GameObject*(const CustomObjectConfig*)> create);
 
     CustomObjectConfig& setMainSprite(std::string frame, int w, int h);
     CustomObjectConfig& setDetailSprite(std::string frame, int w, int h);
@@ -70,5 +70,5 @@ public:
     inline bool hasCustomAnimation() const { return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame(); }
 
     // Create an instance of the custom game object represented by this config struct
-    GameObject* create();
+    GameObject* create() const;
 };

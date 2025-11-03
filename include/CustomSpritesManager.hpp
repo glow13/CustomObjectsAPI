@@ -15,7 +15,7 @@ class CustomSpritesManager {
 private:
     static inline CustomSpritesManager* s_manager;
 
-    std::vector<CustomSpriteConfig> customSpritesCache;
+    std::vector<CustomSpriteConfig*> customSpritesCache;
 
 public:
     static CustomSpritesManager* get();
@@ -24,7 +24,7 @@ public:
     Quality getTextureQuality();
     std::string getSpritesheetQualityName();
 
-    void processCustomObjectSprite(CustomSpriteConfig& spr);
+    void processCustomObjectSprite(CustomSpriteConfig* spr);
     void processRegisteredSprites();
 
     bool isTheSpritesheetCacheUpToDate();

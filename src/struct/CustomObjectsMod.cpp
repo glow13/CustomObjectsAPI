@@ -12,13 +12,13 @@ CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, char offset) : mod(mod), mod
     objectID = transform - (transform % 100);
 } // CustomObjectsMod
 
-CustomObjectConfig& CustomObjectsMod::registerCustomObject(std::string spr, int sprWidth, int sprHeight, std::function<GameObject*(CustomObjectConfig)> create) {
+CustomObjectConfig& CustomObjectsMod::registerCustomObject(std::string spr, int sprWidth, int sprHeight, std::function<GameObject*(const CustomObjectConfig*)> create) {
     int id = objectID + objects.size();
     log::debug("Registered custom object with id {}", id);
 
-    auto config = CustomObjectConfig(modID, id, create);
-    config.mainSprite = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
-    return objects.emplace_back(config);
+    auto config = new CustomObjectConfig(modID, id, create);
+    config->mainSprite = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
+    return *(objects.emplace_back(config));
 } // registerCustomObject
 
 CustomObjectConfig& CustomObjectsMod::registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
@@ -27,7 +27,7 @@ CustomObjectConfig& CustomObjectsMod::registerCustomObject(std::string spr, int 
 
 void CustomObjectsMod::registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
     log::debug("Registered custom sprite \"{}\"", spr);
-    auto config = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
+    auto config = new CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
     sprites.emplace_back(config);
 } // registerCustomSprite
 

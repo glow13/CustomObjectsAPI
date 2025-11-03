@@ -87,14 +87,14 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
     return true;
 } // saveSpritesheetPlist
 
-CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteConfig>& customSprites, Quality quality) {
+CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteConfig*> customSprites, Quality quality) {
     if (customSprites.size() == 0) return nullptr;
     std::vector<CustomObjectSprite> sprites;
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
-    for (const CustomSpriteConfig sprite : customSprites) {
-        auto spr = CustomObjectSprite(sprite.frame, sprite.sourceFrame, sprite.size, quality);
+    for (auto sprite : customSprites) {
+        auto spr = CustomObjectSprite(sprite->frame, sprite->sourceFrame, sprite->size, quality);
 
         sprites.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;

@@ -19,7 +19,7 @@ class $modify(EditorUI) {
             auto buttons = CCArray::create();
             auto manager = CustomObjectsManager::get();
             manager->forEachCustomObject([this, buttons](auto obj) {
-                buttons->addObject(getCreateBtn(obj.id, 4));
+                buttons->addObject(getCreateBtn(obj->id, 4));
             });
  
             return EditorTabUtils::createEditButtonBar(buttons, ui);

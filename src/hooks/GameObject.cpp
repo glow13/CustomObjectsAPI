@@ -11,7 +11,7 @@ public:
         if (key >= 10000) {
             auto manager = CustomObjectsManager::get();
             if (manager->containsCustomObject(key)) {
-                return manager->getCustomObjectByID(key).create();
+                return manager->getCustomObjectByID(key)->create();
             }
         } // if
         return GameObject::createWithKey(key);
