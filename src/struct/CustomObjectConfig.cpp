@@ -30,7 +30,6 @@ GameObject* CustomObjectConfig::create() {
     if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; }
     if (boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffset;
     if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius;
-    if (createOffset != CREATE_OFFSET_DEFAULT) obj->m_unk464 = createOffset;
     if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType;
     if (parentMode != PARENT_MODE_DEFAULT) obj->m_parentMode = parentMode;
 

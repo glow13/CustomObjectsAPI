@@ -14,6 +14,7 @@ public:
     static ObjectType* create(const CustomObjectConfig& config) {
         auto obj = new ObjectType();
         if (obj->init(config)) {
+            obj->config = &config;
             obj->autorelease();
             return obj;
         } // if
@@ -63,6 +64,7 @@ protected:
     } // setSavedValue
 
 private:
+    const CustomObjectConfig* config;
     std::map<std::string, std::string> savedValues;
 
     bool loadSavedValuesFromString(std::string saveString) {
@@ -121,7 +123,7 @@ private:
 
     void setStartPos(cocos2d::CCPoint p0) override {
         if (auto editor = LevelEditorLayer::get()) {
-            ObjectBase::setStartPos((editor->m_editorUI) ? p0 + this->m_unk464 : p0);
+            ObjectBase::setStartPos((editor->m_editorUI) ? p0 + config->createOffset : p0);
         } else ObjectBase::setStartPos(p0);
     } // setStartPos
 

@@ -19,7 +19,6 @@ struct CustomObjectConfig {
 public:
     int id;
     std::string mod;
-    std::function<GameObject*(CustomObjectConfig)> createFunction;
 
     // Sprite frame variables
     CustomSpriteConfig mainSprite;
@@ -35,6 +34,13 @@ public:
     int parentMode = PARENT_MODE_DEFAULT;
     int framesCount = FRAMES_COUNT_DEFAULT;
     float frameTime = FRAME_TIME_DEFAULT;
+
+    // Function variables
+    std::function<void(GameObject*)> setupCustomObjectFunction;
+    std::function<void(GameObject*)> resetCustomObjectFunction;
+    std::function<FLAlertLayer*(EffectGameObject*, CCArray*)> editObjectFunction;
+    std::function<FLAlertLayer*(EffectGameObject*, CCArray*)> editSpecialFunction;
+    std::function<GameObject*(CustomObjectConfig)> createFunction;
 
     CustomObjectConfig() {}
     CustomObjectConfig(std::string mod, int id, std::function<GameObject*(CustomObjectConfig)> create);
