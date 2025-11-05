@@ -11,7 +11,7 @@ using namespace geode::prelude;
 template <class ObjectType, class ObjectBase>
 class CustomObjectUtils : public ObjectBase {
 public:
-    static ObjectType* create(const CustomObjectConfig* config) {
+    static ObjectType* create(const CustomObjectConfig<ObjectType>* config) {
         auto obj = new ObjectType();
         if (obj->init(config)) {
             obj->config = config;
@@ -27,7 +27,7 @@ protected:
     virtual void setupCustomObject() {}
     virtual void resetCustomObject() {}
 
-    bool commonSetup(const CustomObjectConfig* config, bool addSprites = true) {
+    bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
         if (!ObjectBase::init(config->mainSprite)) return false;
 
         // Add sprites to custom object
@@ -64,7 +64,7 @@ protected:
     } // setSavedValue
 
 private:
-    const CustomObjectConfig* config;
+    const CustomObjectConfig<ObjectType>* config;
     std::map<std::string, std::string> savedValues;
 
     bool loadSavedValuesFromString(std::string saveString) {

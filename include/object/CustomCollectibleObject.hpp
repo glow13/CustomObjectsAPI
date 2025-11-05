@@ -8,7 +8,7 @@ using namespace geode::prelude;
 template <class ObjectType>
 class CustomCollectibleObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
-    bool init(const CustomObjectConfig* config) {
+    bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config, false)) return false;
         this->commonInteractiveSetup();
         this->setDontDraw(true);

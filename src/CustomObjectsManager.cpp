@@ -68,10 +68,10 @@ bool CustomObjectsManager::containsCustomObject(int id) {
     return customObjectsCache.contains(id);
 } // containsCustomObject
 
-const CustomObjectConfig* CustomObjectsManager::getCustomObjectByID(int id) {
+const ICustomObjectConfig* CustomObjectsManager::getCustomObjectByID(int id) {
     return customObjectsCache[id];
 } // getCustomObjectByID
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig*)> operation) const {
+void CustomObjectsManager::forEachCustomObject(std::function<void(const ICustomObjectConfig*)> operation) const {
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject

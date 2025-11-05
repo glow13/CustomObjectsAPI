@@ -11,7 +11,7 @@ private:
     static inline CustomObjectsManager* s_manager;
 
     std::vector<CustomObjectsMod*> registeredMods;
-    std::map<int, CustomObjectConfig*> customObjectsCache;
+    std::map<int, ICustomObjectConfig*> customObjectsCache;
 
 public:
     static CustomObjectsManager* get();
@@ -23,6 +23,6 @@ public:
     void printModObjectCount();
 
     bool containsCustomObject(int id);
-    const CustomObjectConfig* getCustomObjectByID(int id);
-    void forEachCustomObject(std::function<void(const CustomObjectConfig*)> operation) const;
+    const ICustomObjectConfig* getCustomObjectByID(int id);
+    void forEachCustomObject(std::function<void(const ICustomObjectConfig*)> operation) const;
 };
