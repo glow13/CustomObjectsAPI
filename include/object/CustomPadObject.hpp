@@ -8,7 +8,7 @@ using namespace geode::prelude;
 template <class ObjectType>
 class CustomPadObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
-    bool init(const CustomObjectConfig& config) {
+    bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;

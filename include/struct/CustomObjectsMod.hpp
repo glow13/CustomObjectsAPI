@@ -12,24 +12,36 @@ public:
     std::string modID;
 
     int objectID;
-    std::vector<CustomSpriteConfig> sprites;
-    std::vector<CustomObjectConfig> objects;
+    std::vector<CustomSpriteConfig*> sprites;
+    std::vector<ICustomObjectConfig*> objects;
 
     CustomObjectsMod(geode::Mod* mod, char offset);
 
-    CustomObjectConfig& registerCustomObject(std::string spr, int sprWidth, int sprHeight, std::function<GameObject*(CustomObjectConfig)> create);
+    template <class ObjectType = CustomGameObject>
+    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
+        int id = objectID + objects.size();
+        log::debug("Registered custom object with id {}", id);
 
-    // Registers a default custom object with the type CustomGameObject
-    CustomObjectConfig& registerCustomObject(std::string spr, int sprWidth, int sprHeight);
+        auto config = new CustomObjectConfig<ObjectType>(modID, id);
+        config->mainSprite = CustomSpriteConfig(spr, modID, CCSize(sprWidth, sprHeight));
+        objects.emplace_back(static_cast<ICustomObjectConfig*>(config));
+        return *config;
+    } // registerCustomObject
+
+    template <class ObjectType = CustomGameObject>
+    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) {
+        return registerCustomObject<ObjectType>(spr, sprSize, sprSize);
+    } // registerCustomObject
+
+    template <class ObjectType = CustomGameObject>
+    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) {
+        return registerCustomObject<ObjectType>(spr, 0, 0);
+    } // registerCustomObject
 
     void registerCustomSprite(std::string spr, int sprWidth, int sprHeight);
     void registerCustomAnimationSprites(std::string spr, int sprWidth, int sprHeight, int frames);
 
     // Inline helper functions
-    inline CustomObjectConfig& registerCustomObject(std::string spr, int sprSize, std::function<GameObject*(CustomObjectConfig)> create) { return registerCustomObject(spr, sprSize, sprSize, create); }
-    inline CustomObjectConfig& registerCustomObject(std::string spr, std::function<GameObject*(CustomObjectConfig)> create) { return registerCustomObject(spr, 0, 0, create); }
-    inline CustomObjectConfig& registerCustomObject(std::string spr, int sprSize) { return registerCustomObject(spr, sprSize, sprSize); }
-    inline CustomObjectConfig& registerCustomObject(std::string spr) { return registerCustomObject(spr, 0, 0); }
     inline void registerCustomAnimationSprites(std::string spr, int sprSize, int frames) { return registerCustomAnimationSprites(spr, sprSize, sprSize, frames); }
     inline void registerCustomAnimationSprites(std::string spr, int frames) { return registerCustomAnimationSprites(spr, 0, 0, frames); }
     inline void registerCustomSprite(std::string spr, int sprSize) { return registerCustomSprite(spr, sprSize, sprSize); }

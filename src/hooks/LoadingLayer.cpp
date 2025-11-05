@@ -85,7 +85,7 @@ class $modify(LoadingLayer) {
         auto toolbox = ObjectToolbox::sharedState();
         auto objectManager = CustomObjectsManager::get();
         objectManager->forEachCustomObject([this, toolbox](auto obj) {
-            toolbox->m_allKeys.insert(std::pair(obj.id, obj.mainSprite.frame));
+            toolbox->m_allKeys.insert(std::pair(obj->id, obj->mainSprite.frame));
         });
         continueLoadAssets();
     } // loadCustomSpritesheet

@@ -18,7 +18,7 @@ public:
 
     bool saveSpritesheetImage(std::string name, std::string path) const;
     bool saveSpritesheetPlist(std::string name, std::string path) const;
-    static CustomObjectsSheet* create(const std::vector<CustomSpriteConfig>& customSprites, Quality quality);
+    static CustomObjectsSheet* create(const std::vector<CustomSpriteConfig*> customSprites, Quality quality);
 
 private:
     static rectpack2D::rect_wh binPacking(std::vector<CustomObjectSprite> &sprites);

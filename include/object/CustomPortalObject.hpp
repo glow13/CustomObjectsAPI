@@ -8,7 +8,7 @@ using namespace geode::prelude;
 template <class ObjectType>
 class CustomPortalObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
-    bool init(const CustomObjectConfig& config) {
+    bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config, false)) return false;
         
         this->m_objectType = GameObjectType::Modifier;
@@ -25,8 +25,8 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        if (!config.mainSprite) this->setDontDraw(true);
-        if (config.detailSprite) this->addPortalBackSprite(config.detailSprite, CCPoint(0, 0), -90);
+        if (!config->mainSprite) this->setDontDraw(true);
+        if (config->detailSprite) this->addPortalBackSprite(config->detailSprite, CCPoint(0, 0), -90);
 
         return true;
     } // init

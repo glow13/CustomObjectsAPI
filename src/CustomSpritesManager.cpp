@@ -25,15 +25,15 @@ std::string CustomSpritesManager::getSpritesheetQualityName() {
     } // switch
 } // getSpritesheetImagePath
 
-void CustomSpritesManager::processCustomObjectSprite(CustomSpriteConfig& spr) {
-    spr.generateFrame();
+void CustomSpritesManager::processCustomObjectSprite(CustomSpriteConfig* spr) {
+    spr->generateFrame();
     if (spr) customSpritesCache.emplace_back(spr);
 } // processCustomObjectSprite
 
 void CustomSpritesManager::processRegisteredSprites() {
     std::unordered_set<std::string> sprites;
     auto it = std::remove_if(customSpritesCache.begin(), customSpritesCache.end(), [&sprites](auto spr) {
-        return !sprites.insert(spr.frame).second;
+        return !sprites.insert(spr->frame).second;
     });
     customSpritesCache.erase(it, customSpritesCache.end());
 } // processRegisteredSprites
@@ -44,8 +44,8 @@ bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() {
     if (customSpritesCache.size() != cache.size()) return false;
 
     for (int i = 0; i < customSpritesCache.size(); i++) {
-        if (customSpritesCache[i].frame == cache[i]) continue;
-        if (std::find(cache.begin(), cache.end(), customSpritesCache[i].frame) != cache.end()) continue;
+        if (customSpritesCache[i]->frame == cache[i]) continue;
+        if (std::find(cache.begin(), cache.end(), customSpritesCache[i]->frame) != cache.end()) continue;
         return false;
     } // for
 
@@ -54,7 +54,7 @@ bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() {
 
 void CustomSpritesManager::saveSpritesheetDataToCache(std::string name) {
     std::vector<std::string> sprites;
-    for (auto spr : customSpritesCache) sprites.emplace_back(spr.frame);
+    for (auto spr : customSpritesCache) sprites.emplace_back(spr->frame);
     Mod::get()->setSavedValue<std::vector<std::string>>(name, sprites);
 } // saveSpritesheetDataToCache
 

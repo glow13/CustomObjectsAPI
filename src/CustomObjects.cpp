@@ -118,8 +118,8 @@ $execute {
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
 
     mod->registerCustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
-    mod->registerCustomObject("smile-block.png"_spr, SmileGameObject::create);
-    mod->registerCustomObject("container.png"_spr, ContainerGameObject::create);
+    mod->registerCustomObject<SmileGameObject>("smile-block.png"_spr);
+    mod->registerCustomObject<ContainerGameObject>("container.png"_spr);
 
     mod->registerCustomObject("block-1.png"_spr);
     mod->registerCustomObject("block-2.png"_spr);
@@ -138,12 +138,12 @@ $execute {
     mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
     mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
 
-    mod->registerCustomObject("bump_03_001.png", TestPad::create).setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13);
-    mod->registerCustomObject("blade_02_001.png", CustomRotateObject::create).setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
+    mod->registerCustomObject<TestPad>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13);
+    mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
 
-    mod->registerCustomObject("portal_18_front_001.png", TestPortal::create).setDetailSprite("portal_18_back_001.png").setCustomRender(1);
-    mod->registerCustomObject("d_key01_001.png", TestCollectible::create).setDetailSprite("d_key01_color_001.png").setCustomRender(0);
+    mod->registerCustomObject<TestPortal>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setCustomRender(1);
+    mod->registerCustomObject<TestCollectible>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setCustomRender(0);
 
-    mod->registerCustomObject("cat_001.png"_spr, CustomAnimatedObject::create).setFramesCount(94).setFrameTime(0.03);
+    mod->registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03);
     mod->registerCustomAnimationSprites("cat_001.png"_spr, 94);
 }

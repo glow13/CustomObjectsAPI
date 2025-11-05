@@ -8,7 +8,7 @@ using namespace geode::prelude;
 template <class ObjectType>
 class CustomCollectibleObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
 public:
-    bool init(const CustomObjectConfig& config) {
+    bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config, false)) return false;
         this->commonInteractiveSetup();
         this->setDontDraw(true);
@@ -20,8 +20,8 @@ public:
         this->m_duration = 0;
         this->m_particleOffset = CCPoint(0, -5);
 
-        auto main = this->addCustomChild(config.mainSprite, CCPoint(0, 0), 0);
-        auto detail = this->addCustomColorChild(config.detailSprite);
+        auto main = this->addCustomChild(config->mainSprite, CCPoint(0, 0), 0);
+        auto detail = this->addCustomColorChild(config->detailSprite);
         detail->setPosition(main->getPosition());
         detail->removeFromParent();
         main->addChild(detail);

@@ -11,10 +11,10 @@ using namespace geode::prelude;
 template <class ObjectType, class ObjectBase>
 class CustomObjectUtils : public ObjectBase {
 public:
-    static ObjectType* create(const CustomObjectConfig& config) {
+    static ObjectType* create(const CustomObjectConfig<ObjectType>* config) {
         auto obj = new ObjectType();
         if (obj->init(config)) {
-            obj->config = &config;
+            obj->config = config;
             obj->autorelease();
             return obj;
         } // if
@@ -27,17 +27,17 @@ protected:
     virtual void setupCustomObject() {}
     virtual void resetCustomObject() {}
 
-    bool commonSetup(const CustomObjectConfig& config, bool addSprites = true) {
-        if (!ObjectBase::init(config.mainSprite)) return false;
+    bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
+        if (!ObjectBase::init(config->mainSprite)) return false;
 
         // Add sprites to custom object
         if (!addSprites) return true;
-        if (!config.mainSprite) this->setDontDraw(true);
-        if (config.detailSprite) this->addCustomColorChild(config.detailSprite);
+        if (!config->mainSprite) this->setDontDraw(true);
+        if (config->detailSprite) this->addCustomColorChild(config->detailSprite);
 
         // Add glow to custom object
         if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config.glowSprite) this->createGlow(config.glowSprite);
+        if (config->glowSprite) this->createGlow(config->glowSprite);
 
         return true;
     } // commonSetup
@@ -64,7 +64,7 @@ protected:
     } // setSavedValue
 
 private:
-    const CustomObjectConfig* config;
+    const CustomObjectConfig<ObjectType>* config;
     std::map<std::string, std::string> savedValues;
 
     bool loadSavedValuesFromString(std::string saveString) {
