@@ -23,37 +23,6 @@ public:
         return nullptr;
     } // create
 
-protected:
-    virtual void setupCustomObject() {
-        if (!(config->setupCustomObjectFunction)) return;
-        (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
-    } // setupCustomObject
-
-    virtual void resetCustomObject() {
-        if (!(config->resetCustomObjectFunction)) return;
-        (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
-    } // resetCustomObject
-
-    void activateCustomObject() {
-        if (!(config->activateCustomObjectFunction)) return;
-        (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this));
-    } // activateCustomObject
-
-    bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
-        if (!ObjectBase::init(config->mainSprite)) return false;
-
-        // Add sprites to custom object
-        if (!addSprites) return true;
-        if (!config->mainSprite) this->setDontDraw(true);
-        if (config->detailSprite) this->addCustomColorChild(config->detailSprite);
-
-        // Add glow to custom object
-        if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config->glowSprite) this->createGlow(config->glowSprite);
-
-        return true;
-    } // commonSetup
-
     template<typename ValueType>
     ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
         if (!savedValues.contains(key)) return defaultValue;
@@ -74,6 +43,37 @@ protected:
         savedValues[key] = valueString.str();
         return oldValue;
     } // setSavedValue
+
+protected:
+    virtual void setupCustomObject() {
+        if (!(config->setupCustomObjectFunction)) return;
+        (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
+    } // setupCustomObject
+
+    virtual void resetCustomObject() {
+        if (!(config->resetCustomObjectFunction)) return;
+        (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
+    } // resetCustomObject
+
+    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
+        if (!(config->activateCustomObjectFunction)) return;
+        (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this), level, player);
+    } // activateCustomObject
+
+    bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
+        if (!ObjectBase::init(config->mainSprite)) return false;
+
+        // Add sprites to custom object
+        if (!addSprites) return true;
+        if (!config->mainSprite) this->setDontDraw(true);
+        if (config->detailSprite) this->addCustomColorChild(config->detailSprite);
+
+        // Add glow to custom object
+        if (this->m_editorEnabled || this->m_hasNoGlow) return true;
+        if (config->glowSprite) this->createGlow(config->glowSprite);
+
+        return true;
+    } // commonSetup
 
 private:
     const CustomObjectConfig<ObjectType>* config;

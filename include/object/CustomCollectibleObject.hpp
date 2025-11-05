@@ -32,7 +32,7 @@ public:
 
 protected:
     virtual void touchCustomCollectible(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject();
+        this->activateCustomObject(level, player);
     } // touchCustomCollectible
 
 private:

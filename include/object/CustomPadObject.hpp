@@ -25,16 +25,6 @@ public:
         return true;
     } // init
 
-protected:
-    virtual void setupCustomObject() override {
-        this->createPadParticles();
-        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
-    } // setupCustomObject
-
-    virtual void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject();
-    } // touchCustomPad
-
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createPadParticles() {
         if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
@@ -45,6 +35,16 @@ protected:
     void bumpPlayer(PlayerObject* player, float power, GameObjectType effectType = GameObjectType::YellowJumpPad) {
         player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
     } // bumpPlayer
+
+protected:
+    virtual void setupCustomObject() override {
+        this->createPadParticles();
+        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
+    } // setupCustomObject
+
+    virtual void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject(level, player);
+    } // touchCustomPad
 
 private:
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {

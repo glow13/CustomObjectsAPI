@@ -21,6 +21,12 @@ public:
         return true;
     } // init
 
+    // Returns nullptr if in the editor
+    CCParticleSystemQuad* createRingParticles() {
+        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
+        return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+    } // createRingParticles
+
 protected:
     virtual void setupCustomObject() override {
         this->createRingParticles();
@@ -28,14 +34,8 @@ protected:
     } // setupCustomObject
 
     virtual void pressCustomRing(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject();
+        this->activateCustomObject(level, player);
     } // pressCustomRing
-
-    // Returns nullptr if in the editor
-    CCParticleSystemQuad* createRingParticles() {
-        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
-        return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
-    } // createRingParticles
 
 private:
     void activatedByPlayer(PlayerObject* player) override {

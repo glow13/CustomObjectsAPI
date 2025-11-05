@@ -31,16 +31,6 @@ public:
         return true;
     } // init
 
-protected:
-    virtual void setupCustomObject() override {
-        this->createPortalParticles();
-        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
-    } // setupCustomObject
-
-    virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject();
-    } // touchCustomPortal
-
     // Returns nullptr if in the editor
     CCSprite* addPortalBackSprite(gd::string frame, CCPoint offset, int zOrder) {
         if (auto level = PlayLayer::get()) {
@@ -106,6 +96,16 @@ protected:
         this->GameObject::playShineEffect();
         this->m_objectID = id;
     } // playShineEffect
+
+protected:
+    virtual void setupCustomObject() override {
+        this->createPortalParticles();
+        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
+    } // setupCustomObject
+
+    virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject(level, player);
+    } // touchCustomPortal
 
 private:
     CCSprite* m_portalBack = nullptr;

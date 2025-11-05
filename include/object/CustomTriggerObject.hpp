@@ -20,7 +20,7 @@ public:
 
 protected:
     virtual void activateCustomTrigger(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject();
+        this->activateCustomObject(level, player);
     } // activateCustomTrigger
 
 private:
