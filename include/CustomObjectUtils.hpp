@@ -55,7 +55,7 @@ protected:
         (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
     } // resetCustomObject
 
-    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
+    virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
         if (!(config->activateCustomObjectFunction)) return;
         (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this), level, player);
     } // activateCustomObject

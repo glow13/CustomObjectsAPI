@@ -36,16 +36,6 @@ public:
         player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
     } // bumpPlayer
 
-protected:
-    virtual void setupCustomObject() override {
-        this->createPadParticles();
-        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
-    } // setupCustomObject
-
-    virtual void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject(level, player);
-    } // touchCustomPad
-
 private:
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
@@ -55,7 +45,7 @@ private:
             player->m_lastActivatedPortal = this;
             player->m_lastPortalPos = this->getPosition();
             this->activatedByPlayer(player);
-            touchCustomPad(level, player);
+            this->activateCustomObject(level, player);
         } // if
     } // triggerObject
 };

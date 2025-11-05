@@ -27,20 +27,10 @@ public:
         return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
     } // createRingParticles
 
-protected:
-    virtual void setupCustomObject() override {
-        this->createRingParticles();
-        CustomObjectUtils<ObjectType, RingObject>::setupCustomObject();
-    } // setupCustomObject
-
-    virtual void pressCustomRing(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject(level, player);
-    } // pressCustomRing
-
 private:
     void activatedByPlayer(PlayerObject* player) override {
         RingObject::activatedByPlayer(player);
-        pressCustomRing(player->m_gameLayer, player);
+        this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
 };
 

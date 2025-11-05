@@ -18,11 +18,6 @@ public:
         return true;
     } // init
 
-protected:
-    virtual void activateCustomTrigger(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject(level, player);
-    } // activateCustomTrigger
-
 private:
     void customSetup() override {
         EffectGameObject::customSetup();
@@ -33,7 +28,7 @@ private:
 
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
-        activateCustomTrigger(level, player);
+        this->activateCustomObject(level, player);
     } // triggerObject
 };
 

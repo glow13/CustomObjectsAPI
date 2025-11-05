@@ -97,16 +97,6 @@ public:
         this->m_objectID = id;
     } // playShineEffect
 
-protected:
-    virtual void setupCustomObject() override {
-        this->createPortalParticles();
-        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
-    } // setupCustomObject
-
-    virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {
-        this->activateCustomObject(level, player);
-    } // touchCustomPortal
-
 private:
     CCSprite* m_portalBack = nullptr;
     GameObjectType m_fakeType = GameObjectType::Modifier;
@@ -119,7 +109,7 @@ private:
             player->m_lastActivatedPortal = this;
             player->m_lastPortalPos = this->getPosition();
             this->activatedByPlayer(player);
-            touchCustomPortal(level, player);
+            this->activateCustomObject(level, player);
         } // if
     } // triggerObject
 
