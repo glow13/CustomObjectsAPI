@@ -32,8 +32,14 @@ public:
     } // init
 
 protected:
-    virtual void setupCustomObject() override { createPortalParticles(); }
-    virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {}
+    virtual void setupCustomObject() override {
+        this->createPortalParticles();
+        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
+    } // setupCustomObject
+
+    virtual void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject();
+    } // touchCustomPortal
 
     // Returns nullptr if in the editor
     CCSprite* addPortalBackSprite(gd::string frame, CCPoint offset, int zOrder) {

@@ -47,6 +47,7 @@ struct CustomObjectConfig : public ICustomObjectConfig {
 public:
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
+    std::function<void(ObjectType*)> activateCustomObjectFunction;
     std::function<void(ObjectType*, CCArray*)> editObjectFunction;
     std::function<void(ObjectType*, CCArray*)> editSpecialFunction;
 
@@ -78,6 +79,7 @@ public:
     // Set callback functions
     CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*)> callback) { activateCustomObjectFunction = callback; return *this; }    
     CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, CCArray*)> callback) { editObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, CCArray*)> callback) { editSpecialFunction = callback; return *this; }
 

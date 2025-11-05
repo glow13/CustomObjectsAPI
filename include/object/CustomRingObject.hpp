@@ -22,8 +22,14 @@ public:
     } // init
 
 protected:
-    virtual void setupCustomObject() override { createRingParticles(); }
-    virtual void pressCustomRing(GJBaseGameLayer* level, PlayerObject* player) {}
+    virtual void setupCustomObject() override {
+        this->createRingParticles();
+        CustomObjectUtils<ObjectType, RingObject>::setupCustomObject();
+    } // setupCustomObject
+
+    virtual void pressCustomRing(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject();
+    } // pressCustomRing
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createRingParticles() {

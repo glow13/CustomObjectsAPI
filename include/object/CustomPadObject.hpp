@@ -26,8 +26,14 @@ public:
     } // init
 
 protected:
-    virtual void setupCustomObject() override { createPadParticles(); }
-    virtual void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) {}
+    virtual void setupCustomObject() override {
+        this->createPadParticles();
+        CustomObjectUtils<ObjectType, EffectGameObject>::setupCustomObject();
+    } // setupCustomObject
+
+    virtual void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject();
+    } // touchCustomPad
 
     // Returns nullptr if in the editor
     CCParticleSystemQuad* createPadParticles() {

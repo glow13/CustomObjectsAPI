@@ -19,7 +19,9 @@ public:
     } // init
 
 protected:
-    virtual void activateCustomTrigger(GJBaseGameLayer* level, PlayerObject* player) {}
+    virtual void activateCustomTrigger(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject();
+    } // activateCustomTrigger
 
 private:
     void customSetup() override {

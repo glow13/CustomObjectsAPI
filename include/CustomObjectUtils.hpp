@@ -34,6 +34,11 @@ protected:
         (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
     } // resetCustomObject
 
+    void activateCustomObject() {
+        if (!(config->activateCustomObjectFunction)) return;
+        (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this));
+    } // activateCustomObject
+
     bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
         if (!ObjectBase::init(config->mainSprite)) return false;
 

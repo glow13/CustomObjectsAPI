@@ -31,7 +31,9 @@ public:
     } // init
 
 protected:
-    virtual void touchCustomCollectible(GJBaseGameLayer* level, PlayerObject* player) {}
+    virtual void touchCustomCollectible(GJBaseGameLayer* level, PlayerObject* player) {
+        this->activateCustomObject();
+    } // touchCustomCollectible
 
 private:
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const* p2) override {
