@@ -35,7 +35,7 @@ public:
 
     void resetCustomObject() override { m_bouncePower = 1; }
 
-    void pressCustomRing(GJBaseGameLayer* level, PlayerObject* player) override {
+    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) override {
         player->propellPlayer(m_bouncePower * 0.35, true, 12);
         player->animatePlatformerJump(1.0f);
         m_bouncePower += 0.1;
@@ -56,27 +56,10 @@ public:
         m_bouncePower = getSavedValue<int>("bounce", 8);
     } // resetCustomObject
 
-    void activateCustomTrigger(GJBaseGameLayer* level, PlayerObject* player) override {
+    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) override {
         player->setYVelocity(m_bouncePower, 1);
         m_bouncePower++;
     } // activateCustomTrigger
-};
-
-class $object(TestPad, CustomPadObject) {
-    void setupCustomObject() override {
-        srand(time(0));
-        if (auto particle = createPadParticles()) {
-            particle->setStartColor(ccColor4F{ 255, 0, 255, 255 });
-            particle->setEndColor(ccColor4F{ 255, 0, 255, 255 });
-        } // if
-
-        setGlowColor(ccColor3B{ 255, 0, 255 });
-    } // setupCustomObject
-
-    void touchCustomPad(GJBaseGameLayer* level, PlayerObject* player) override {
-        bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
-        if (rand() % 50 == 0) GJBaseGameLayer::get()->destroyPlayer(player, this);
-    } // touchCustomPad
 };
 
 class $object(TestPortal, CustomPortalObject) {
@@ -90,7 +73,7 @@ class $object(TestPortal, CustomPortalObject) {
         } // if
     } // setupCustomObject
 
-    void touchCustomPortal(GJBaseGameLayer* level, PlayerObject* player) override {
+    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) override {
         GameObjectType type;
         switch (rand() % 6) {
             case 0: type = GameObjectType::ShipPortal; break;
@@ -105,12 +88,6 @@ class $object(TestPortal, CustomPortalObject) {
         switchPlayerMode(level, player, type);
         playShineEffect(type);
     } // touchCustomPortal
-};
-
-class $object(TestCollectible, CustomCollectibleObject) {
-    void touchCustomCollectible(GJBaseGameLayer* level, PlayerObject* player) override {
-        log::info("COLLECTED ME!!!!!!!");
-    } // touchCustomCollectible
 };
 
 $execute {
@@ -138,11 +115,28 @@ $execute {
     mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
     mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
 
-    mod->registerCustomObject<TestPad>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13);
-    mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
+    mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13)
+        .onSetupCustomObject([](CustomPadObject* obj) {
+            srand(time(0));
+            if (auto particle = obj->createPadParticles()) {
+                particle->setStartColor(ccColor4F{ 255, 0, 255, 255 });
+                particle->setEndColor(ccColor4F{ 255, 0, 255, 255 });
+            } // if
 
+            obj->setGlowColor(ccColor3B{ 255, 0, 255 });
+        })
+        .onActivateCustomObject([](CustomPadObject* obj, auto level, auto player) {
+            obj->bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
+            if (rand() % 50 == 0) level->destroyPlayer(player, obj);
+        });
+
+    mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
     mod->registerCustomObject<TestPortal>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setCustomRender(1);
-    mod->registerCustomObject<TestCollectible>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setCustomRender(0);
+
+    mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setCustomRender(0)
+        .onActivateCustomObject([](auto, auto, auto) {
+            log::info("COLLECTED ME!!!!!!!");
+        });
 
     mod->registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03);
     mod->registerCustomAnimationSprites("cat_001.png"_spr, 94);
