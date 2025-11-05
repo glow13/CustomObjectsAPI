@@ -49,8 +49,8 @@ class $modify(LoadingLayer) {
         } // if
 
         log::info("Cache is outdated, generating the custom objects spritesheet...");
-        if (auto smallLabel2 = getChildByID("geode-small-label-2")) {
-            auto label = static_cast<CCLabelBMFont*>(smallLabel2);
+        if (auto smallLabel = getChildByID("geode-small-label")) {
+            auto label = static_cast<CCLabelBMFont*>(smallLabel);
             label->setString("Generating custom spritesheet");
         } // if
 
@@ -64,11 +64,6 @@ class $modify(LoadingLayer) {
             auto sheetQuality = manager->getTextureQuality();
             auto sheetName = manager->getSpritesheetQualityName();
             manager->addSpritesheetToCache(sheetName, sheetQuality);
-
-            if (auto smallLabel2 = getChildByID("geode-small-label-2")) {
-                auto label = static_cast<CCLabelBMFont*>(smallLabel2);
-                label->setString("");
-            } // if
         } // if
         continueLoadAssets();
     } // generateCustomSpritesheet
