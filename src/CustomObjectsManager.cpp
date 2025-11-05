@@ -54,21 +54,14 @@ void CustomObjectsManager::processRegisteredMods() {
     spriteManager->processRegisteredSprites();
 } // processRegisteredMods
 
-int CustomObjectsManager::getObjectCount() {
-    return customObjectsCache.size();
-} // getObjectCount
-
 void CustomObjectsManager::printModObjectCount() {
     int modCount = registeredMods.size();
     int objectCount = customObjectsCache.size();
     log::info("A total of {} mods registered {} total custom objects", modCount, objectCount);
 } // printModObjectCount
 
-bool CustomObjectsManager::containsCustomObject(int id) {
-    return customObjectsCache.contains(id);
-} // containsCustomObject
-
 const ICustomObjectConfig* CustomObjectsManager::getCustomObjectByID(int id) {
+    if (!customObjectsCache.contains(id)) return nullptr;
     return customObjectsCache[id];
 } // getCustomObjectByID
 

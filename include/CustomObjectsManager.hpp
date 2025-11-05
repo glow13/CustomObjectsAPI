@@ -18,11 +18,8 @@ public:
 
     CustomObjectsMod* registerCustomObjectsMod(geode::Mod* mod, char offset = 0);
     void processRegisteredMods();
-
-    int getObjectCount();
     void printModObjectCount();
 
-    bool containsCustomObject(int id);
     const ICustomObjectConfig* getCustomObjectByID(int id);
     void forEachCustomObject(std::function<void(const ICustomObjectConfig*)> operation) const;
 };
