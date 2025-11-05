@@ -47,23 +47,15 @@ struct CustomObjectConfig : public ICustomObjectConfig {
 public:
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
-    std::function<FLAlertLayer*(ObjectType*, CCArray*)> editObjectFunction;
-    std::function<FLAlertLayer*(ObjectType*, CCArray*)> editSpecialFunction;
+    std::function<void(ObjectType*, CCArray*)> editObjectFunction;
+    std::function<void(ObjectType*, CCArray*)> editSpecialFunction;
 
     CustomObjectConfig(std::string mod, int id) : ICustomObjectConfig(mod, id) {}
 
+    // Set object sprites
     CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int w, int h) { mainSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
     CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int w, int h) { detailSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
     CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int w, int h) { glowSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
-
-    CustomObjectConfig<ObjectType>& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
-    CustomObjectConfig<ObjectType>& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
-    CustomObjectConfig<ObjectType>& setBoxRadius(int radius) { boxRadius = radius; return *this; }
-    CustomObjectConfig<ObjectType>& setCreateOffset(int x, int y) { createOffset = CCPoint(x, y); return *this; }
-    CustomObjectConfig<ObjectType>& setObjectType(GameObjectType type) { objectType = type; return *this; }
-    CustomObjectConfig<ObjectType>& setCustomRender(int parent = 4) { parentMode = parent; return *this; }
-    CustomObjectConfig<ObjectType>& setFramesCount(int frames) { framesCount = frames; return *this; }
-    CustomObjectConfig<ObjectType>& setFrameTime(float time) { frameTime = time; return *this; }
 
     // Inline helper functions for sprite frames
     inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int size) { return setMainSprite(frame, size, size); }
@@ -73,6 +65,23 @@ public:
     inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int size) { return setGlowSprite(frame, size, size); }
     inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame) { return setGlowSprite(frame, 0, 0); }
 
+    // Set object config values
+    CustomObjectConfig<ObjectType>& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
+    CustomObjectConfig<ObjectType>& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
+    CustomObjectConfig<ObjectType>& setBoxRadius(int radius) { boxRadius = radius; return *this; }
+    CustomObjectConfig<ObjectType>& setCreateOffset(int x, int y) { createOffset = CCPoint(x, y); return *this; }
+    CustomObjectConfig<ObjectType>& setObjectType(GameObjectType type) { objectType = type; return *this; }
+    CustomObjectConfig<ObjectType>& setCustomRender(int parent = 4) { parentMode = parent; return *this; }
+    CustomObjectConfig<ObjectType>& setFramesCount(int frames) { framesCount = frames; return *this; }
+    CustomObjectConfig<ObjectType>& setFrameTime(float time) { frameTime = time; return *this; }
+
+    // Set callback functions
+    CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, CCArray*)> callback) { editObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, CCArray*)> callback) { editSpecialFunction = callback; return *this; }
+
+    // Create new object using this config
     ObjectType* create() const override {
         ObjectType* obj = ObjectType::create(this);
 

@@ -24,8 +24,15 @@ public:
     } // create
 
 protected:
-    virtual void setupCustomObject() {}
-    virtual void resetCustomObject() {}
+    virtual void setupCustomObject() {
+        if (!(config->setupCustomObjectFunction)) return;
+        (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
+    } // setupCustomObject
+
+    virtual void resetCustomObject() {
+        if (!(config->resetCustomObjectFunction)) return;
+        (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
+    } // resetCustomObject
 
     bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
         if (!ObjectBase::init(config->mainSprite)) return false;
