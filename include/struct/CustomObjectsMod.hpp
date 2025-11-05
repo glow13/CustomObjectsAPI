@@ -6,6 +6,8 @@
 
 using namespace geode::prelude;
 
+class CustomGameObject;
+
 struct CustomObjectsMod {
 public:
     geode::Mod* mod;
