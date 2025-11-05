@@ -17,7 +17,7 @@ public:
 
     CustomObjectsMod(geode::Mod* mod, char offset);
 
-    template <class ObjectType>
+    template <class ObjectType = CustomGameObject>
     CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
         int id = objectID + objects.size();
         log::debug("Registered custom object with id {}", id);
@@ -28,11 +28,15 @@ public:
         return *config;
     } // registerCustomObject
 
-    template <class ObjectType>
-    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) { return registerCustomObject<ObjectType>(spr, sprSize, sprSize); }
+    template <class ObjectType = CustomGameObject>
+    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) {
+        return registerCustomObject<ObjectType>(spr, sprSize, sprSize);
+    } // registerCustomObject
 
-    template <class ObjectType>
-    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) { return registerCustomObject<ObjectType>(spr, 0, 0); }
+    template <class ObjectType = CustomGameObject>
+    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) {
+        return registerCustomObject<ObjectType>(spr, 0, 0);
+    } // registerCustomObject
 
     void registerCustomSprite(std::string spr, int sprWidth, int sprHeight);
     void registerCustomAnimationSprites(std::string spr, int sprWidth, int sprHeight, int frames);

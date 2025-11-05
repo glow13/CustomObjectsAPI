@@ -117,26 +117,26 @@ $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
 
-    mod->registerCustomObject<CustomGameObject>("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
+    mod->registerCustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
     mod->registerCustomObject<SmileGameObject>("smile-block.png"_spr);
     mod->registerCustomObject<ContainerGameObject>("container.png"_spr);
 
-    mod->registerCustomObject<CustomGameObject>("block-1.png"_spr);
-    mod->registerCustomObject<CustomGameObject>("block-2.png"_spr);
-    mod->registerCustomObject<CustomGameObject>("block-3.png"_spr);
-    mod->registerCustomObject<CustomGameObject>("block-4.png"_spr);
-    mod->registerCustomObject<CustomGameObject>("block-5.png"_spr);
-    mod->registerCustomObject<CustomGameObject>("block-6.png"_spr);
-    mod->registerCustomObject<CustomGameObject>("block-7.png"_spr, 60, 30);
-    mod->registerCustomObject<CustomGameObject>("block-8.png"_spr, 60, 30);
-    mod->registerCustomObject<CustomGameObject>("block-9.png"_spr, 60, 30);
-    mod->registerCustomObject<CustomGameObject>("block-10.png"_spr, 60);
-    mod->registerCustomObject<CustomGameObject>("block-11.png"_spr, 60);
-    mod->registerCustomObject<CustomGameObject>("block-12.png"_spr, 60);
+    mod->registerCustomObject("block-1.png"_spr);
+    mod->registerCustomObject("block-2.png"_spr);
+    mod->registerCustomObject("block-3.png"_spr);
+    mod->registerCustomObject("block-4.png"_spr);
+    mod->registerCustomObject("block-5.png"_spr);
+    mod->registerCustomObject("block-6.png"_spr);
+    mod->registerCustomObject("block-7.png"_spr, 60, 30);
+    mod->registerCustomObject("block-8.png"_spr, 60, 30);
+    mod->registerCustomObject("block-9.png"_spr, 60, 30);
+    mod->registerCustomObject("block-10.png"_spr, 60);
+    mod->registerCustomObject("block-11.png"_spr, 60);
+    mod->registerCustomObject("block-12.png"_spr, 60);
 
-    mod->registerCustomObject<CustomGameObject>("spike_01_001.png").setGlowSprite("spike_01_glow_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
-    mod->registerCustomObject<CustomGameObject>("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
-    mod->registerCustomObject<CustomGameObject>("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
+    mod->registerCustomObject("spike_01_001.png").setGlowSprite("spike_01_glow_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
+    mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
+    mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
 
     mod->registerCustomObject<TestPad>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13);
     mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
