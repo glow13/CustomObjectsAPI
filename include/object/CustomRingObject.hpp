@@ -17,6 +17,7 @@ public:
         this->m_duration = 0;
         this->m_usesAudioScale = true;
         this->m_greenDebugDraw = true;
+        this->m_baseColor->m_defaultColorID = 0;
 
         return true;
     } // init
@@ -32,6 +33,10 @@ private:
         RingObject::activatedByPlayer(player);
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
+
+    bool canAllowMultiActivate() override {
+        return true;
+    } // canAllowMultiActivate
 };
 
 class CustomRingObject : public CustomRingObjectBase<CustomRingObject> {};

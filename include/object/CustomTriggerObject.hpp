@@ -14,6 +14,7 @@ public:
         this->m_objectType = GameObjectType::Modifier;
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
+        this->m_baseColor->m_defaultColorID = 0;
 
         return true;
     } // init

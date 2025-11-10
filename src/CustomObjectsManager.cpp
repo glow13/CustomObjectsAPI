@@ -27,9 +27,9 @@ void CustomObjectsManager::processRegisteredMods() {
                 obj->detailSprite.custom = false;
                 obj->glowSprite.custom = false;
             } else {
-                spriteManager->processCustomObjectSprite(&(obj->mainSprite));
-                spriteManager->processCustomObjectSprite(&(obj->detailSprite));
-                spriteManager->processCustomObjectSprite(&(obj->glowSprite));
+                spriteManager->processCustomObjectSprite(&obj->mainSprite);
+                spriteManager->processCustomObjectSprite(&obj->detailSprite);
+                spriteManager->processCustomObjectSprite(&obj->glowSprite);
             } // if
 
             if (obj->hasCustomAnimation()) {

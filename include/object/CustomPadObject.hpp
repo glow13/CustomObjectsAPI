@@ -16,6 +16,7 @@ public:
         this->m_height = 5;
         this->m_duration = 0;
         this->m_greenDebugDraw = true;
+        this->m_baseColor->m_defaultColorID = 0;
 
         this->m_isTrigger = false;
         this->m_isSpawnTriggered = false;
@@ -48,6 +49,10 @@ private:
             this->activateCustomObject(level, player);
         } // if
     } // triggerObject
+
+    bool canAllowMultiActivate() override {
+        return true;
+    } // canAllowMultiActivate
 };
 
 class CustomPadObject : public CustomPadObjectBase<CustomPadObject> {};

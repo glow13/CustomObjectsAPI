@@ -19,6 +19,7 @@ public:
         this->m_zFixedZLayer = true;
         this->m_defaultZLayer = ZLayer::T1;
         this->m_particleOffset = CCPoint(-5, 0);
+        this->m_baseColor->m_defaultColorID = 0;
 
         this->m_isTrigger = false;
         this->m_isSpawnTriggered = false;
@@ -145,6 +146,10 @@ private:
     GameObjectType getType() const override {
         return this->m_fakeType;
     } // getType
+
+    bool canAllowMultiActivate() override {
+        return true;
+    } // canAllowMultiActivate
 };
 
 class CustomPortalObject : public CustomPortalObjectBase<CustomPortalObject> {};
