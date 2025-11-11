@@ -29,6 +29,12 @@ public:
         if (!config->mainSprite) this->setDontDraw(true);
         if (config->detailSprite) this->addPortalBackSprite(config->detailSprite, CCPoint(0, 0), -90);
 
+        this->template setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
+        this->template setupObjectProperty<bool>(112, this->m_cameraEditCameraSettings);
+        this->template setupObjectProperty<float>(113, this->m_cameraEasingValue, [this](){return this->m_cameraEditCameraSettings;});
+        this->template setupObjectProperty<float>(114, this->m_cameraPaddingValue, [this](){return this->m_cameraEditCameraSettings;});
+        this->template setupObjectProperty<bool>(370, this->m_cameraDisableGridSnap);
+
         return true;
     } // init
 

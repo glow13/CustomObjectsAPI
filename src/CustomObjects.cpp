@@ -131,7 +131,10 @@ $execute {
         });
 
     mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
-    mod->registerCustomObject<TestPortal>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setCustomRender(1);
+    mod->registerCustomObject<TestPortal>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setCustomRender(1)
+        .onEditObjectButton([](auto obj, auto objs) {
+            SetupCameraModePopup::create(obj, objs)->show();
+        });
 
     mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setCustomRender(0)
         .onActivateCustomObject([](auto, auto, auto) {
