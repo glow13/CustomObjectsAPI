@@ -75,32 +75,6 @@ protected:
         return true;
     } // commonSetup
 
-private:
-    const CustomObjectConfig<ObjectType>* config;
-    std::map<std::string, std::string> savedValues;
-
-    bool loadSavedValuesFromString(std::string saveString) {
-
-        // Are there any saved values to load?
-        if (saveString.empty()) return false;
-
-        // Base64 decode the saved string
-        auto result = base64::decodeString(saveString);
-        if (!result.isOk()) return false;
-
-        // Parse the string and load the values
-        std::stringstream valuesString(result.unwrap());
-        std::string key, valueStr;
-
-        savedValues.clear();
-        while (std::getline(valuesString, key, ',')) {
-            std::getline(valuesString, valueStr, ',');
-            savedValues[key] = valueStr;
-        } // while
-
-        return true;
-    } // loadSavedValuesFromString
-
     gd::string getSaveString(GJBaseGameLayer* p0) override {
         std::string saveString = ObjectBase::getSaveString(p0);
         if (savedValues.empty()) return saveString;
@@ -132,6 +106,32 @@ private:
             parent->addChild(this->m_glowSprite, -1000);
         } // if
     } // activateObject
+
+private:
+    const CustomObjectConfig<ObjectType>* config;
+    std::map<std::string, std::string> savedValues;
+
+    bool loadSavedValuesFromString(std::string saveString) {
+
+        // Are there any saved values to load?
+        if (saveString.empty()) return false;
+
+        // Base64 decode the saved string
+        auto result = base64::decodeString(saveString);
+        if (!result.isOk()) return false;
+
+        // Parse the string and load the values
+        std::stringstream valuesString(result.unwrap());
+        std::string key, valueStr;
+
+        savedValues.clear();
+        while (std::getline(valuesString, key, ',')) {
+            std::getline(valuesString, valueStr, ',');
+            savedValues[key] = valueStr;
+        } // while
+
+        return true;
+    } // loadSavedValuesFromString
 
     void setStartPos(cocos2d::CCPoint p0) override {
         if (auto editor = LevelEditorLayer::get()) {

@@ -39,6 +39,12 @@ public:
     inline bool isCustomRender() const { return parentMode != PARENT_MODE_DEFAULT; }
     inline bool hasCustomAnimation() const { return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame(); }
 
+    virtual bool hasEditObjectFunction() const { return false; }
+    virtual bool hasEditSpecialFunction() const { return false; }
+
+    virtual void customEditObject(GameObject*, CCArray*) const {}
+    virtual void customEditSpecial(GameObject*, CCArray*) const {}
+
     virtual GameObject* create() const { return nullptr; };
 };
 
@@ -50,6 +56,12 @@ public:
     std::function<void(ObjectType*, CCArray*)> editObjectFunction;
     std::function<void(ObjectType*, CCArray*)> editSpecialFunction;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectFunction;
+
+    bool hasEditObjectFunction() const override { return (bool)editObjectFunction; }
+    bool hasEditSpecialFunction() const override { return (bool)editSpecialFunction; }
+
+    void customEditObject(GameObject* obj, CCArray* objs) const override { editObjectFunction(static_cast<ObjectType*>(obj), objs); }
+    void customEditSpecial(GameObject* obj, CCArray* objs) const override { editSpecialFunction(static_cast<ObjectType*>(obj), objs); }
 
     CustomObjectConfig(std::string mod, int id) : ICustomObjectConfig(mod, id) {}
 
