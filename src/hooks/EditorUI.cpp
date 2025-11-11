@@ -28,6 +28,54 @@ class $modify(EditorUI) {
         return true;
     } // init
 
+    bool editButtonUsable() {
+        int objectID, classType, objectType;
+        getGroupInfo(m_selectedObject, m_selectedObjects, objectID, classType, objectType);
+
+        if (objectID >= 10000) {
+            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
+            if (obj && obj->hasEditObjectFunction()) return true;
+        } // if
+
+        return EditorUI::editButtonUsable();
+    } // editButtonUsable
+
+    bool editButton2Usable() {
+        int objectID, classType, objectType;
+        getGroupInfo(m_selectedObject, m_selectedObjects, objectID, classType, objectType);
+
+        if (objectID >= 10000) {
+            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
+            if (obj && obj->hasEditSpecialFunction()) return true;
+        } // if
+
+        return EditorUI::editButton2Usable();
+    } // editButton2Usable
+
+    void editObject(CCObject* p0) {
+        int objectID, classType, objectType;
+        getGroupInfo(m_selectedObject, m_selectedObjects, objectID, classType, objectType);
+
+        if (objectID >= 10000) {
+            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
+            if (obj && obj->hasEditObjectFunction()) {
+                obj->customEditObject(m_selectedObject, m_selectedObjects);
+            } else EditorUI::editObject(p0);
+        } else EditorUI::editObject(p0);
+    } // editObject
+
+    void editObjectSpecial(int p0) {
+        int objectID, classType, objectType;
+        getGroupInfo(m_selectedObject, m_selectedObjects, objectID, classType, objectType);
+
+        if (objectID >= 10000) {
+            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
+            if (obj && obj->hasEditSpecialFunction()) {
+                obj->customEditSpecial(m_selectedObject, m_selectedObjects);
+            } else EditorUI::editObjectSpecial(p0);
+        } else EditorUI::editObjectSpecial(p0);
+    } // editObjectSpecial
+
     #define $compare1(var) if (obj1->var != obj2->var) log::info(#var" = {}, {}", obj1->var, obj2->var)
     #define $compare2(var) if (obj1->var != obj2->var) log::info(#var)
 
