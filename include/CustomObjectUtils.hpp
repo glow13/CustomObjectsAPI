@@ -44,7 +44,6 @@ public:
         return oldValue;
     } // setSavedValue
 
-protected:
     virtual void setupCustomObject() {
         if (!(config->setupCustomObjectFunction)) return;
         (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
@@ -60,6 +59,7 @@ protected:
         (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this), level, player);
     } // activateCustomObject
 
+protected:
     bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
         if (!ObjectBase::init(config->mainSprite)) return false;
 
@@ -74,16 +74,6 @@ protected:
 
         return true;
     } // commonSetup
-
-    gd::string getSaveString(GJBaseGameLayer* p0) override {
-        std::string saveString = ObjectBase::getSaveString(p0);
-        if (savedValues.empty()) return saveString;
-
-        std::string valuesString;
-        for (auto [key, value] : savedValues) valuesString += fmt::format("{},{},", key, value);
-        valuesString = valuesString.substr(0, valuesString.length() - 1);
-        return saveString += fmt::format(",500,{}", base64::encode(valuesString));
-    } // getSaveString
 
     void addMainSpriteToParent(bool p0) override {
         bool disableBlend = (this->m_parentMode == 4);
@@ -106,6 +96,12 @@ protected:
             parent->addChild(this->m_glowSprite, -1000);
         } // if
     } // activateObject
+
+    void setStartPos(cocos2d::CCPoint p0) override {
+        if (auto editor = LevelEditorLayer::get()) {
+            ObjectBase::setStartPos((editor->m_editorUI) ? p0 + config->createOffset : p0);
+        } else ObjectBase::setStartPos(p0);
+    } // setStartPos
 
 private:
     const CustomObjectConfig<ObjectType>* config;
@@ -133,11 +129,15 @@ private:
         return true;
     } // loadSavedValuesFromString
 
-    void setStartPos(cocos2d::CCPoint p0) override {
-        if (auto editor = LevelEditorLayer::get()) {
-            ObjectBase::setStartPos((editor->m_editorUI) ? p0 + config->createOffset : p0);
-        } else ObjectBase::setStartPos(p0);
-    } // setStartPos
+    gd::string getSaveString(GJBaseGameLayer* p0) override {
+        std::string saveString = ObjectBase::getSaveString(p0);
+        if (savedValues.empty()) return saveString;
+
+        std::string valuesString;
+        for (auto [key, value] : savedValues) valuesString += fmt::format("{},{},", key, value);
+        valuesString = valuesString.substr(0, valuesString.length() - 1);
+        return saveString += fmt::format(",500,{}", base64::encode(valuesString));
+    } // getSaveString
 
     void customObjectSetup(gd::vector<gd::string>& p0, gd::vector<void*>& p1) override {
         ObjectBase::customObjectSetup(p0, p1);
