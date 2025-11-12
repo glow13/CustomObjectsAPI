@@ -1,7 +1,5 @@
 #include "struct/CustomObjectsMod.hpp"
 
-#include "object/CustomGameObject.hpp"
-
 CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, char offset) : mod(mod), modID(mod->getID()) {
     uint32_t min = 10000;
     uint32_t max = INT32_MAX - 100;

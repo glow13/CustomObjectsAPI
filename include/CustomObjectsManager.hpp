@@ -11,7 +11,7 @@ private:
     static inline CustomObjectsManager* s_manager;
 
     std::vector<CustomObjectsMod*> registeredMods;
-    std::map<int, ICustomObjectConfig*> customObjectsCache;
+    std::unordered_map<int, ICustomObjectConfig*> customObjectsCache;
 
 public:
     static CustomObjectsManager* get();

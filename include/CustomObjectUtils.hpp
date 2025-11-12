@@ -135,8 +135,8 @@ private:
     };
 
     const CustomObjectConfig<ObjectType>* config;
-    std::map<std::string, std::string> savedValues;
-    std::map<int, IObjectProp*> objectProperties;
+    std::unordered_map<std::string, std::string> savedValues;
+    std::unordered_map<int, IObjectProp*> objectProperties;
 
     bool loadSavedValuesFromString(std::string saveString) {
 
