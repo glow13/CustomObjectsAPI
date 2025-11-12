@@ -44,11 +44,6 @@ public:
         return oldValue;
     } // setSavedValue
 
-    template <typename ValueType>
-    void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = [](){return true;}) {
-        objectProperties[key] = new ObjectProp<ValueType>(value, cond);
-    } // setupObjectProperty
-
     virtual void setupCustomObject() {
         if (!(config->setupCustomObjectFunction)) return;
         (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
@@ -65,6 +60,11 @@ public:
     } // activateCustomObject
 
 protected:
+    template <typename ValueType>
+    void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = [](){return true;}) {
+        objectProperties[key] = new ObjectProp<ValueType>(value, cond);
+    } // setupObjectProperty
+
     bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
         if (!ObjectBase::init(config->mainSprite)) return false;
 

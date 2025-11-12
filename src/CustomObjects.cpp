@@ -65,7 +65,6 @@ public:
 class $object(TestPortal, CustomPortalObject) {
     void setupCustomObject() override {
         srand(time(0));
-        m_cameraIsFreeMode = true;
 
         if (auto particle = createPortalParticles()) {
             particle->setStartColor(ccColor4F{ 255, 255, 0, 255 });
