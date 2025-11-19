@@ -94,7 +94,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
 
     // Initialize sprites vector and find side lengths
     for (auto sprite : customSprites) {
-        auto spr = CustomSheetSprite(sprite->frame, sprite->sourceFrame, sprite->size, quality);
+        auto spr = CustomSheetSprite(sprite->frame, sprite->sourceFrame, sprite->rect, quality);
 
         sprites.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;

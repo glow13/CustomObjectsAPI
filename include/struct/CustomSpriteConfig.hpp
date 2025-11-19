@@ -13,11 +13,11 @@ public:
     std::string frame;
     std::string sourceFrame;
     std::string mod;
-    CCSize size;
+    CCRect rect;
     bool custom;
 
     CustomSpriteConfig();
-    CustomSpriteConfig(std::string frame, std::string mod, CCSize size);
+    CustomSpriteConfig(std::string frame, std::string mod, CCRect rect);
 
     inline operator gd::string() const { return frame; }
     inline operator const char*() const { return frame.c_str(); }

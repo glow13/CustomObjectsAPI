@@ -66,17 +66,20 @@ public:
     CustomObjectConfig(std::string mod, int id) : ICustomObjectConfig(mod, id) {}
 
     // Set object sprites
-    CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int w, int h) { mainSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
-    CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int w, int h) { detailSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
-    CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int w, int h) { glowSprite = CustomSpriteConfig(frame, mod, CCSize(w, h)); return *this; }
+    CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int x, int y, int w, int h) { mainSprite = CustomSpriteConfig(frame, mod, CCRect(x, y, w, h)); return *this; }
+    CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int x, int y, int w, int h) { detailSprite = CustomSpriteConfig(frame, mod, CCRect(x, y, w, h)); return *this; }
+    CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int x, int y, int w, int h) { glowSprite = CustomSpriteConfig(frame, mod, CCRect(x, y, w, h)); return *this; }
 
     // Inline helper functions for sprite frames
-    inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int size) { return setMainSprite(frame, size, size); }
-    inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame) { return setMainSprite(frame, 0, 0); }
-    inline CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int size) { return setDetailSprite(frame, size, size); }
-    inline CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame) { return setDetailSprite(frame, 0, 0); }
-    inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int size) { return setGlowSprite(frame, size, size); }
-    inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame) { return setGlowSprite(frame, 0, 0); }
+    inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int w, int h) { return setMainSprite(frame, 0, 0, w, h); }
+    inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int size) { return setMainSprite(frame, 0, 0, size, size); }
+    inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame) { return setMainSprite(frame, 0, 0, 0, 0); }
+    inline CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int w, int h) { return setDetailSprite(frame, 0, 0, w, h); }
+    inline CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int size) { return setDetailSprite(frame, 0, 0, size, size); }
+    inline CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame) { return setDetailSprite(frame, 0, 0, 0, 0); }
+    inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int w, int h) { return setGlowSprite(frame, 0, 0, w, h); }
+    inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int size) { return setGlowSprite(frame, 0, 0, size, size); }
+    inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame) { return setGlowSprite(frame, 0, 0, 0, 0); }
 
     // Set object config values
     CustomObjectConfig<ObjectType>& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }

@@ -11,12 +11,13 @@ struct CustomSheetSprite {
     std::string sourceFrame;
 
     rectpack2D::rect_wh size; // desired final size of the sprite in the spritesheet
+    rectpack2D::rect_wh offset; // user-defined offset of the sprite, seperate from the trim process
     rectpack2D::rect_xywh trim; // rect that designates the size of the not-transparent content in the scaled sprite
     rectpack2D::rect_xywhf rect; // rect that designates the size and position of this sprite in the spritesheet
 
     CustomSheetSprite();
     CustomSheetSprite(const rectpack2D::rect_xywhf& rect);
-    CustomSheetSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality);
+    CustomSheetSprite(std::string frame, std::string sourceFrame, CCRect rect, Quality quality);
 
     std::string offString() const;
     std::string sizeString() const;

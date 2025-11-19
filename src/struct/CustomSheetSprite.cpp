@@ -2,15 +2,16 @@
 
 CustomSheetSprite::CustomSheetSprite() : frame(""), sourceFrame(""), rect({0, 0, 0, 0, false}) {}
 CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
-CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) {
+CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame, CCRect rect, Quality quality) {
     this->frame = frame;
     this->sourceFrame = sourceFrame;
+    this->offset = {(int)rect.origin.x * quality, (int)rect.origin.y * quality};
 
     // Find the original sprite frame
     auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
     auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
     if (!source) {
-        this->size = {(int)std::ceil(size.width * (int)quality), (int)std::ceil(size.height * (int)quality)};
+        this->size = {(int)std::ceil(rect.size.width * (int)quality), (int)std::ceil(rect.size.height * (int)quality)};
         this->trim = {0, 0, this->size.w, this->size.h};
         this->rect = {0, 0, this->size.w, this->size.h, false};
         return;
@@ -21,8 +22,8 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     auto oSize = source->getOriginalSize();
 
     // Set the size of the sprite, use the original size if no size was provided
-    if (size.isZero()) this->size = {(int)std::ceil(oSize.width * (int)quality), (int)std::ceil(oSize.height * (int)quality)};
-    else this->size = {(int)std::ceil(size.width * (int)quality), (int)std::ceil(size.height * (int)quality)};
+    if (rect.size.isZero()) this->size = {(int)std::ceil(oSize.width * (int)quality), (int)std::ceil(oSize.height * (int)quality)};
+    else this->size = {(int)std::ceil(rect.size.width * (int)quality), (int)std::ceil(rect.size.height * (int)quality)};
 
     // Render the sprite at the desired size
     auto render = CCRenderTexture::create(this->size.w / quality, this->size.h / quality);
@@ -84,7 +85,7 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
 std::string CustomSheetSprite::offString() const {
     int offsetX = (trim.x + trim.w / 2) - (size.w / 2);
     int offsetY = (size.h / 2) - (trim.y + trim.h / 2);
-    return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
+    return "{" + fmt::format("{},{}", offsetX + offset.w, offsetY + offset.h) + "}";
 } // offString
 
 std::string CustomSheetSprite::sizeString() const {
