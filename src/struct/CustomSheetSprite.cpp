@@ -1,8 +1,8 @@
 #include "struct/CustomSheetSprite.hpp"
 
-CustomObjectSprite::CustomObjectSprite() : frame(""), sourceFrame(""), rect({0, 0, 0, 0, false}) {}
-CustomObjectSprite::CustomObjectSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
-CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) {
+CustomSheetSprite::CustomSheetSprite() : frame(""), sourceFrame(""), rect({0, 0, 0, 0, false}) {}
+CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
+CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality) {
     this->frame = frame;
     this->sourceFrame = sourceFrame;
 
@@ -81,26 +81,26 @@ CustomObjectSprite::CustomObjectSprite(std::string frame, std::string sourceFram
     image->release();
 } // CustomObjectSprite
 
-std::string CustomObjectSprite::offString() const {
+std::string CustomSheetSprite::offString() const {
     int offsetX = (trim.x + trim.w / 2) - (size.w / 2);
     int offsetY = (size.h / 2) - (trim.y + trim.h / 2);
     return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
 } // offString
 
-std::string CustomObjectSprite::sizeString() const {
+std::string CustomSheetSprite::sizeString() const {
     int width = rect.flipped ? rect.h : rect.w;
     int height = rect.flipped ? rect.w : rect.h;
     return "{" + fmt::format("{},{}", width, height) + "}";
 } // sizeString
 
-std::string CustomObjectSprite::rectString() const {
+std::string CustomSheetSprite::rectString() const {
     return "{{" + fmt::format("{},{}", rect.x, rect.y) + "}," + sizeString() + "}";
 } // rectString
 
-std::string CustomObjectSprite::sourceString() const {
+std::string CustomSheetSprite::sourceString() const {
     return "{" + fmt::format("{},{}", size.w, size.h) + "}";
 } // sourceString
 
-std::string CustomObjectSprite::rotatedString() const {
+std::string CustomSheetSprite::rotatedString() const {
     return rect.flipped ? "<true/>" : "<false/>";
 } // rotatedString

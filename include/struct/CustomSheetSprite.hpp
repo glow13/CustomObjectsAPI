@@ -6,17 +6,17 @@ using namespace geode::prelude;
 
 enum Quality : int;
 
-struct CustomObjectSprite {
+struct CustomSheetSprite {
     std::string frame;
     std::string sourceFrame;
 
     rectpack2D::rect_wh size; // desired final size of the sprite in the spritesheet
-    rectpack2D::rect_xywh trim; // rect that designates the size of the not transparent content in the scaled sprite
+    rectpack2D::rect_xywh trim; // rect that designates the size of the not-transparent content in the scaled sprite
     rectpack2D::rect_xywhf rect; // rect that designates the size and position of this sprite in the spritesheet
 
-    CustomObjectSprite();
-    CustomObjectSprite(const rectpack2D::rect_xywhf& rect);
-    CustomObjectSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality);
+    CustomSheetSprite();
+    CustomSheetSprite(const rectpack2D::rect_xywhf& rect);
+    CustomSheetSprite(std::string frame, std::string sourceFrame, CCSize size, Quality quality);
 
     std::string offString() const;
     std::string sizeString() const;

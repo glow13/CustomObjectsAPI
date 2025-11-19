@@ -89,12 +89,12 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
 
 CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteConfig*> customSprites, Quality quality) {
     if (customSprites.size() == 0) return nullptr;
-    std::vector<CustomObjectSprite> sprites;
+    std::vector<CustomSheetSprite> sprites;
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
     for (auto sprite : customSprites) {
-        auto spr = CustomObjectSprite(sprite->frame, sprite->sourceFrame, sprite->size, quality);
+        auto spr = CustomSheetSprite(sprite->frame, sprite->sourceFrame, sprite->size, quality);
 
         sprites.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;
@@ -120,7 +120,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
     return sheet;
 } // create
 
-rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomObjectSprite> &sprites) {
+rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomSheetSprite> &sprites) {
     using namespace rectpack2D;
 
     // Buffer sprites
