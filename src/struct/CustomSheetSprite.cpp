@@ -32,54 +32,56 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     oSprite->setScaleX(this->size.w / oSize.width / (int)quality);
     oSprite->setScaleY(this->size.h / oSize.height / (int)quality);
     oSprite->visit();
-    render->end();
 
     // Get the raw sprite pixel data
-    auto image = render->newCCImage();
-    auto width = image->getWidth();
-    auto height = image->getHeight();
-    auto data = image->getData();
+    auto& s = render->m_pTexture->getContentSizeInPixels();
+    unsigned int w = s.width, h = s.height;
+    auto data = new uint8_t[w * h * 4];
 
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    render->end();
+    render->release();
+    oSprite->release();
+
+    // Calculate the minimum rect to contain the sprite
     int maxX = 0;
     int maxY = 0;
-    int minX = width;
-    int minY = height;
+    int minX = w;
+    int minY = h;
     int threshold = 4;
 
     // Find top edge
-    for (int y = 0, total = 0; y < height && minY == height; y++) {
-        for (int x = 0; x < width; x++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
+    for (int y = 0, total = 0; y < h && minY == h; y++) {
+        for (int x = 0; x < w; x++) if (data[(y * w + x) * 4 + 3]) total++;
         if (total >= threshold) minY = y;
     } // for
 
     // Find bottom edge
-    for (int y = height - 1, total = 0; y >= minY && maxY == 0; y--) {
-        for (int x = 0; x < width; x++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
+    for (int y = h - 1, total = 0; y >= minY && maxY == 0; y--) {
+        for (int x = 0; x < w; x++) if (data[(y * w + x) * 4 + 3]) total++;
         if (total >= threshold) maxY = y;
     } // for
 
     // Find left edge
-    for (int x = 0, total = 0; x < width && minX == width; x++) {
-        for (int y = minY; y <= maxY; y++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
+    for (int x = 0, total = 0; x < w && minX == w; x++) {
+        for (int y = minY; y <= maxY; y++) if (data[(y * w + x) * 4 + 3]) total++;
         if (total >= threshold) minX = x;
     } // for
 
     // Find right edge
-    for (int x = width - 1, total = 0; x >= minX && maxX == 0; x--) {
-        for (int y = minY; y <= maxY; y++) if (*(data + (y * width * 4) + (x * 4) + 3) > 0) total++;
+    for (int x = w - 1, total = 0; x >= minX && maxX == 0; x--) {
+        for (int y = minY; y <= maxY; y++) if (data[(y * w + x) * 4 + 3]) total++;
         if (total >= threshold) maxX = x;
     } // for
 
     // Calculate the sprite trim rect and sprite sheet rect
     int sprWidth = std::ceil((maxX - minX + 1) / (float)quality) * (int)quality;
     int sprHeight = std::ceil((maxY - minY + 1) / (float)quality) * (int)quality;
-    this->trim = {minX, minY, sprWidth, sprHeight};
+    this->trim = {minX, (int)h - maxY, sprWidth, sprHeight}; // flip y
     this->rect = {0, 0, sprWidth, sprHeight, false};
-
-    // Clean up
-    oSprite->release();
-    render->release();
-    image->release();
+    delete[] data;
 } // CustomObjectSprite
 
 std::string CustomSheetSprite::offString() const {
