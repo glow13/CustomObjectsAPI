@@ -28,24 +28,29 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     // Save the rendered image pixel data
     auto& s = render->m_pTexture->getContentSizeInPixels();
     unsigned int w = s.width, h = s.height;
-    auto buffer = new uint8_t[w * h * 4];
 
+    std::vector<uint8_t> data(w * h * 4);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
 
     render->end();
     render->release();
 
     // Flip the image
-    std::vector<uint8_t> data(w * h * 4);
-    for (int i = 0; i < h; i++) memcpy(&data[i * w * 4], &buffer[(h - i - 1) * w * 4], w * 4);
-    delete[] buffer;
+    for (int y = 0; y < h / 2; y++) {
+        auto begin = data.begin() + y * w * 4;
+        auto end = data.end() - (y + 1) * w * 4;
+        std::swap_ranges(begin, begin + w * 4, end);
+    } // for
 
     // Reverse premultiply alpha
-    for (long i = 0; i < w * h * 4; i++) {
-        if ((i + 1) % 4 == 0) continue;
-        float a = data[i - (i % 4) + 3] / 255.0f;
-        data[i] = (uint8_t)(data[i] / (a > 0 ? a : 1));
+    for (long i = 0; i < w * h * 4; i += 4) {
+        float a = data[i+3];
+        if (a == 0 || a == 255) continue;
+
+        data[i+0] *= 255 / a;
+        data[i+1] *= 255 / a;
+        data[i+2] *= 255 / a;
     } // for
 
     return lodepng::encode((path + name + ".png"), data, w, h) == 0;
