@@ -103,10 +103,28 @@ protected:
     } // activateObject
 
     void setStartPos(cocos2d::CCPoint p0) override {
-        if (auto editor = LevelEditorLayer::get()) {
-            ObjectBase::setStartPos((editor->m_editorUI) ? p0 + config->createOffset : p0);
-        } else ObjectBase::setStartPos(p0);
+        if (this->m_editorEnabled) {
+            if (auto lel = LevelEditorLayer::get(); lel && lel->m_editorUI) {
+                p0 += config->createOffset;
+            } // if
+        } // if
+        ObjectBase::setStartPos(p0);
     } // setStartPos
+
+    void customSetup() override {
+        ObjectBase::customSetup();
+        setupCustomObject();
+    } // customSetup
+
+    void firstSetup() override {
+        ObjectBase::firstSetup();
+        setupCustomObject();
+    } // firstSetup
+
+    void resetObject() override {
+        ObjectBase::resetObject();
+        resetCustomObject();
+    } // resetObject
 
 private:
     struct IObjectProp {
@@ -177,20 +195,9 @@ private:
     void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override {
         ObjectBase::customObjectSetup(propValues, propIsPresent);
         loadSavedValuesFromString(propValues[500]);
-        setupCustomObject();
 
         for (auto [key, prop] : objectProperties) {
             if (propIsPresent[key]) prop->setValue(propValues[key]);
         } // for
     } // customObjectSetup
-
-    void resetObject() override {
-        ObjectBase::resetObject();
-        resetCustomObject();
-    } // resetObject
-
-    void firstSetup() override {
-        ObjectBase::firstSetup();
-        setupCustomObject();
-    } // firstSetup
 };
