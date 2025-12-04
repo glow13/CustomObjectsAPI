@@ -25,10 +25,10 @@ std::string CustomSpritesManager::getSpritesheetQualityName() {
     } // switch
 } // getSpritesheetImagePath
 
-void CustomSpritesManager::processCustomObjectSprite(CustomSpriteConfig* spr) {
+void CustomSpritesManager::registerCustomObjectSprite(CustomSpriteConfig* spr) {
     spr->generateFrame();
     if (spr) customSpritesCache.emplace_back(spr);
-} // processCustomObjectSprite
+} // registerCustomObjectSprite
 
 void CustomSpritesManager::processRegisteredSprites() {
     std::unordered_set<std::string> sprites;

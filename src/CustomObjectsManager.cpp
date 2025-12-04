@@ -27,9 +27,9 @@ void CustomObjectsManager::processRegisteredMods() {
                 obj->detailSprite.custom = false;
                 obj->glowSprite.custom = false;
             } else {
-                spriteManager->processCustomObjectSprite(&obj->mainSprite);
-                spriteManager->processCustomObjectSprite(&obj->detailSprite);
-                spriteManager->processCustomObjectSprite(&obj->glowSprite);
+                spriteManager->registerCustomObjectSprite(&obj->mainSprite);
+                spriteManager->registerCustomObjectSprite(&obj->detailSprite);
+                spriteManager->registerCustomObjectSprite(&obj->glowSprite);
             } // if
 
             if (obj->hasCustomAnimation()) {
@@ -47,11 +47,9 @@ void CustomObjectsManager::processRegisteredMods() {
         } // for
 
         for (auto spr : mod->sprites) {
-            spriteManager->processCustomObjectSprite(spr);
+            spriteManager->registerCustomObjectSprite(spr);
         } // for
     } // for
-
-    spriteManager->processRegisteredSprites();
 } // processRegisteredMods
 
 void CustomObjectsManager::printModObjectCount() {

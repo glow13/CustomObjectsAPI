@@ -10,16 +10,16 @@ CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, char offset) : mod(mod), mod
     objectID = transform - (transform % 100);
 } // CustomObjectsMod
 
-void CustomObjectsMod::registerCustomSprite(std::string spr, int sprX, int sprY, int sprWidth, int sprHeight) {
+void CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
     log::debug("Registered custom sprite \"{}\"", spr);
-    auto config = new CustomSpriteConfig(spr, modID, CCRect(sprX, sprY, sprWidth, sprHeight));
+    auto config = new CustomSpriteConfig(spr, modID, CCRect(sprOffsetX, sprOffsetY, sprWidth, sprHeight));
     sprites.emplace_back(config);
 } // registerCustomSprite
 
-void CustomObjectsMod::registerCustomAnimationSprites(std::string spr, int sprX, int sprY, int sprWidth, int sprHeight, int frames) {
+void CustomObjectsMod::registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames) {
     auto baseFrame = spr.substr(0, spr.find("_001"));
     for (int i = 1; i <= frames; i++) {
         auto animFrame = fmt::format("{}_{:03d}.png", baseFrame, i);
-        registerCustomSprite(animFrame, sprX, sprY, sprWidth, sprHeight);
+        registerCustomSprite(animFrame, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     } // for
 } // registerCustomAnimation

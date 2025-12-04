@@ -24,7 +24,7 @@ public:
     Quality getTextureQuality();
     std::string getSpritesheetQualityName();
 
-    void processCustomObjectSprite(CustomSpriteConfig* spr);
+    void registerCustomObjectSprite(CustomSpriteConfig* spr);
     void processRegisteredSprites();
 
     bool isTheSpritesheetCacheUpToDate();

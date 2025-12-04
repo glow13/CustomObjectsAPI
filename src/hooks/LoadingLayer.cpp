@@ -30,9 +30,12 @@ class $modify(LoadingLayer) {
     } // loadAssets
 
     void processMods() {
-        auto manager = CustomObjectsManager::get();
-        manager->processRegisteredMods();
-        manager->printModObjectCount();
+        auto objManager = CustomObjectsManager::get();
+        auto sprManager = CustomSpritesManager::get();
+
+        objManager->processRegisteredMods();
+        sprManager->processRegisteredSprites();
+        objManager->printModObjectCount();
         continueLoadAssets();
     } // processMods
 
