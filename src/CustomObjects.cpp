@@ -62,29 +62,6 @@ public:
     } // activateCustomTrigger
 };
 
-class $object(TestPortal, CustomPortalObject) {
-    void setupCustomObject() override {
-        updateParticleColor(ccColor3B{ 255, 255, 0 });
-        updateParticleOpacity(255);
-    } // setupCustomObject
-
-    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) override {
-        GameObjectType type;
-        switch (rand() % 6) {
-            case 0: type = GameObjectType::ShipPortal; break;
-            case 1: type = GameObjectType::CubePortal; break;
-            case 2: type = GameObjectType::BallPortal; break;
-            case 3: type = GameObjectType::UfoPortal; break;
-            case 4: type = GameObjectType::RobotPortal; break;
-            case 5: type = GameObjectType::SpiderPortal; break;
-            default: type = GameObjectType::CubePortal; break;
-        } // switch
-
-        switchPlayerMode(level, player, type);
-        playShineEffect(type);
-    } // touchCustomPortal
-};
-
 $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
@@ -110,21 +87,31 @@ $execute {
     mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
     mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
 
-    mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13)
-        .onSetupCustomObject([](CustomPadObject* obj) {
-            obj->setGlowColor(ccColor3B{ 255, 0, 255 });
-            obj->updateParticleColor(ccColor3B{ 255, 0, 255 });
-            obj->updateParticleOpacity(255);
-        })
+    mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setCreateOffset(0, -13).setCustomRender(0)
         .onActivateCustomObject([](CustomPadObject* obj, auto level, auto player) {
             obj->bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
             if (rand() % 50 == 0) level->destroyPlayer(player, obj);
         });
 
     mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
-    mod->registerCustomObject<TestPortal>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setCustomRender(1)
+    mod->registerCustomObject<CustomPortalObject>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setParticleColor(255, 255, 0).setCustomRender(1)
         .onEditObjectButton([](auto obj, auto objs) {
             SetupCameraModePopup::create(obj, objs)->show();
+        })
+        .onActivateCustomObject([](CustomPortalObject* obj, auto level, auto player) {
+            GameObjectType type;
+            switch (rand() % 6) {
+                case 0: type = GameObjectType::ShipPortal; break;
+                case 1: type = GameObjectType::CubePortal; break;
+                case 2: type = GameObjectType::BallPortal; break;
+                case 3: type = GameObjectType::UfoPortal; break;
+                case 4: type = GameObjectType::RobotPortal; break;
+                case 5: type = GameObjectType::SpiderPortal; break;
+                default: type = GameObjectType::CubePortal; break;
+            } // switch
+
+            obj->switchPlayerMode(level, player, type);
+            obj->playShineEffect(type);
         });
 
     mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setCustomRender(0)

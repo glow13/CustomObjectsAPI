@@ -112,6 +112,9 @@ protected:
     } // setStartPos
 
     void customSetup() override {
+        this->updateParticleColor(config->particleColor);
+        this->updateParticleOpacity(config->particleOpacity);
+
         ObjectBase::customSetup();
         setupCustomObject();
     } // customSetup

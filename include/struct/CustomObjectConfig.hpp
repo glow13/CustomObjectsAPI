@@ -14,6 +14,9 @@ using namespace geode::prelude;
 #define PARENT_MODE_DEFAULT 10
 #define FRAMES_COUNT_DEFAULT 0
 #define FRAME_TIME_DEFAULT 1
+#define GLOW_COLOR_DEFAULT ccColor3B(255,255,255)
+#define PARTICLE_COLOR_DEFAULT ccColor3B(255,255,255)
+#define PARTICLE_OPACITY_DEFUALT 255
 
 struct ICustomObjectConfig {
 public:
@@ -32,6 +35,9 @@ public:
     int parentMode = PARENT_MODE_DEFAULT;
     int framesCount = FRAMES_COUNT_DEFAULT;
     float frameTime = FRAME_TIME_DEFAULT;
+    ccColor3B glowColor = GLOW_COLOR_DEFAULT;
+    ccColor3B particleColor = PARTICLE_COLOR_DEFAULT;
+    GLubyte particleOpacity = PARTICLE_OPACITY_DEFUALT;
 
     ICustomObjectConfig() {}
     ICustomObjectConfig(std::string mod, int id) : mod(mod), id(id) {}
@@ -90,12 +96,15 @@ public:
     CustomObjectConfig<ObjectType>& setCustomRender(int parent = 4) { parentMode = parent; return *this; }
     CustomObjectConfig<ObjectType>& setFramesCount(int frames) { framesCount = frames; return *this; }
     CustomObjectConfig<ObjectType>& setFrameTime(float time) { frameTime = time; return *this; }
+    CustomObjectConfig<ObjectType>& setGlowColor(GLubyte r, GLubyte g, GLubyte b) { glowColor = {r,g,b}; return *this; }
+    CustomObjectConfig<ObjectType>& setParticleColor(GLubyte r, GLubyte g, GLubyte b) { particleColor = {r,g,b}; return *this; }
+    CustomObjectConfig<ObjectType>& setParticleOpacity(GLubyte opacity) { particleOpacity = opacity; return *this; }
 
     // Set callback functions
-    CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectFunction = callback; return *this; }
-    CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, CCArray*)> callback) { editObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, CCArray*)> callback) { editSpecialFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectFunction = callback; return *this; }
 
     // Create new object using this config
@@ -112,6 +121,7 @@ public:
         if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius;
         if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType;
         if (parentMode != PARENT_MODE_DEFAULT) obj->m_parentMode = parentMode;
+        if (glowColor != GLOW_COLOR_DEFAULT) obj->setGlowColor(glowColor);
 
         return obj;
     } // create
