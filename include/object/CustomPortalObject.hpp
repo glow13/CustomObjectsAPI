@@ -27,7 +27,10 @@ public:
         this->m_isMultiTriggered = false;
 
         if (!config->mainSprite) this->setDontDraw(true);
-        if (config->detailSprite) this->addPortalBackSprite(config->detailSprite, CCPoint(0, 0), -90);
+        if (!this->m_editorEnabled && config->detailSprite) {
+            auto parent = static_cast<CCSprite*>(static_cast<CCNode*>(GJBaseGameLayer::get()->m_game2LayerB0));
+            this->m_portalBack = this->addInternalChild(parent, config->detailSprite, CCPoint(0, 0), -90);
+        } // if
 
         this->template setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
         this->template setupObjectProperty<bool>(112, this->m_cameraEditCameraSettings);
@@ -37,15 +40,6 @@ public:
 
         return true;
     } // init
-
-    // Returns nullptr if in the editor
-    CCSprite* addPortalBackSprite(gd::string frame, CCPoint offset, int zOrder) {
-        if (auto level = PlayLayer::get()) {
-            auto parent = static_cast<CCSprite*>(static_cast<CCNode*>(level->m_game2LayerB0));
-            this->m_portalBack = this->addInternalChild(parent, frame, offset, zOrder);
-            return this->m_portalBack;
-        } else return nullptr;
-    } // addPortalBackSprite
 
     void switchPlayerMode(GJBaseGameLayer* level, PlayerObject* player, GameObjectType type) {
         this->m_objectType = type;
