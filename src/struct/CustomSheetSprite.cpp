@@ -11,7 +11,7 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     auto frames = CCSpriteFrameCache::sharedSpriteFrameCache()->m_pSpriteFrames;
     auto source = static_cast<CCSpriteFrame*>(frames->objectForKey(sourceFrame));
     if (!source) {
-        this->size = {(int)std::ceil(rect.size.width * (int)quality), (int)std::ceil(rect.size.height * (int)quality)};
+        this->size = {(int)rect.size.width * quality, (int)rect.size.height * quality};
         this->trim = {0, 0, this->size.w, this->size.h};
         this->rect = {0, 0, this->size.w, this->size.h, false};
         return;
@@ -22,8 +22,8 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     auto oSize = source->getOriginalSize();
 
     // Set the size of the sprite, use the original size if no size was provided
-    if (rect.size.isZero()) this->size = {(int)std::ceil(oSize.width * (int)quality), (int)std::ceil(oSize.height * (int)quality)};
-    else this->size = {(int)std::ceil(rect.size.width * (int)quality), (int)std::ceil(rect.size.height * (int)quality)};
+    if (rect.size.isZero()) this->size = {(int)oSize.width * quality, (int)oSize.height * quality};
+    else this->size = {(int)rect.size.width * quality, (int)rect.size.height * quality};
 
     // Render the sprite at the desired size
     auto render = CCRenderTexture::create(this->size.w / quality, this->size.h / quality);
@@ -36,10 +36,10 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     // Get the raw sprite pixel data
     auto& s = render->m_pTexture->getContentSizeInPixels();
     unsigned int w = s.width, h = s.height;
-    auto data = new uint8_t[w * h * 4];
 
+    std::vector<uint8_t> data(w * h * 4);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
 
     render->end();
     render->release();
@@ -48,12 +48,12 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     // Calculate the minimum rect to contain the sprite
     int maxX = 0;
     int maxY = 0;
-    int minX = w;
-    int minY = h;
+    int minX = w - 1;
+    int minY = h - 1;
     int threshold = 4;
 
     // Find top edge
-    for (int y = 0, total = 0; y < h && minY == h; y++) {
+    for (int y = 0, total = 0; y < h && minY == h - 1; y++) {
         for (int x = 0; x < w; x++) if (data[(y * w + x) * 4 + 3]) total++;
         if (total >= threshold) minY = y;
     } // for
@@ -65,7 +65,7 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     } // for
 
     // Find left edge
-    for (int x = 0, total = 0; x < w && minX == w; x++) {
+    for (int x = 0, total = 0; x < w && minX == w - 1; x++) {
         for (int y = minY; y <= maxY; y++) if (data[(y * w + x) * 4 + 3]) total++;
         if (total >= threshold) minX = x;
     } // for
@@ -79,9 +79,8 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     // Calculate the sprite trim rect and sprite sheet rect
     int sprWidth = std::ceil((maxX - minX + 1) / (float)quality) * (int)quality;
     int sprHeight = std::ceil((maxY - minY + 1) / (float)quality) * (int)quality;
-    this->trim = {minX, (int)h - maxY, sprWidth, sprHeight}; // flip y
+    this->trim = {minX, (int)h - maxY - 1, sprWidth, sprHeight}; // flip y
     this->rect = {0, 0, sprWidth, sprHeight, false};
-    delete[] data;
 } // CustomObjectSprite
 
 std::string CustomSheetSprite::offString() const {
