@@ -27,7 +27,7 @@ std::string CustomSpritesManager::getSpritesheetQualityName() {
 
 void CustomSpritesManager::registerCustomObjectSprite(CustomSpriteConfig* spr) {
     spr->generateFrame();
-    if (spr) customSpritesCache.emplace_back(spr);
+    if (*spr) customSpritesCache.emplace_back(spr);
 } // registerCustomObjectSprite
 
 void CustomSpritesManager::processRegisteredSprites() {
