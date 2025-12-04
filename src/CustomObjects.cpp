@@ -26,10 +26,10 @@ public:
     float m_bouncePower = 1;
 
     void setupCustomObject() override {
-        if (auto particle = createRingParticles()) {
-            particle->setStartColor(ccColor4F{ 0, 0, 0, 255 });
-            particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
-            particle->setBlendFunc(kCCBlendFuncDisable);
+        if (m_particle) {
+            m_particle->setStartColor(ccColor4F{ 0, 0, 0, 255 });
+            m_particle->setEndColor(ccColor4F{ 0, 0, 0, 0 });
+            m_particle->setBlendFunc(kCCBlendFuncDisable);
         } // if
     } // setupCustomObject
 
@@ -64,12 +64,8 @@ public:
 
 class $object(TestPortal, CustomPortalObject) {
     void setupCustomObject() override {
-        srand(time(0));
-
-        if (auto particle = createPortalParticles()) {
-            particle->setStartColor(ccColor4F{ 255, 255, 0, 255 });
-            particle->setEndColor(ccColor4F{ 255, 255, 0, 255 });
-        } // if
+        updateParticleColor(ccColor3B{ 255, 255, 0 });
+        updateParticleOpacity(255);
     } // setupCustomObject
 
     void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) override {
@@ -116,13 +112,9 @@ $execute {
 
     mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setCustomRender(0).setCreateOffset(0, -13)
         .onSetupCustomObject([](CustomPadObject* obj) {
-            srand(time(0));
-            if (auto particle = obj->createPadParticles()) {
-                particle->setStartColor(ccColor4F{ 255, 0, 255, 255 });
-                particle->setEndColor(ccColor4F{ 255, 0, 255, 255 });
-            } // if
-
             obj->setGlowColor(ccColor3B{ 255, 0, 255 });
+            obj->updateParticleColor(ccColor3B{ 255, 0, 255 });
+            obj->updateParticleOpacity(255);
         })
         .onActivateCustomObject([](CustomPadObject* obj, auto level, auto player) {
             obj->bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);

@@ -22,17 +22,19 @@ public:
         return true;
     } // init
 
-    // Returns nullptr if in the editor
-    CCParticleSystemQuad* createRingParticles() {
-        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
-        return this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
-    } // createRingParticles
-
 private:
     void activatedByPlayer(PlayerObject* player) override {
         RingObject::activatedByPlayer(player);
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
+
+    void customSetup() override {
+        if (!this->m_editorEnabled && !this->m_hasNoParticles) {
+            this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+            this->claimParticle();
+        } // if
+        CustomObjectUtils<ObjectType, RingObject>::customSetup();
+    } // customSetup
 
     bool canAllowMultiActivate() override {
         return true;

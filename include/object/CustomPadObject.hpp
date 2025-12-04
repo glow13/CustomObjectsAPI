@@ -26,12 +26,6 @@ public:
         return true;
     } // init
 
-    // Returns nullptr if in the editor
-    CCParticleSystemQuad* createPadParticles() {
-        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
-        return this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
-    } // createPadParticles
-
     // Copies the behaviour of a regular pad, with adjustable bump strength
     void bumpPlayer(PlayerObject* player, float power, GameObjectType effectType = GameObjectType::YellowJumpPad) {
         player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
@@ -49,6 +43,14 @@ private:
             this->activateCustomObject(level, player);
         } // if
     } // triggerObject
+
+    void customSetup() override {
+        if (!this->m_editorEnabled && !this->m_hasNoParticles) {
+            this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+            this->claimParticle();
+        } // if
+        CustomObjectUtils<ObjectType, EffectGameObject>::customSetup();
+    } // customSetup
 
     bool canAllowMultiActivate() override {
         return true;

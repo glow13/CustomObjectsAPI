@@ -47,12 +47,6 @@ public:
         } else return nullptr;
     } // addPortalBackSprite
 
-    // Returns nullptr if in the editor
-    CCParticleSystemQuad* createPortalParticles() {
-        if (this->m_editorEnabled || this->m_hasNoParticles) return nullptr;
-        return this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
-    } // createPortalParticles
-
     void switchPlayerMode(GJBaseGameLayer* level, PlayerObject* player, GameObjectType type) {
         this->m_objectType = type;
         this->m_fakeType = type;
@@ -119,6 +113,14 @@ private:
             this->activateCustomObject(level, player);
         } // if
     } // triggerObject
+
+    void customSetup() override {
+        if (!this->m_editorEnabled && !this->m_hasNoParticles) {
+            this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+            this->claimParticle();
+        } // if
+        CustomObjectUtils<ObjectType, EffectGameObject>::customSetup();
+    } // customSetup
 
     void setPosition(cocos2d::CCPoint const& p0) override {
         this->EffectGameObject::setPosition(p0);
