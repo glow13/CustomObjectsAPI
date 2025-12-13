@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomCollectibleObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
+class $base(CustomCollectibleObject, EffectGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config, false)) return false;
+        if (!EffectGameObject::init(config->mainSprite)) return false;
         this->commonInteractiveSetup();
         this->setDontDraw(true);
 
@@ -38,4 +37,4 @@ private:
     } // triggerObject
 };
 
-class CustomCollectibleObject : public CustomCollectibleObjectBase<CustomCollectibleObject> {};
+class $generic(CustomCollectibleObject);

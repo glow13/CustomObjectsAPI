@@ -5,12 +5,11 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomPortalObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
+class $base(CustomPortalObject, EffectGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config, false)) return false;
-        
+        if (!EffectGameObject::init(config->mainSprite)) return false;
+
         this->m_objectType = GameObjectType::Modifier;
         this->m_width = 34;
         this->m_height = 86;
@@ -88,7 +87,7 @@ public:
             default: break;
         } // switch
 
-        this->GameObject::playShineEffect();
+        CustomBase::playShineEffect();
         this->m_objectID = id;
     } // playShineEffect
 
@@ -113,36 +112,36 @@ private:
             this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomObjectBase<ObjectType, EffectGameObject>::customSetup();
+        CustomBase::customSetup();
     } // customSetup
 
     void setPosition(cocos2d::CCPoint const& p0) override {
-        this->EffectGameObject::setPosition(p0);
+        CustomBase::setPosition(p0);
         if (this->m_portalBack) this->m_portalBack->setPosition(p0);
     } // setPosition
 
     void setRotation(float p0) override {
-        this->EffectGameObject::setRotation(p0);
+        CustomBase::setRotation(p0);
         if (this->m_portalBack) this->m_portalBack->setRotation(p0);
     } // setRotation
 
     void setScale(float p0) override {
-        this->EffectGameObject::setScale(p0);
+        CustomBase::setScale(p0);
         if (this->m_portalBack) this->m_portalBack->setScale(p0);
     } // setScale
 
     void setOpacity(unsigned char p0) override {
-        this->EffectGameObject::setOpacity(p0);
+        CustomBase::setOpacity(p0);
         if (this->m_portalBack) this->m_portalBack->setOpacity(p0);
     } // setOpacity
 
     void setVisible(bool p0) override {
-        this->EffectGameObject::setVisible(p0);
+        CustomBase::setVisible(p0);
         if (this->m_portalBack) this->m_portalBack->setVisible(p0);
     } // setVisible
 
     bool hasBeenActivated() override {
-        return EffectGameObject::hasBeenActivated() && this->m_isNoMultiActivate;
+        return CustomBase::hasBeenActivated() && this->m_isNoMultiActivate;
     } // hasBeenActivated
 
     GameObjectType getType() const override {
@@ -154,4 +153,4 @@ private:
     } // canAllowMultiActivate
 };
 
-class CustomPortalObject : public CustomPortalObjectBase<CustomPortalObject> {};
+class $generic(CustomPortalObject);

@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomRingObjectBase : public CustomObjectBase<ObjectType, RingObject> {
+class $base(CustomRingObject, RingObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config)) return false;
+        if (!CustomBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::CustomRing;
         this->m_width = 36;
@@ -24,7 +23,7 @@ public:
 
 private:
     void activatedByPlayer(PlayerObject* player) override {
-        RingObject::activatedByPlayer(player);
+        CustomBase::activatedByPlayer(player);
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
 
@@ -33,7 +32,7 @@ private:
             this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomObjectBase<ObjectType, RingObject>::customSetup();
+        CustomBase::customSetup();
     } // customSetup
 
     bool canAllowMultiActivate() override {
@@ -41,4 +40,4 @@ private:
     } // canAllowMultiActivate
 };
 
-class CustomRingObject : public CustomRingObjectBase<CustomRingObject> {};
+class $generic(CustomRingObject);

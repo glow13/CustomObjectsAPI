@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomRotateObjectBase : public CustomObjectBase<ObjectType, EnhancedGameObject> {
+class $base(CustomRotateObject, EnhancedGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-       if (!this->commonSetup(config, false)) return false;
+        if (!EnhancedGameObject::init(config->mainSprite)) return false;
 
         this->setDontDraw(true);
         this->addCustomChild(config->mainSprite, CCPoint(0, 0), 0);
@@ -37,4 +36,4 @@ public:
     } // init
 };
 
-class CustomRotateObject : public CustomRotateObjectBase<CustomRotateObject> {};
+class $generic(CustomRotateObject);

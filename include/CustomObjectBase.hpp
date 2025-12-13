@@ -4,12 +4,22 @@
 
 using namespace geode::prelude;
 
+#define BASE1(BaseType, c) BaseType##Dummy; template <class ObjectType> class BaseType##Base : public CustomObjectBase<ObjectType, GameObject> { \
+    protected: using CustomBase = CustomObjectBase<ObjectType, GameObject>::CustomBase; public: c##c
+#define BASE2(BaseType, ObjectBase, c) BaseType##Dummy; template <class ObjectType> class BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase> { \
+    protected: using CustomBase = CustomObjectBase<ObjectType, ObjectBase>::CustomBase; public: c##c
+#define $base(...) GEODE_INVOKE(GEODE_CONCAT(BASE, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__, /)
+
+#define $generic(BaseType) BaseType : public BaseType##Base<BaseType> {}
+
 #define OBJECT1(ObjectType) ObjectType : public CustomGameObjectBase<ObjectType>
-#define OBJECT2(ObjectType, ObjectBase) ObjectType : public ObjectBase ## Base<ObjectType>
+#define OBJECT2(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
 #define $object(...) GEODE_INVOKE(GEODE_CONCAT(OBJECT, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__)
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
+protected:
+    using CustomBase = CustomObjectBase<ObjectType, ObjectBase>;
 public:
     static ObjectType* create(const CustomObjectConfig<ObjectType>* config) {
         auto obj = new ObjectType();
@@ -22,6 +32,20 @@ public:
         delete obj;
         return nullptr;
     } // create
+
+    bool init(const CustomObjectConfig<ObjectType>* config) {
+        if (!ObjectBase::init(config->mainSprite)) return false;
+
+        // Add sprites to custom object
+        if (!config->mainSprite) this->setDontDraw(true);
+        if (config->detailSprite) this->addCustomColorChild(config->detailSprite);
+
+        // Add glow to custom object
+        if (this->m_editorEnabled || this->m_hasNoGlow) return true;
+        if (config->glowSprite) this->createGlow(config->glowSprite);
+
+        return true;
+    } // init
 
     template <typename ValueType>
     ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
@@ -64,21 +88,6 @@ protected:
     void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = [](){return true;}) {
         objectProperties[key] = new ObjectProp<ValueType>(value, cond);
     } // setupObjectProperty
-
-    bool commonSetup(const CustomObjectConfig<ObjectType>* config, bool addSprites = true) {
-        if (!ObjectBase::init(config->mainSprite)) return false;
-
-        // Add sprites to custom object
-        if (!addSprites) return true;
-        if (!config->mainSprite) this->setDontDraw(true);
-        if (config->detailSprite) this->addCustomColorChild(config->detailSprite);
-
-        // Add glow to custom object
-        if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config->glowSprite) this->createGlow(config->glowSprite);
-
-        return true;
-    } // commonSetup
 
     void addMainSpriteToParent(bool p0) override {
         bool disableBlend = (this->m_parentMode == 4);

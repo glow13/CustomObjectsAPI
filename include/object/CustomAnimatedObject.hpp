@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomAnimatedObjectBase : public CustomObjectBase<ObjectType, EnhancedGameObject> {
+class $base(CustomAnimatedObject, EnhancedGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config)) return false;
+        if (!CustomBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Decoration;
         this->m_hasCustomAnimation = config->hasCustomAnimation();
@@ -18,4 +17,4 @@ public:
     } // init
 };
 
-class CustomAnimatedObject : public CustomAnimatedObjectBase<CustomAnimatedObject> {};
+class $generic(CustomAnimatedObject);

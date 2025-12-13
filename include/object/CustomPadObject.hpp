@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomPadObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
+class $base(CustomPadObject, EffectGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config)) return false;
+        if (!CustomBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
         this->m_width = 25;
@@ -49,7 +48,7 @@ private:
             this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomObjectBase<ObjectType, EffectGameObject>::customSetup();
+        CustomBase::customSetup();
     } // customSetup
 
     bool canAllowMultiActivate() override {
@@ -57,4 +56,4 @@ private:
     } // canAllowMultiActivate
 };
 
-class CustomPadObject : public CustomPadObjectBase<CustomPadObject> {};
+class $generic(CustomPadObject);

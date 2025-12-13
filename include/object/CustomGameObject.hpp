@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomGameObjectBase : public CustomObjectBase<ObjectType, GameObject> {
+class $base(CustomGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config)) return false;
+        if (!CustomBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Decoration;
 
@@ -17,4 +16,4 @@ public:
     } // init
 };
 
-class CustomGameObject : public CustomGameObjectBase<CustomGameObject> {};
+class $generic(CustomGameObject);

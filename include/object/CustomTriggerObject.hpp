@@ -5,11 +5,10 @@
 
 using namespace geode::prelude;
 
-template <class ObjectType>
-class CustomTriggerObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
+class $base(CustomTriggerObject, EffectGameObject) {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!this->commonSetup(config)) return false;
+        if (!CustomBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
         this->m_dontIgnoreDuration = true;
@@ -21,7 +20,7 @@ public:
 
 private:
     void customSetup() override {
-        CustomObjectBase<ObjectType, EffectGameObject>::customSetup();
+        CustomBase::customSetup();
         this->setDontDraw(!this->m_editorEnabled);
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
@@ -33,4 +32,4 @@ private:
     } // triggerObject
 };
 
-class CustomTriggerObject : public CustomTriggerObjectBase<CustomTriggerObject> {};
+class $generic(CustomTriggerObject);
