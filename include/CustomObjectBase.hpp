@@ -9,7 +9,7 @@ using namespace geode::prelude;
 #define $object(...) GEODE_INVOKE(GEODE_CONCAT(OBJECT, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__)
 
 template <class ObjectType, class ObjectBase>
-class CustomObjectUtils : public ObjectBase {
+class CustomObjectBase : public ObjectBase {
 public:
     static ObjectType* create(const CustomObjectConfig<ObjectType>* config) {
         auto obj = new ObjectType();

@@ -1,12 +1,12 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectUtils.hpp"
+#include "CustomObjectBase.hpp"
 
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomPortalObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
+class CustomPortalObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config, false)) return false;
@@ -113,7 +113,7 @@ private:
             this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomObjectUtils<ObjectType, EffectGameObject>::customSetup();
+        CustomObjectBase<ObjectType, EffectGameObject>::customSetup();
     } // customSetup
 
     void setPosition(cocos2d::CCPoint const& p0) override {

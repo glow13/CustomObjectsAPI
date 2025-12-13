@@ -1,12 +1,12 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectUtils.hpp"
+#include "CustomObjectBase.hpp"
 
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomCollectibleObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
+class CustomCollectibleObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config, false)) return false;

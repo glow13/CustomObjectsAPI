@@ -1,12 +1,12 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectUtils.hpp"
+#include "CustomObjectBase.hpp"
 
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomRingObjectBase : public CustomObjectUtils<ObjectType, RingObject> {
+class CustomRingObjectBase : public CustomObjectBase<ObjectType, RingObject> {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config)) return false;
@@ -33,7 +33,7 @@ private:
             this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomObjectUtils<ObjectType, RingObject>::customSetup();
+        CustomObjectBase<ObjectType, RingObject>::customSetup();
     } // customSetup
 
     bool canAllowMultiActivate() override {

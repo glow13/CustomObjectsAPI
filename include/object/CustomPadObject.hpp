@@ -1,12 +1,12 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectUtils.hpp"
+#include "CustomObjectBase.hpp"
 
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomPadObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
+class CustomPadObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config)) return false;
@@ -49,7 +49,7 @@ private:
             this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomObjectUtils<ObjectType, EffectGameObject>::customSetup();
+        CustomObjectBase<ObjectType, EffectGameObject>::customSetup();
     } // customSetup
 
     bool canAllowMultiActivate() override {

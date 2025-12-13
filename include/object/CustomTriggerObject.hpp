@@ -1,12 +1,12 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectUtils.hpp"
+#include "CustomObjectBase.hpp"
 
 using namespace geode::prelude;
 
 template <class ObjectType>
-class CustomTriggerObjectBase : public CustomObjectUtils<ObjectType, EffectGameObject> {
+class CustomTriggerObjectBase : public CustomObjectBase<ObjectType, EffectGameObject> {
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!this->commonSetup(config)) return false;
@@ -21,7 +21,7 @@ public:
 
 private:
     void customSetup() override {
-        CustomObjectUtils<ObjectType, EffectGameObject>::customSetup();
+        CustomObjectBase<ObjectType, EffectGameObject>::customSetup();
         this->setDontDraw(!this->m_editorEnabled);
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
