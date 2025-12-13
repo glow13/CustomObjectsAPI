@@ -3,9 +3,10 @@
 
 using namespace geode::prelude;
 
-#define SPRITE1(frame) SPRITE3(frame, 0, 0)
-#define SPRITE2(frame, size) SPRITE3(frame, size, size)
-#define SPRITE3(frame, w, h) "custom-objects/" + Mod::get()->getID() + "/"#w"/"#h"/" frame
+#define SPRITE1(frame) SPRITE5(frame, 0, 0, 0, 0)
+#define SPRITE2(frame, s) SPRITE5(frame, 0, 0, s, s)
+#define SPRITE3(frame, w, h) SPRITE5(frame, 0, 0, w, h)
+#define SPRITE5(frame, x, y, w, h) "custom-objects/" + Mod::get()->getID() + "/"#x"."#y"."#w"."#h"/" frame
 #define $sprite(...) GEODE_INVOKE(GEODE_CONCAT(SPRITE, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__)
 
 struct CustomSpriteConfig {

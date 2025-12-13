@@ -83,6 +83,8 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
 
     file << "\t</dict>\n\t<key>metadata</key>\n\t<dict>\n";
     file << "\t\t<key>format</key>\n\t\t<integer>3</integer>\n";
+    file << "\t\t<key>pixelFormat</key>\n\t\t<string>RGBA8888</string>\n";
+    file << "\t\t<key>premultiplyAlpha</key>\n\t\t<false/>\n";
     file << "\t\t<key>realTextureFileName</key>\n\t\t<string>"+name+".png</string>\n";
     file << "\t\t<key>size</key>\n\t\t<string>{"+sizeString+"}</string>\n";
     file << "\t\t<key>textureFileName</key>\n\t\t<string>"+name+".png</string>\n";

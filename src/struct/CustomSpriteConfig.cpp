@@ -8,5 +8,5 @@ bool CustomSpriteConfig::isAnimationFrame() const { return sourceFrame.find("_00
 void CustomSpriteConfig::generateFrame() {
     if (sourceFrame.empty()) return;
     auto frameName = sourceFrame.substr(sourceFrame.find("/") + 1);
-    frame = fmt::format("custom-objects/{}/{}/{}/{}", mod, (int)rect.size.width, (int)rect.size.height, frameName);
+    frame = fmt::format("custom-objects/{}/{}.{}.{}.{}/{}", mod, (int)rect.origin.x, (int)rect.origin.y, (int)rect.size.width, (int)rect.size.height, frameName);
 } // generateFrame
