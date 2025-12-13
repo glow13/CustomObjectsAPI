@@ -6,17 +6,17 @@
 using namespace geode::prelude;
 
 // Config defaults
-#define BOX_SIZE_DEFAULT CCSize(0, 0)
-#define BOX_OFFSET_DEFAULT CCPoint(0, 0)
-#define BOX_RADIUS_DEFAULT 0
-#define CREATE_OFFSET_DEFAULT CCPoint(0, 0)
-#define OBJECT_TYPE_DEFAULT (GameObjectType)(-1)
-#define PARENT_MODE_DEFAULT 10
-#define FRAMES_COUNT_DEFAULT 0
-#define FRAME_TIME_DEFAULT 1
-#define GLOW_COLOR_DEFAULT ccColor3B(255,255,255)
-#define PARTICLE_COLOR_DEFAULT ccColor3B(255,255,255)
-#define PARTICLE_OPACITY_DEFUALT 255
+constexpr CCSize BOX_SIZE_DEFAULT {0, 0};
+constexpr CCPoint BOX_OFFSET_DEFAULT {0, 0};
+constexpr int BOX_RADIUS_DEFAULT = 0;
+constexpr CCPoint CREATE_OFFSET_DEFAULT {0, 0};
+constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
+constexpr int PARENT_MODE_DEFAULT = 10;
+constexpr int FRAMES_COUNT_DEFAULT = 0;
+constexpr float FRAME_TIME_DEFAULT = 1.0f;
+constexpr ccColor3B GLOW_COLOR_DEFAULT {255, 255, 255};
+constexpr ccColor3B PARTICLE_COLOR_DEFAULT {255, 255, 255};
+constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 
 struct ICustomObjectConfig {
 public:

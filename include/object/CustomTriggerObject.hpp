@@ -21,7 +21,7 @@ public:
 
 private:
     void customSetup() override {
-        EffectGameObject::customSetup();
+        CustomObjectUtils<ObjectType, EffectGameObject>::customSetup();
         this->setDontDraw(!this->m_editorEnabled);
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
