@@ -3,13 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomTriggerObject, EffectGameObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, EffectGameObject>::CustomBase;
+class $base(CustomTriggerObject, EffectGameObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!CustomBase::init(config)) return false;
+        if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
         this->m_dontIgnoreDuration = true;
@@ -21,7 +18,7 @@ public:
 
 private:
     void customSetup() override {
-        CustomBase::customSetup();
+        CustomObjectBase::customSetup();
         this->setDontDraw(!this->m_editorEnabled);
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;

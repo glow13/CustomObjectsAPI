@@ -3,13 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomAnimatedObject, EnhancedGameObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, EnhancedGameObject>::CustomBase;
+class $base(CustomAnimatedObject, EnhancedGameObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!CustomBase::init(config)) return false;
+        if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Decoration;
         this->m_hasCustomAnimation = config->hasCustomAnimation();

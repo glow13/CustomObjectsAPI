@@ -3,10 +3,7 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomPortalObject, EffectGameObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, EffectGameObject>::CustomBase;
+class $base(CustomPortalObject, EffectGameObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EffectGameObject::init(config->mainSprite)) return false;
@@ -88,7 +85,7 @@ public:
             default: break;
         } // switch
 
-        CustomBase::playShineEffect();
+        CustomObjectBase::playShineEffect();
         this->m_objectID = id;
     } // playShineEffect
 
@@ -113,36 +110,36 @@ private:
             this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomBase::customSetup();
+        CustomObjectBase::customSetup();
     } // customSetup
 
     void setPosition(cocos2d::CCPoint const& p0) override {
-        CustomBase::setPosition(p0);
+        CustomObjectBase::setPosition(p0);
         if (this->m_portalBack) this->m_portalBack->setPosition(p0);
     } // setPosition
 
     void setRotation(float p0) override {
-        CustomBase::setRotation(p0);
+        CustomObjectBase::setRotation(p0);
         if (this->m_portalBack) this->m_portalBack->setRotation(p0);
     } // setRotation
 
     void setScale(float p0) override {
-        CustomBase::setScale(p0);
+        CustomObjectBase::setScale(p0);
         if (this->m_portalBack) this->m_portalBack->setScale(p0);
     } // setScale
 
     void setOpacity(unsigned char p0) override {
-        CustomBase::setOpacity(p0);
+        CustomObjectBase::setOpacity(p0);
         if (this->m_portalBack) this->m_portalBack->setOpacity(p0);
     } // setOpacity
 
     void setVisible(bool p0) override {
-        CustomBase::setVisible(p0);
+        CustomObjectBase::setVisible(p0);
         if (this->m_portalBack) this->m_portalBack->setVisible(p0);
     } // setVisible
 
     bool hasBeenActivated() override {
-        return CustomBase::hasBeenActivated() && this->m_isNoMultiActivate;
+        return CustomObjectBase::hasBeenActivated() && this->m_isNoMultiActivate;
     } // hasBeenActivated
 
     GameObjectType getType() const override {

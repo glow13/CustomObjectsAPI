@@ -3,13 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomPadObject, EffectGameObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, EffectGameObject>::CustomBase;
+class $base(CustomPadObject, EffectGameObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!CustomBase::init(config)) return false;
+        if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
         this->m_width = 25;
@@ -49,7 +46,7 @@ private:
             this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomBase::customSetup();
+        CustomObjectBase::customSetup();
     } // customSetup
 
     bool canAllowMultiActivate() override {

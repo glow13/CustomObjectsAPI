@@ -4,14 +4,18 @@
 
 using namespace geode::prelude;
 
-#define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
-#define $object(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
+#define $base(BaseType, ObjectBase) BaseType##Dummy; \
+    template <class ObjectType> class BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase> { \
+    protected: using CustomObjectBase = CustomObjectBase<ObjectType, ObjectBase>::Base; public:
+
 #define $generic(BaseType) BaseType : public BaseType##Base<BaseType> {}
+
+#define $object(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
 protected:
-    using CustomBase = CustomObjectBase<ObjectType, ObjectBase>;
+    using Base = CustomObjectBase<ObjectType, ObjectBase>;
 public:
     static ObjectType* create(const CustomObjectConfig<ObjectType>* config) {
         auto obj = new ObjectType();

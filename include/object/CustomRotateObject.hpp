@@ -3,10 +3,7 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomRotateObject, EnhancedGameObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, EnhancedGameObject>::CustomBase;
+class $base(CustomRotateObject, EnhancedGameObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EnhancedGameObject::init(config->mainSprite)) return false;

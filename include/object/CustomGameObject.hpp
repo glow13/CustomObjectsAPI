@@ -3,13 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomGameObject, GameObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, GameObject>::CustomBase;
+class $base(CustomGameObject, GameObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!CustomBase::init(config)) return false;
+        if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Decoration;
 

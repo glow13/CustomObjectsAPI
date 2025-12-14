@@ -3,13 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-template <class ObjectType>
-class $base(CustomRingObject, RingObject) {
-protected:
-    using CustomBase = CustomObjectBase<ObjectType, RingObject>::CustomBase;
+class $base(CustomRingObject, RingObject)
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!CustomBase::init(config)) return false;
+        if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::CustomRing;
         this->m_width = 36;
@@ -24,7 +21,7 @@ public:
 
 private:
     void activatedByPlayer(PlayerObject* player) override {
-        CustomBase::activatedByPlayer(player);
+        CustomObjectBase::activatedByPlayer(player);
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
 
@@ -33,7 +30,7 @@ private:
             this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
-        CustomBase::customSetup();
+        CustomObjectBase::customSetup();
     } // customSetup
 
     bool canAllowMultiActivate() override {
