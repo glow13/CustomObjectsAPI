@@ -14,8 +14,6 @@ public:
         this->m_objectType = GameObjectType::Modifier;
         this->m_baseColor->m_defaultColorID = 0;
         this->m_isInvisible = !this->m_editorEnabled;
-        this->m_dontIgnoreDuration = true;
-        this->m_isTrigger = true;
 
         return true;
     } // init
@@ -23,7 +21,9 @@ public:
 private:
     void customSetup() override {
         CustomObjectBase::customSetup();
+        this->m_activateTriggerInEditor = true;
         this->m_dontIgnoreDuration = true;
+        this->m_canBeControlled = true;
         this->m_isTrigger = true;
     } // customSetup
 
