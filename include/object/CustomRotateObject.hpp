@@ -3,9 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-using namespace geode::prelude;
-
+template <class ObjectType>
 class $base(CustomRotateObject, EnhancedGameObject) {
+protected:
+    using CustomBase = CustomObjectBase<ObjectType, EnhancedGameObject>::CustomBase;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EnhancedGameObject::init(config->mainSprite)) return false;

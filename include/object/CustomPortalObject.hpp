@@ -3,9 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-using namespace geode::prelude;
-
+template <class ObjectType>
 class $base(CustomPortalObject, EffectGameObject) {
+protected:
+    using CustomBase = CustomObjectBase<ObjectType, EffectGameObject>::CustomBase;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EffectGameObject::init(config->mainSprite)) return false;
@@ -27,7 +28,7 @@ public:
 
         if (!config->mainSprite) this->setDontDraw(true);
         if (!this->m_editorEnabled && config->detailSprite) {
-            auto parent = static_cast<CCSprite*>(static_cast<CCNode*>(GJBaseGameLayer::get()->m_game2LayerB0));
+            auto parent = cast::base_cast<CCSprite*>(GJBaseGameLayer::get()->m_game2LayerB0);
             this->m_portalBack = this->addInternalChild(parent, config->detailSprite, CCPoint(0, 0), -90);
         } // if
 

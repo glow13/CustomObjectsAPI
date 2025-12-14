@@ -3,9 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-using namespace geode::prelude;
-
-class $base(CustomGameObject) {
+template <class ObjectType>
+class $base(CustomGameObject, GameObject) {
+protected:
+    using CustomBase = CustomObjectBase<ObjectType, GameObject>::CustomBase;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!CustomBase::init(config)) return false;

@@ -3,9 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-using namespace geode::prelude;
-
+template <class ObjectType>
 class $base(CustomCollectibleObject, EffectGameObject) {
+protected:
+    using CustomBase = CustomObjectBase<ObjectType, EffectGameObject>::CustomBase;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EffectGameObject::init(config->mainSprite)) return false;

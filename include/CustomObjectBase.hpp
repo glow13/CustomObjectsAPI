@@ -4,17 +4,9 @@
 
 using namespace geode::prelude;
 
-#define BASE1(BaseType, c) BaseType##Dummy; template <class ObjectType> class BaseType##Base : public CustomObjectBase<ObjectType, GameObject> { \
-    protected: using CustomBase = CustomObjectBase<ObjectType, GameObject>::CustomBase; public: c##c
-#define BASE2(BaseType, ObjectBase, c) BaseType##Dummy; template <class ObjectType> class BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase> { \
-    protected: using CustomBase = CustomObjectBase<ObjectType, ObjectBase>::CustomBase; public: c##c
-#define $base(...) GEODE_INVOKE(GEODE_CONCAT(BASE, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__, /)
-
+#define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
+#define $object(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
 #define $generic(BaseType) BaseType : public BaseType##Base<BaseType> {}
-
-#define OBJECT1(ObjectType) ObjectType : public CustomGameObjectBase<ObjectType>
-#define OBJECT2(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
-#define $object(...) GEODE_INVOKE(GEODE_CONCAT(OBJECT, GEODE_NUMBER_OF_ARGS(__VA_ARGS__)), __VA_ARGS__)
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
