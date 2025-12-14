@@ -6,14 +6,16 @@ using namespace geode::prelude;
 
 #define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
 #define $object(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
+#define $object2(ObjectType, ObjectBase) ObjectType : public CustomObjectBase<ObjectType, ObjectBase>
 #define $generic(BaseType) BaseType : public BaseType##Base<BaseType> {}
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
 protected:
     using Base = CustomObjectBase<ObjectType, ObjectBase>;
+    using CustomObjectConfig = CustomObjectConfig<ObjectType>;
 public:
-    static ObjectType* create(const CustomObjectConfig<ObjectType>* config) {
+    static ObjectType* create(const CustomObjectConfig* config) {
         auto obj = new ObjectType();
         if (obj->init(config)) {
             obj->config = config;
@@ -25,7 +27,7 @@ public:
         return nullptr;
     } // create
 
-    bool init(const CustomObjectConfig<ObjectType>* config) {
+    bool init(const CustomObjectConfig* config) {
         if (!ObjectBase::init(config->mainSprite)) return false;
 
         // Add sprites to custom object
@@ -137,10 +139,12 @@ private:
         virtual std::string getValue() { return ""; }
 
         bool valid(bool val) { return val; }
+        bool valid(int val) {return true; }
         bool valid(float val) { return true; }
         bool valid(std::string val) { return !val.empty(); }
 
         std::string format(bool val) { return val ? "1" : "0"; }
+        std::string format(int val) { return fmt::format("{}", val); }
         std::string format(float val) { return fmt::format("{:g}", val); }
         std::string format(std::string val) { return val; }
     };
@@ -156,7 +160,7 @@ private:
         void setValue(std::string val) override { std::stringstream(val) >> value; }
     };
 
-    const CustomObjectConfig<ObjectType>* config;
+    const CustomObjectConfig* config;
     std::unordered_map<std::string, std::string> savedValues;
     std::unordered_map<int, IObjectProp*> objectProperties;
 
