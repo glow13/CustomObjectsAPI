@@ -3,7 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-class $base(CustomRingObject, RingObject)
+template <class ObjectType>
+class $base(CustomRingObject, RingObject) {
+protected:
+    using CustomObjectBase = CustomObjectBase<ObjectType, RingObject>::Base;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!CustomObjectBase::init(config)) return false;

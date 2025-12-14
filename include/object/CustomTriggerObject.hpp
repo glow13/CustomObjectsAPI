@@ -3,7 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-class $base(CustomTriggerObject, EffectGameObject)
+template <class ObjectType>
+class $base(CustomTriggerObject, EffectGameObject) {
+protected:
+    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!CustomObjectBase::init(config)) return false;

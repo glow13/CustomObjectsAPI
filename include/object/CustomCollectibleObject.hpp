@@ -3,7 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-class $base(CustomCollectibleObject, EffectGameObject)
+template <class ObjectType>
+class $base(CustomCollectibleObject, EffectGameObject) {
+protected:
+    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EffectGameObject::init(config->mainSprite)) return false;

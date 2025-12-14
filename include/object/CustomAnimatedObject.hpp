@@ -3,7 +3,10 @@
 
 #include "CustomObjectBase.hpp"
 
-class $base(CustomAnimatedObject, EnhancedGameObject)
+template <class ObjectType>
+class $base(CustomAnimatedObject, EnhancedGameObject) {
+protected:
+    using CustomObjectBase = CustomObjectBase<ObjectType, EnhancedGameObject>::Base;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!CustomObjectBase::init(config)) return false;
