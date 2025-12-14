@@ -16,6 +16,11 @@ public:
         return GameObject::createWithKey(key);
     } // createWithKey
 
+    bool isTrigger() {
+        if (m_objectID >= 10000) return m_isTrigger;
+        return GameObject::isTrigger();
+    } // isTrigger
+
     bool isSpawnableTrigger() {
         if (m_objectID >= 10000) return m_isTrigger;
         return GameObject::isSpawnableTrigger();
