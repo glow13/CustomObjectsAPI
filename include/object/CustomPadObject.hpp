@@ -12,16 +12,10 @@ public:
         if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
+        this->m_baseColor->m_defaultColorID = 0;
+        this->m_greenDebugDraw = true;
         this->m_width = 25;
         this->m_height = 5;
-        this->m_duration = 0;
-        this->m_greenDebugDraw = true;
-        this->m_baseColor->m_defaultColorID = 0;
-
-        this->m_isTrigger = false;
-        this->m_isSpawnTriggered = false;
-        this->m_isTouchTriggered = true;
-        this->m_isMultiTriggered = false;
 
         return true;
     } // init
@@ -50,6 +44,7 @@ private:
             this->claimParticle();
         } // if
         CustomObjectBase::customSetup();
+        this->m_dontIgnoreDuration = false;
     } // customSetup
 
     bool canAllowMultiActivate() override {

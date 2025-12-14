@@ -12,12 +12,11 @@ public:
         if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::CustomRing;
-        this->m_width = 36;
-        this->m_height = 36;
-        this->m_duration = 0;
+        this->m_baseColor->m_defaultColorID = 0;
         this->m_usesAudioScale = true;
         this->m_greenDebugDraw = true;
-        this->m_baseColor->m_defaultColorID = 0;
+        this->m_width = 36;
+        this->m_height = 36;
 
         return true;
     } // init
@@ -34,6 +33,7 @@ private:
             this->claimParticle();
         } // if
         CustomObjectBase::customSetup();
+        this->m_dontIgnoreDuration = false;
     } // customSetup
 
     bool canAllowMultiActivate() override {

@@ -14,11 +14,10 @@ public:
         this->setDontDraw(true);
 
         this->m_objectType = GameObjectType::Collectible;
+        this->m_particleOffset = CCPoint(0, -5);
         this->m_unk28c = true;
         this->m_width = 25;
         this->m_height = 20;
-        this->m_duration = 0;
-        this->m_particleOffset = CCPoint(0, -5);
 
         auto main = this->addCustomChild(config->mainSprite, CCPoint(0, 0), 0);
         auto detail = this->addCustomColorChild(config->detailSprite);

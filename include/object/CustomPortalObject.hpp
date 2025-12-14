@@ -12,19 +12,13 @@ public:
         if (!EffectGameObject::init(config->mainSprite)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
+        this->m_baseColor->m_defaultColorID = 0;
         this->m_width = 34;
         this->m_height = 86;
-        this->m_duration = 0;
         this->m_greenDebugDraw = true;
         this->m_zFixedZLayer = true;
         this->m_defaultZLayer = ZLayer::T1;
         this->m_particleOffset = CCPoint(-5, 0);
-        this->m_baseColor->m_defaultColorID = 0;
-
-        this->m_isTrigger = false;
-        this->m_isSpawnTriggered = false;
-        this->m_isTouchTriggered = true;
-        this->m_isMultiTriggered = false;
 
         if (!config->mainSprite) this->setDontDraw(true);
         if (!this->m_editorEnabled && config->detailSprite) {
@@ -114,6 +108,7 @@ private:
             this->claimParticle();
         } // if
         CustomObjectBase::customSetup();
+        this->m_dontIgnoreDuration = false;
     } // customSetup
 
     void setPosition(cocos2d::CCPoint const& p0) override {

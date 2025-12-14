@@ -12,9 +12,10 @@ public:
         if (!CustomObjectBase::init(config)) return false;
 
         this->m_objectType = GameObjectType::Modifier;
+        this->m_baseColor->m_defaultColorID = 0;
+        this->m_isInvisible = !this->m_editorEnabled;
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
-        this->m_baseColor->m_defaultColorID = 0;
 
         return true;
     } // init
@@ -22,7 +23,6 @@ public:
 private:
     void customSetup() override {
         CustomObjectBase::customSetup();
-        this->setDontDraw(!this->m_editorEnabled);
         this->m_dontIgnoreDuration = true;
         this->m_isTrigger = true;
     } // customSetup
