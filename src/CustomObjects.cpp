@@ -85,16 +85,16 @@ $execute {
 
     mod->registerCustomObject("spike_01_001.png").setGlowSprite("spike_01_glow_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
     mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
-    mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setCustomRender();
+    mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setDisableBatchRender();
 
-    mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setCreateOffset(0, -13).setCustomRender(0)
+    mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setCreateOffset(0, -13).setBatchMode(0)
         .onActivateCustomObject([](CustomPadObject* obj, auto level, auto player) {
             obj->bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
             if (rand() % 50 == 0) level->destroyPlayer(player, obj);
         });
 
-    mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setCustomRender(0);
-    mod->registerCustomObject<CustomPortalObject>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setParticleColor(255, 255, 0).setCustomRender(1)
+    mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setBatchMode(0);
+    mod->registerCustomObject<CustomPortalObject>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setParticleColor(255, 255, 0).setBatchMode(1)
         .onEditObjectButton([](auto obj, auto objs) {
             SetupCameraModePopup::create(obj, objs)->show();
         })
@@ -114,7 +114,7 @@ $execute {
             obj->playShineEffect(type);
         });
 
-    mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setCustomRender(0)
+    mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setBatchMode(0)
         .onActivateCustomObject([](auto, auto, auto) {
             log::info("COLLECTED ME!!!!!!!");
         });

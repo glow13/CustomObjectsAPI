@@ -5,13 +5,13 @@
 
 using namespace geode::prelude;
 
-// Config defaults
 constexpr CCSize BOX_SIZE_DEFAULT {0, 0};
 constexpr CCPoint BOX_OFFSET_DEFAULT {0, 0};
 constexpr int BOX_RADIUS_DEFAULT = 0;
 constexpr CCPoint CREATE_OFFSET_DEFAULT {0, 0};
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
-constexpr int PARENT_MODE_DEFAULT = 10;
+constexpr int BATCH_MODE_DEFAULT = 10;
+constexpr bool DISABLE_BATCH_DEFAULT = false;
 constexpr int FRAMES_COUNT_DEFAULT = 0;
 constexpr float FRAME_TIME_DEFAULT = 1.0f;
 constexpr ccColor3B GLOW_COLOR_DEFAULT {255, 255, 255};
@@ -32,7 +32,8 @@ public:
     int boxRadius = BOX_RADIUS_DEFAULT;
     CCPoint createOffset = CREATE_OFFSET_DEFAULT;
     GameObjectType objectType = OBJECT_TYPE_DEFAULT;
-    int parentMode = PARENT_MODE_DEFAULT;
+    int batchMode = BATCH_MODE_DEFAULT;
+    bool disableBatch = DISABLE_BATCH_DEFAULT;
     int framesCount = FRAMES_COUNT_DEFAULT;
     float frameTime = FRAME_TIME_DEFAULT;
     ccColor3B glowColor = GLOW_COLOR_DEFAULT;
@@ -42,7 +43,7 @@ public:
     ICustomObjectConfig() {}
     ICustomObjectConfig(std::string mod, int id) : mod(mod), id(id) {}
 
-    inline bool isCustomRender() const { return parentMode != PARENT_MODE_DEFAULT; }
+    inline bool isCustomRender() const { return disableBatch || batchMode != BATCH_MODE_DEFAULT; }
     inline bool hasCustomAnimation() const { return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame(); }
 
     virtual bool hasEditObjectFunction() const { return false; }
@@ -93,7 +94,8 @@ public:
     CustomObjectConfig<ObjectType>& setBoxRadius(int radius) { boxRadius = radius; return *this; }
     CustomObjectConfig<ObjectType>& setCreateOffset(int x, int y) { createOffset = CCPoint(x, y); return *this; }
     CustomObjectConfig<ObjectType>& setObjectType(GameObjectType type) { objectType = type; return *this; }
-    CustomObjectConfig<ObjectType>& setCustomRender(int parent = 4) { parentMode = parent; return *this; }
+    CustomObjectConfig<ObjectType>& setBatchMode(int mode) { batchMode = mode; return *this; }
+    CustomObjectConfig<ObjectType>& setDisableBatchRender() { disableBatch = true; return *this; }
     CustomObjectConfig<ObjectType>& setFramesCount(int frames) { framesCount = frames; return *this; }
     CustomObjectConfig<ObjectType>& setFrameTime(float time) { frameTime = time; return *this; }
     CustomObjectConfig<ObjectType>& setGlowColor(GLubyte r, GLubyte g, GLubyte b) { glowColor = {r,g,b}; return *this; }
@@ -120,7 +122,8 @@ public:
         if (boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffset;
         if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius;
         if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType;
-        if (parentMode != PARENT_MODE_DEFAULT) obj->m_parentMode = parentMode;
+        if (batchMode != BATCH_MODE_DEFAULT) obj->m_parentMode = batchMode;
+        if (disableBatch) { obj->m_parentMode = 4; obj->m_addToNodeContainer = true; }
         if (glowColor != GLOW_COLOR_DEFAULT) obj->setGlowColor(glowColor);
 
         return obj;

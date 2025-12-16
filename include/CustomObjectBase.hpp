@@ -5,9 +5,9 @@
 using namespace geode::prelude;
 
 #define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
-#define $object(ObjectType, ObjectBase) ObjectType : public ObjectBase##Base<ObjectType>
-#define $object2(ObjectType, ObjectBase) ObjectType : public CustomObjectBase<ObjectType, ObjectBase>
-#define $generic(BaseType) BaseType : public BaseType##Base<BaseType> {}
+#define $object(ObjectType, ObjectBase) ObjectType final : public ObjectBase##Base<ObjectType>
+#define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>
+#define $generic(BaseType) BaseType final : public BaseType##Base<BaseType> {}
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
@@ -115,8 +115,10 @@ protected:
     } // setStartPos
 
     void customSetup() override {
-        this->updateParticleColor(config->particleColor);
-        this->updateParticleOpacity(config->particleOpacity);
+        if (this->m_particle) {
+            this->updateParticleColor(config->particleColor);
+            this->updateParticleOpacity(config->particleOpacity);
+        } // if
 
         ObjectBase::customSetup();
         setupCustomObject();
