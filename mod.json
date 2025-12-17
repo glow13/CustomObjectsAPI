@@ -1,40 +1,42 @@
 {
-	"geode": "4.10.0",
-	"gd": {
-		"win": "2.2074",
-		"android": "2.2074",
-		"mac": "2.2074",
-		"ios": "2.2074"
-	},
-	"id": "glow12.custom-objects-api",
-	"name": "Custom Objects API",
-	"version": "v1.0.0",
-	"developer": "glow12",
-	"description": "Add custom objects to Geometry Dash!",
-	"dependencies": {
-		"alphalaneous.editortab_api": ">=v1.0.17"
-	},
-	"resources": {
-        "spritesheets": {
-			"CustomObjects": [
-				"resources/*.png",
-				"resources/sprites/*.png"
-			],
-			"cat": [
-				"resources/cat/*.png"
-			]
-		}
+    "geode": "4.10.0",
+    "gd": {
+        "win": "2.2074",
+        "android": "2.2074",
+        "mac": "2.2074",
+        "ios": "2.2074"
     },
-	"settings": {
-		"debug": {
+    "id": "glow12.custom-objects-api",
+    "name": "Custom Objects API",
+    "version": "v1.0.0",
+    "developer": "glow12",
+    "description": "Add custom objects to Geometry Dash!",
+    "dependencies": {
+        "alphalaneous.editortab_api": ">=v1.0.17"
+    },
+    "resources": {
+        "sprites": [
+            "resources/*.png"
+        ],
+        "spritesheets": {
+            "CustomObjects": [
+                "resources/sprites/*.png"
+            ],
+            "cat": [
+                "resources/cat/*.png"
+            ]
+        }
+    },
+    "settings": {
+        "debug": {
             "type": "title",
             "name": "Debug"
         },
-		"force-generation": {
-			"type": "bool",
-			"name": "Force Spritesheet Generation",
-			"description": "Always generate the spritesheets on game launch, used for debugging",
-			"default": false
-		}
-	}
+        "force-generation": {
+            "type": "bool",
+            "name": "Force Spritesheet Generation",
+            "description": "Always generate the spritesheets on game launch, used for debugging",
+            "default": false
+        }
+    }
 }
