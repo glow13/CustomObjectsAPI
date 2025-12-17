@@ -12,6 +12,12 @@ CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod
     return registeredMods.back();
 } // registerCustomObjectsMod
 
+bool CustomObjectsManager::areAllRegisteredModsProcessed() {
+    int registeredObjectsCount = 0;
+    for (auto mod : registeredMods) registeredObjectsCount += mod->objects.size();
+    return customObjectsCache.size() >= registeredObjectsCount;
+} // areAllRegisteredModsProcessed
+
 void CustomObjectsManager::processRegisteredMods() {
     auto spriteManager = CustomSpritesManager::get();
     customObjectsCache.clear();

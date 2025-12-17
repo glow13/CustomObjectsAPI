@@ -33,9 +33,12 @@ class $modify(LoadingLayer) {
         auto objManager = CustomObjectsManager::get();
         auto sprManager = CustomSpritesManager::get();
 
-        objManager->processRegisteredMods();
-        sprManager->processRegisteredSprites();
-        objManager->printModObjectCount();
+        if (!objManager->areAllRegisteredModsProcessed()) {
+            objManager->processRegisteredMods();
+            sprManager->processRegisteredSprites();
+            objManager->printModObjectCount();
+        } // if
+
         continueLoadAssets();
     } // processMods
 
@@ -43,6 +46,9 @@ class $modify(LoadingLayer) {
         m_fields->m_shouldGenerateSpritesheet = false;
 
         auto manager = CustomSpritesManager::get();
+        auto cache = manager->getCacheDirectory();
+        CCFileUtils::get()->addSearchPath(cache.c_str());
+
         if (Mod::get()->getSettingValue<bool>("force-generation")) {
             log::info("Forced spritesheet generation is enabled!");
         } else if (manager->isTheSpritesheetCacheUpToDate()) {
@@ -73,11 +79,12 @@ class $modify(LoadingLayer) {
 
     void loadCustomSpritesheet() {
         auto manager = CustomSpritesManager::get();
-        auto imagePath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
-        auto plistPath = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".plist";
 
-        auto texture = CCTextureCache::sharedTextureCache()->addImage(imagePath.c_str(), false);
-        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(plistPath.c_str(), texture);
+        auto png = manager->getSpritesheetQualityName() + ".png";
+        auto plist = manager->getSpritesheetQualityName() + ".plist";
+
+        auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
+        CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
         // texture->setAliasTexParameters();
 
         auto toolbox = ObjectToolbox::sharedState();
@@ -85,6 +92,7 @@ class $modify(LoadingLayer) {
         objectManager->forEachCustomObject([this, toolbox](auto obj) {
             toolbox->m_allKeys.insert(std::pair(obj->id, obj->mainSprite.frame));
         });
+
         continueLoadAssets();
     } // loadCustomSpritesheet
 };

@@ -8,7 +8,7 @@ CustomSpritesManager* CustomSpritesManager::get() {
 std::string CustomSpritesManager::getCacheDirectory() {
     auto path = Mod::get()->getSaveDir().string() + "/cache/";
     if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
-    return path;
+    return utils::string::pathToString(path);
 } // getCacheDirectory
 
 Quality CustomSpritesManager::getTextureQuality() {
@@ -39,7 +39,8 @@ void CustomSpritesManager::processRegisteredSprites() {
 } // processRegisteredSprites
 
 bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() {
-    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(getSpritesheetQualityName());
+    auto sheetName = getSpritesheetQualityName();
+    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(sheetName);
 
     if (customSpritesCache.size() != cache.size()) return false;
 
@@ -48,6 +49,12 @@ bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() {
         if (std::find(cache.begin(), cache.end(), customSpritesCache[i]->frame) != cache.end()) continue;
         return false;
     } // for
+
+    auto png = sheetName + ".png";
+    if (png == CCFileUtils::get()->fullPathForFilename(png.c_str(), false)) return false;
+
+    auto plist = sheetName + ".plist";
+    if (plist == CCFileUtils::get()->fullPathForFilename(plist.c_str(), false)) return false;
 
     return true;
 } // isTheSpritesheetCacheUpToDate

@@ -44,40 +44,46 @@ public:
 
         auto manager = CustomSpritesManager::get();
         auto path = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
-        auto spr = CCTextureCache::sharedTextureCache()->addImage(path.c_str(), false);
+
+        auto sheet = CCTextureCache::get()->textureForKey(path.c_str());
+        if (!sheet) {
+            log::error("Failed to load the custom objects spritesheet! Batch rendering is disabled");
+            return;
+        } // if
 
         auto fields = m_fields.self();
 
-        fields->m_customLayerT4 = createAndAddBatchLayer(spr, m_gameLayerT4, false);
-        fields->m_customBlendingLayerT4 = createAndAddBatchLayer(spr, m_gameBlendingLayerT4, true);
+        fields->m_customLayerT4 = createAndAddBatchLayer(sheet, m_gameLayerT4, false);
+        fields->m_customBlendingLayerT4 = createAndAddBatchLayer(sheet, m_gameBlendingLayerT4, true);
 
-        fields->m_customLayerT3 = createAndAddBatchLayer(spr, m_gameLayerT3, false);
-        fields->m_customBlendingLayerT3 = createAndAddBatchLayer(spr, m_gameBlendingLayerT3, true);
+        fields->m_customLayerT3 = createAndAddBatchLayer(sheet, m_gameLayerT3, false);
+        fields->m_customBlendingLayerT3 = createAndAddBatchLayer(sheet, m_gameBlendingLayerT3, true);
 
-        fields->m_customLayerT2 = createAndAddBatchLayer(spr, m_gameLayerT2, false);
-        fields->m_customBlendingLayerT2 = createAndAddBatchLayer(spr, m_gameBlendingLayerT2, true);
+        fields->m_customLayerT2 = createAndAddBatchLayer(sheet, m_gameLayerT2, false);
+        fields->m_customBlendingLayerT2 = createAndAddBatchLayer(sheet, m_gameBlendingLayerT2, true);
 
-        fields->m_customLayerT1 = createAndAddBatchLayer(spr, m_gameLayerT1, false);
-        fields->m_customBlendingLayerT1 = createAndAddBatchLayer(spr, m_gameBlendingLayerT1, true);
+        fields->m_customLayerT1 = createAndAddBatchLayer(sheet, m_gameLayerT1, false);
+        fields->m_customBlendingLayerT1 = createAndAddBatchLayer(sheet, m_gameBlendingLayerT1, true);
 
-        fields->m_customLayerB1 = createAndAddBatchLayer(spr, m_gameLayerB1, false);
-        fields->m_customBlendingLayerB1 = createAndAddBatchLayer(spr, m_gameBlendingLayerB1, true);
+        fields->m_customLayerB1 = createAndAddBatchLayer(sheet, m_gameLayerB1, false);
+        fields->m_customBlendingLayerB1 = createAndAddBatchLayer(sheet, m_gameBlendingLayerB1, true);
 
-        fields->m_customLayerB2 = createAndAddBatchLayer(spr, m_gameLayerB2, false);
-        fields->m_customBlendingLayerB2 = createAndAddBatchLayer(spr, m_gameBlendingLayerB2, true);
+        fields->m_customLayerB2 = createAndAddBatchLayer(sheet, m_gameLayerB2, false);
+        fields->m_customBlendingLayerB2 = createAndAddBatchLayer(sheet, m_gameBlendingLayerB2, true);
 
-        fields->m_customLayerB3 = createAndAddBatchLayer(spr, m_gameLayerB3, false);
-        fields->m_customBlendingLayerB3 = createAndAddBatchLayer(spr, m_gameBlendingLayerB3, true);
+        fields->m_customLayerB3 = createAndAddBatchLayer(sheet, m_gameLayerB3, false);
+        fields->m_customBlendingLayerB3 = createAndAddBatchLayer(sheet, m_gameBlendingLayerB3, true);
 
-        fields->m_customLayerB4 = createAndAddBatchLayer(spr, m_gameLayerB4, false);
-        fields->m_customBlendingLayerB4 = createAndAddBatchLayer(spr, m_gameBlendingLayerB4, true);
+        fields->m_customLayerB4 = createAndAddBatchLayer(sheet, m_gameLayerB4, false);
+        fields->m_customBlendingLayerB4 = createAndAddBatchLayer(sheet, m_gameBlendingLayerB4, true);
 
-        fields->m_customLayerB5 = createAndAddBatchLayer(spr, m_gameLayerB5, false);
-        fields->m_customBlendingLayerB5 = createAndAddBatchLayer(spr, m_gameBlendingLayerB5, true);
+        fields->m_customLayerB5 = createAndAddBatchLayer(sheet, m_gameLayerB5, false);
+        fields->m_customBlendingLayerB5 = createAndAddBatchLayer(sheet, m_gameBlendingLayerB5, true);
     } // setupLayers
 
     CCNode* parentForZLayer(int zLayer, bool blend, int parent, int ui) {
         if (parent != 10 || ui) return GJBaseGameLayer::parentForZLayer(zLayer, blend, parent, ui);
+        else if (!m_fields->m_customLayerB1) return GJBaseGameLayer::parentForZLayer(zLayer, blend, 4, ui);
 
         if (!blend) switch(static_cast<ZLayer>(zLayer)) {
             case ZLayer::T4: return m_fields->m_customLayerT4;

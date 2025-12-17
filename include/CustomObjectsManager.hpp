@@ -17,6 +17,7 @@ public:
     static CustomObjectsManager* get();
 
     CustomObjectsMod* registerCustomObjectsMod(geode::Mod* mod, char offset = 0);
+    bool areAllRegisteredModsProcessed();
     void processRegisteredMods();
     void printModObjectCount();
 

@@ -50,7 +50,7 @@ CustomSheetSprite::CustomSheetSprite(std::string frame, std::string sourceFrame,
     int maxY = 0;
     int minX = w - 1;
     int minY = h - 1;
-    int threshold = 4;
+    int threshold = 4; // TODO CHANGE THIS BEFORE RELEASE PLEAASSSSSEEEEEEEEE
 
     // Find top edge
     for (int y = 0, total = 0; y < h && minY == h - 1; y++) {
