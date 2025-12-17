@@ -37,6 +37,12 @@
             "name": "Force Spritesheet Generation",
             "description": "Always generate the spritesheets on game launch, used for debugging",
             "default": false
+        },
+        "disable-aa": {
+            "type": "bool",
+            "name": "Disable Anti-Aliasing",
+            "description": "Disables the anti-aliasing effect applied to the custom objects spritesheet",
+            "default": false
         }
     }
 }

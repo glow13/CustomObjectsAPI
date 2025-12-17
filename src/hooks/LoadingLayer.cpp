@@ -85,7 +85,7 @@ class $modify(LoadingLayer) {
 
         auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
         CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
-        // texture->setAliasTexParameters();
+        if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
 
         auto toolbox = ObjectToolbox::sharedState();
         auto objectManager = CustomObjectsManager::get();
