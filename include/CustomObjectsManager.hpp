@@ -1,8 +1,8 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "struct/CustomObjectConfig.hpp"
-#include "struct/CustomObjectsMod.hpp"
+#include "data/CustomObjectConfig.hpp"
+#include "data/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
 

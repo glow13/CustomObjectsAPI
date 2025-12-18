@@ -1,4 +1,4 @@
-#include "struct/CustomSpriteConfig.hpp"
+#include "data/CustomSpriteConfig.hpp"
 
 CustomSpriteConfig::CustomSpriteConfig() : frame(""), sourceFrame(""), mod(""), rect(CCRect(0, 0, 0, 0)), custom(true) {}
 CustomSpriteConfig::CustomSpriteConfig(std::string frame, std::string mod, CCRect size) : sourceFrame(frame), mod(mod), rect(size), custom(true) {}

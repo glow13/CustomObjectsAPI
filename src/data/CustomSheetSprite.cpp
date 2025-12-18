@@ -1,4 +1,4 @@
-#include "struct/CustomSheetSprite.hpp"
+#include "data/CustomSheetSprite.hpp"
 
 CustomSheetSprite::CustomSheetSprite() : frame(""), sourceFrame(""), rect({0, 0, 0, 0, false}) {}
 CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : frame(""), sourceFrame(""), rect(rect) {}
