@@ -82,3 +82,38 @@ void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quali
         log::info("Saved spritesheet to \"{}\"", path + name + ".png");
     } else log::error("Failed to save custom spritesheet!");
 } // addSpritesheetToCache
+
+CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& data) {
+    auto texture = spr->displayFrame()->getTexture();
+    auto rect = spr->displayFrame()->getRectInPixels();
+
+    int textureW = texture->getPixelsWide();
+    int textureH = texture->getPixelsHigh();
+
+    ByteVector pixels(textureW * textureH * 4);
+
+    ccGLBindTexture2D(texture->getName());
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+    data.resize(rect.size.width * rect.size.height * 4);
+    for (int y = 0; y < rect.size.height; y++) {
+        auto start = pixels.begin() + ((rect.origin.y + y) * textureW + rect.origin.x) * 4;
+        std::copy(start, start + rect.size.width * 4, data.begin() + y * rect.size.width * 4);
+    } // for
+
+    return rect.size;
+} // getPixelDataFromSprite
+
+CCSprite* CustomSpritesManager::getSpriteFromPixelData(ByteVector& data, CCSize size) {
+    auto texture = new CCTexture2D();
+    texture->autorelease();
+    texture->initWithData(
+        data.data(),
+        kCCTexture2DPixelFormat_RGBA8888,
+        size.width,
+        size.height, 
+        size
+    );
+
+    return CCSprite::createWithTexture(texture);
+} // getSpriteFromPixelData
