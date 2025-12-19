@@ -119,6 +119,6 @@ $execute {
             log::info("COLLECTED ME!!!!!!!");
         });
 
-    mod->registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03);
+    mod->registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03).setEditorTabPriority(-1);
     mod->registerCustomAnimationSprites("cat_001.png"_spr, 94);
 }

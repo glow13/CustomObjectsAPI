@@ -17,6 +17,7 @@ constexpr float FRAME_TIME_DEFAULT = 1.0f;
 constexpr ccColor3B GLOW_COLOR_DEFAULT {255, 255, 255};
 constexpr ccColor3B PARTICLE_COLOR_DEFAULT {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
+constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
 struct ICustomObjectConfig {
 public:
@@ -39,6 +40,7 @@ public:
     ccColor3B glowColor = GLOW_COLOR_DEFAULT;
     ccColor3B particleColor = PARTICLE_COLOR_DEFAULT;
     GLubyte particleOpacity = PARTICLE_OPACITY_DEFUALT;
+    int editorPriority = EDITOR_PRIORITY_DEFAULT;
 
     ICustomObjectConfig() {}
     ICustomObjectConfig(std::string mod, int id) : mod(mod), id(id) {}
@@ -101,6 +103,7 @@ public:
     CustomObjectConfig<ObjectType>& setGlowColor(GLubyte r, GLubyte g, GLubyte b) { glowColor = {r,g,b}; return *this; }
     CustomObjectConfig<ObjectType>& setParticleColor(GLubyte r, GLubyte g, GLubyte b) { particleColor = {r,g,b}; return *this; }
     CustomObjectConfig<ObjectType>& setParticleOpacity(GLubyte opacity) { particleOpacity = opacity; return *this; }
+    CustomObjectConfig<ObjectType>& setEditorTabPriority(int priority) { editorPriority = priority; return *this; }
 
     // Set callback functions
     CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, CCArray*)> callback) { editObjectFunction = callback; return *this; }
