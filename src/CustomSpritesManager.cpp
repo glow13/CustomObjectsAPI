@@ -72,6 +72,7 @@ void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quali
         return;
     } // if
 
+    log::info("Spritesheet generation was successful, saving spritesheet to the cache...");
     auto path = getCacheDirectory();
     bool saved = spritesheet->saveSpritesheetImage(name, path);
     saved = saved && spritesheet->saveSpritesheetPlist(name, path);
@@ -79,8 +80,8 @@ void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quali
     // Save the frames in the sprite cache
     if (saved) {
         saveSpritesheetDataToCache(name);
-        log::info("Saved spritesheet to \"{}\"", path + name + ".png");
-    } else log::error("Failed to save custom spritesheet!");
+        log::info("Saved spritesheet as \"{}\"", path + name + ".png");
+    } else log::error("Failed to save custom objects spritesheet!");
 } // addSpritesheetToCache
 
 CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& data) {

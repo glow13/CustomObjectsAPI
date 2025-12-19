@@ -138,19 +138,35 @@ rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomSheetSprite
     using namespace rectpack2D;
 
     // Buffer sprites
-    float totalWidth = 0;
+    int totalWidth = 0;
     for (auto& spr : sprites) {
         spr.rect.w += SPRITE_BUFFER;
         spr.rect.h += SPRITE_BUFFER;
         totalWidth += std::max(spr.rect.w, spr.rect.h);
     } // for
 
-    auto size = find_best_packing<empty_spaces<true>>(sprites, make_finder_input(
-        totalWidth, -4,
-        [](rect_xywhf&) { return callback_result::CONTINUE_PACKING; },
-        [](rect_xywhf&) { return callback_result::ABORT_PACKING; },
-        flipping_option::ENABLED
-    ));
+    rect_wh size;
+    int width = totalWidth;
+    auto onBinPackingSuccess = [](rect_xywhf&) { return callback_result::CONTINUE_PACKING; };
+    auto onBinPackingFailure = [&size, &width, totalWidth](rect_xywhf&) {
+        log::warn("Failed to generate the spritesheet at size {}, retrying...", width);
+        size = {0,0};
+        width += totalWidth; // increase width until success
+        return callback_result::ABORT_PACKING;
+    };
+
+    while (size.w == 0 || size.h == 0) {
+        auto finderInput = make_finder_input(
+            width, -4,
+            onBinPackingSuccess,
+            onBinPackingFailure,
+            flipping_option::ENABLED
+        );
+        size = find_best_packing<empty_spaces<true>>(
+            sprites,
+            finderInput
+        );
+    } // while
 
     // Remove sprite buffer
     for (auto& spr : sprites) {

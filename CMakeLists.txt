@@ -39,7 +39,7 @@ target_link_libraries(${PROJECT_NAME} lodepng)
 CPMAddPackage(
   NAME rectpack2d
   GITHUB_REPOSITORY TeamHypersomnia/rectpack2D
-  GIT_TAG 2f53fac
+  GIT_TAG 61e8156
   DOWNLOAD_ONLY ON
 )
 target_include_directories(${PROJECT_NAME} PUBLIC ${rectpack2d_SOURCE_DIR}/src/rectpack2D)
