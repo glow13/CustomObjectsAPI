@@ -91,20 +91,16 @@ CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& d
     auto keys = CCTextureCache::get()->m_pTextures->allKeysForObject(texture);
     if (keys->count() == 0) return CCSizeZero;
 
-    CCImage textureImage;
-    if (!textureImage.initWithImageFile(keys->stringAtIndex(0)->getCString())) return CCSizeZero;
-
-    auto textureData = textureImage.getData();
-    auto textureDataLen = textureImage.getDataLen();
-    ByteVector pixels(textureData, textureData + textureDataLen * 4);
+    CCImage image;
+    auto filePath = keys->stringAtIndex(0)->getCString();
+    if (!image.initWithImageFile(filePath)) return CCSizeZero;
 
     if (frame->isRotated()) rect.size.swap();
     data.resize(rect.size.width * rect.size.height * 4);
 
-    auto textureW = textureImage.getWidth();
     for (int y = 0; y < rect.size.height; y++) {
-        auto start = pixels.begin() + ((rect.origin.y + y) * textureW + rect.origin.x) * 4;
-        std::copy(start, start + rect.size.width * 4, data.begin() + y * rect.size.width * 4);
+        auto start = image.getData() + (int)((rect.origin.y + y) * image.getWidth()+ rect.origin.x) * 4;
+        std::memcpy(data.data() + (int)(y * rect.size.width) * 4, start, rect.size.width * 4);
     } // for
 
     return rect.size;
