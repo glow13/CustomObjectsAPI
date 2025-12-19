@@ -6,12 +6,19 @@ CustomSheetSprite::CustomSheetSprite(std::string frameName, std::string sourceFr
     this->frameName = frameName;
     this->sourceFrame = sourceFrame;
 
-    auto frame = CCSpriteFrameCache::get()->spriteFrameByName(sourceFrame.c_str());
-    auto originalSize = frame->getOriginalSizeInPixels();
+    CCSpriteFrame* frame;
+    if (auto spr = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(sourceFrame)) {
+        frame = static_cast<CCSpriteFrame*>(spr);
+    } else if (CCSprite spr; spr.initWithFile(sourceFrame.c_str())) {
+        frame = spr.displayFrame();
+    } else {
+        log::error("Failed to find sprite \"{}\"", sourceFrame);
+        this->size = CCSizeZero;
+        return;
+    } // if
 
+    auto originalSize = frame->getOriginalSizeInPixels();
     rect.size = rect.size.isZero() ? originalSize : rect.size * (int)quality;
-    this->offset = rect.origin * (int)quality;
-    this->size = rect.size;
 
     float scaleX = rect.size.width / originalSize.width;
     float scaleY = rect.size.height / originalSize.height;
@@ -21,9 +28,11 @@ CustomSheetSprite::CustomSheetSprite(std::string frameName, std::string sourceFr
     offset = CCPoint(offset.x * scaleX, offset.y * scaleY);
     trimSize = CCSize(trimSize.width * scaleX, trimSize.height * scaleY);
 
-    int trimX = (size.width - trimSize.width) * 0.5f + offset.x;
-    int trimY = (size.height - trimSize.height) * 0.5f - offset.y;
+    int trimX = (rect.size.width - trimSize.width) * 0.5f + offset.x;
+    int trimY = (rect.size.height - trimSize.height) * 0.5f - offset.y;
 
+    this->size = rect.size;
+    this->offset = rect.origin * (int)quality;
     this->trim = {trimX, trimY, (int)trimSize.width, (int)trimSize.height};
     this->rect = {0, 0, (int)trimSize.width, (int)trimSize.height, false};
 } // CustomSheetSprite

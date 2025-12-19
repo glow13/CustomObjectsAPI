@@ -15,16 +15,20 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
 
     // Add each sprite to the sheet
     for (auto spr : spritesCache) {
+        CCSprite sprite;
+        if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.sourceFrame.c_str())) {
+            sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
+        } else if (!sprite.initWithFile(spr.sourceFrame.c_str())) continue;
+
         int offsetX = spr.rect.flipped ? spr.size.height - spr.trim.h - spr.trim.y : spr.trim.x;
         int offsetY = spr.rect.flipped ? spr.trim.x : spr.trim.y;
 
-        auto sprite = CCSprite::createWithSpriteFrameName(spr.sourceFrame.c_str());
-        sprite->setPosition(CCPoint(spr.rect.x - offsetX, sheetSize.h - spr.rect.y + offsetY) / quality);
-        sprite->setAnchorPoint(spr.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
-        sprite->setScaleX(spr.size.width / (sprite->getContentWidth() * (int)quality));
-        sprite->setScaleY(spr.size.height / (sprite->getContentHeight() * (int)quality));
-        sprite->setRotation(spr.rect.flipped ? 90 : 0);
-        sprite->visit();
+        sprite.setPosition(CCPoint(spr.rect.x - offsetX, sheetSize.h - spr.rect.y + offsetY) / quality);
+        sprite.setAnchorPoint(spr.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
+        sprite.setScaleX(spr.size.width / (sprite.getContentWidth() * (int)quality));
+        sprite.setScaleY(spr.size.height / (sprite.getContentHeight() * (int)quality));
+        sprite.setRotation(spr.rect.flipped ? 90 : 0);
+        sprite.visit();
     } // for
 
     // Save the rendered image pixel data
@@ -104,6 +108,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
     // Initialize sprites vector and find side lengths
     for (auto sprite : customSprites) {
         auto spr = CustomSheetSprite(sprite->frame, sprite->sourceFrame, sprite->rect, quality);
+        if (spr.size.isZero()) continue;
 
         sprites.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;

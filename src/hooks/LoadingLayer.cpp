@@ -74,6 +74,12 @@ class $modify(LoadingLayer) {
             auto sheetName = manager->getSpritesheetQualityName();
             manager->addSpritesheetToCache(sheetName, sheetQuality);
         } // if
+
+        if (auto smallLabel = getChildByID("geode-small-label")) {
+            auto label = static_cast<CCLabelBMFont*>(smallLabel);
+            label->setString("Loading game resources");
+        } // if
+
         continueLoadAssets();
     } // generateCustomSpritesheet
 
