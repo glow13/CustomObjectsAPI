@@ -24,9 +24,14 @@ class $modify(EditorUI) {
 
             auto start = buttons->data->arr;
             std::sort(start, start + buttons->count(), [manager](auto a, auto b) {
-                auto priorityA = manager->getCustomObjectByID(static_cast<CreateMenuItem*>(a)->m_objectID)->editorPriority;
-                auto priorityB = manager->getCustomObjectByID(static_cast<CreateMenuItem*>(b)->m_objectID)->editorPriority;
-                return priorityA < priorityB;
+                auto objectIDA = static_cast<CreateMenuItem*>(a)->m_objectID;
+                auto objectIDB = static_cast<CreateMenuItem*>(b)->m_objectID;
+
+                auto priorityA = manager->getCustomObjectByID(objectIDA)->editorPriority;
+                auto priorityB = manager->getCustomObjectByID(objectIDB)->editorPriority;
+
+                if (priorityA == priorityB) return objectIDA < objectIDB;
+                else return priorityA < priorityB;
             });
  
             return EditorTabUtils::createEditButtonBar(buttons, ui);
