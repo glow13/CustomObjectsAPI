@@ -88,17 +88,20 @@ CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& d
     auto texture = frame->getTexture();
     auto rect = frame->getRectInPixels();
 
-    int textureW = texture->getPixelsWide();
-    int textureH = texture->getPixelsHigh();
+    auto keys = CCTextureCache::get()->m_pTextures->allKeysForObject(texture);
+    if (keys->count() == 0) return CCSizeZero;
 
-    ByteVector pixels(textureW * textureH * 4);
+    CCImage textureImage;
+    if (!textureImage.initWithImageFile(keys->stringAtIndex(0)->getCString())) return CCSizeZero;
 
-    ccGLBindTexture2D(texture->getName());
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    auto textureData = textureImage.getData();
+    auto textureDataLen = textureImage.getDataLen();
+    ByteVector pixels(textureData, textureData + textureDataLen * 4);
 
     if (frame->isRotated()) rect.size.swap();
     data.resize(rect.size.width * rect.size.height * 4);
 
+    auto textureW = textureImage.getWidth();
     for (int y = 0; y < rect.size.height; y++) {
         auto start = pixels.begin() + ((rect.origin.y + y) * textureW + rect.origin.x) * 4;
         std::copy(start, start + rect.size.width * 4, data.begin() + y * rect.size.width * 4);
@@ -108,6 +111,8 @@ CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& d
 } // getPixelDataFromSprite
 
 CCSprite* CustomSpritesManager::getSpriteFromPixelData(ByteVector& data, CCSize size) {
+    if (size.isZero()) return nullptr;
+
     auto texture = new CCTexture2D();
     texture->autorelease();
     texture->initWithData(
