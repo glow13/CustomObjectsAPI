@@ -84,8 +84,9 @@ void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quali
 } // addSpritesheetToCache
 
 CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& data) {
-    auto texture = spr->displayFrame()->getTexture();
-    auto rect = spr->displayFrame()->getRectInPixels();
+    auto frame = spr->displayFrame();
+    auto texture = frame->getTexture();
+    auto rect = frame->getRectInPixels();
 
     int textureW = texture->getPixelsWide();
     int textureH = texture->getPixelsHigh();
@@ -95,7 +96,9 @@ CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& d
     ccGLBindTexture2D(texture->getName());
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 
+    if (frame->isRotated()) rect.size.swap();
     data.resize(rect.size.width * rect.size.height * 4);
+
     for (int y = 0; y < rect.size.height; y++) {
         auto start = pixels.begin() + ((rect.origin.y + y) * textureW + rect.origin.x) * 4;
         std::copy(start, start + rect.size.width * 4, data.begin() + y * rect.size.width * 4);
