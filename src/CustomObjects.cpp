@@ -62,6 +62,27 @@ public:
     } // activateCustomTrigger
 };
 
+class $object2(ModTriggerObject, SpawnTriggerGameObject) {
+public:
+    bool init(const CustomObjectConfig* config) {
+        if (!EffectGameObject::init(config->mainSprite)) return false;
+
+        m_objectType = GameObjectType::Modifier;
+        m_baseColor->m_defaultColorID = 0;
+        m_isInvisible = !m_editorEnabled;
+
+        return true;
+    } // init
+
+    void setupCustomObject() override {
+        m_isTrigger = true;
+        m_activateTriggerInEditor = true;
+        m_isSpawnOrderTrigger = true;
+        m_canBeControlled = true;
+        m_dontIgnoreDuration = false;
+    } // setupCustomObject
+};
+
 $execute {
     auto manager = CustomObjectsManager::get();
     auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
@@ -121,4 +142,9 @@ $execute {
 
     mod->registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03).setEditorTabPriority(-1);
     mod->registerCustomAnimationSprites("cat_001.png"_spr, 94);
+
+    mod->registerCustomObject<ModTriggerObject>("edit_eSpawnBtn_001.png")
+        .onEditObjectButton([](auto obj, auto objs) {
+            SetupSpawnPopup::create(obj, objs)->show();
+        });
 }
