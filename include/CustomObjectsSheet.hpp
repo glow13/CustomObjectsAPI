@@ -6,8 +6,6 @@
 
 using namespace geode::prelude;
 
-#define SPRITE_BUFFER 2
-
 enum Quality : int;
 
 class CustomObjectsSheet : public CCNode {

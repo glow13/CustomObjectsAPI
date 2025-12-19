@@ -7,20 +7,22 @@
 #include <finders_interface.h>
 #include <lodepng.h>
 
+#define SPRITE_BUFFER 2
+
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
     auto render = CCRenderTexture::create(sheetSize.w / quality, sheetSize.h / quality);
     render->begin();
 
     // Add each sprite to the sheet
     for (auto spr : spritesCache) {
-        int offsetX = spr.rect.flipped ? spr.size.h - spr.trim.h - spr.trim.y : spr.trim.x;
+        int offsetX = spr.rect.flipped ? spr.size.height - spr.trim.h - spr.trim.y : spr.trim.x;
         int offsetY = spr.rect.flipped ? spr.trim.x : spr.trim.y;
 
         auto sprite = CCSprite::createWithSpriteFrameName(spr.sourceFrame.c_str());
         sprite->setPosition(CCPoint(spr.rect.x - offsetX, sheetSize.h - spr.rect.y + offsetY) / quality);
         sprite->setAnchorPoint(spr.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
-        sprite->setScaleX(spr.size.w / (sprite->getContentWidth() * (int)quality));
-        sprite->setScaleY(spr.size.h / (sprite->getContentHeight() * (int)quality));
+        sprite->setScaleX(spr.size.width / (sprite->getContentWidth() * (int)quality));
+        sprite->setScaleY(spr.size.height / (sprite->getContentHeight() * (int)quality));
         sprite->setRotation(spr.rect.flipped ? 90 : 0);
         sprite->visit();
     } // for
@@ -71,7 +73,7 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
     file << "<dict>\n\t<key>frames</key>\n\t<dict>\n";
 
     for (auto spr : spritesCache) {
-        file << "\t\t<key>"+spr.frame+"</key>\n\t\t<dict>\n";
+        file << "\t\t<key>"+spr.frameName+"</key>\n\t\t<dict>\n";
         file << "\t\t\t<key>spriteOffset</key>\n\t\t\t<string>"+spr.offString()+"</string>\n";
         file << "\t\t\t<key>spriteSize</key>\n\t\t\t<string>"+spr.sizeString()+"</string>\n";
         file << "\t\t\t<key>spriteSourceSize</key>\n\t\t\t<string>"+spr.sourceString()+"</string>\n";
