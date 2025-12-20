@@ -1,10 +1,11 @@
 #pragma once
 #include <Geode/Geode.hpp>
-
-#include "data/CustomObjectConfig.hpp"
-#include "data/CustomSheetSprite.hpp"
+#include <rect_structs.h>
 
 using namespace geode::prelude;
+
+struct CustomSpriteConfig;
+struct CustomSheetSprite;
 
 enum Quality : int;
 

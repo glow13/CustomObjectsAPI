@@ -1,4 +1,6 @@
 #include "CustomSpritesManager.hpp"
+#include "CustomObjectsSheet.hpp"
+#include "data/CustomSpriteConfig.hpp"
 
 CustomSpritesManager* CustomSpritesManager::get() {
     if (!s_manager) s_manager = new CustomSpritesManager();

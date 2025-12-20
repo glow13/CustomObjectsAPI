@@ -1,9 +1,9 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "CustomObjectsSheet.hpp"
-
 using namespace geode::prelude;
+
+struct CustomSpriteConfig;
 
 enum Quality : int {
     LOW = 1,

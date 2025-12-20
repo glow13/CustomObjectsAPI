@@ -1,5 +1,8 @@
 #include "CustomObjectsManager.hpp"
 
+#include "data/CustomObjectConfig.hpp"
+#include "data/CustomObjectsMod.hpp"
+
 #include "object/CustomGameObject.hpp"
 #include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"

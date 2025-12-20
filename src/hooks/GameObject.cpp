@@ -2,6 +2,7 @@
 #include <Geode/modify/GameObject.hpp>
 
 #include "CustomObjectsManager.hpp"
+#include "data/CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 

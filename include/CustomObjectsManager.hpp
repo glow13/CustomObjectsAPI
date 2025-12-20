@@ -1,10 +1,10 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "data/CustomObjectConfig.hpp"
-#include "data/CustomObjectsMod.hpp"
-
 using namespace geode::prelude;
+
+struct CustomObjectsMod;
+struct ICustomObjectConfig;
 
 class CustomObjectsManager {
 private:

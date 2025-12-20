@@ -3,6 +3,7 @@
 
 #include "CustomObjectsManager.hpp"
 #include "CustomSpritesManager.hpp"
+#include "data/CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 

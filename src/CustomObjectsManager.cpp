@@ -1,5 +1,7 @@
 #include "CustomObjectsManager.hpp"
 #include "CustomSpritesManager.hpp"
+#include "data/CustomObjectConfig.hpp"
+#include "data/CustomObjectsMod.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();

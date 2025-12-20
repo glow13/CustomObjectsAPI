@@ -1,4 +1,6 @@
 #include "CustomObjectsSheet.hpp"
+#include "data/CustomSpriteConfig.hpp"
+#include "data/CustomSheetSprite.hpp"
 
 #define LODEPNG_NO_COMPILE_DECODER
 #define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS
@@ -7,7 +9,7 @@
 #include <finders_interface.h>
 #include <lodepng.h>
 
-#define SPRITE_BUFFER 2
+constexpr int SPRITE_BUFFER = 2;
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
     auto render = CCRenderTexture::create(sheetSize.w / quality, sheetSize.h / quality);

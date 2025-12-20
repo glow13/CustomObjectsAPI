@@ -5,17 +5,17 @@
 
 using namespace geode::prelude;
 
-constexpr CCSize BOX_SIZE_DEFAULT {0, 0};
-constexpr CCPoint BOX_OFFSET_DEFAULT {0, 0};
+constexpr CCSize BOX_SIZE_DEFAULT = CCSizeZero;
+constexpr CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
 constexpr int BOX_RADIUS_DEFAULT = 0;
-constexpr CCPoint CREATE_OFFSET_DEFAULT {0, 0};
+constexpr CCPoint CREATE_OFFSET_DEFAULT = CCPointZero;
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
 constexpr int BATCH_MODE_DEFAULT = 10;
 constexpr bool DISABLE_BATCH_DEFAULT = false;
 constexpr int FRAMES_COUNT_DEFAULT = 0;
 constexpr float FRAME_TIME_DEFAULT = 1.0f;
-constexpr ccColor3B GLOW_COLOR_DEFAULT {255, 255, 255};
-constexpr ccColor3B PARTICLE_COLOR_DEFAULT {255, 255, 255};
+constexpr ccColor3B GLOW_COLOR_DEFAULT = {255, 255, 255};
+constexpr ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 

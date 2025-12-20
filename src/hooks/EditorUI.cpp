@@ -1,9 +1,9 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/EditorUI.hpp>
-
 #include <alphalaneous.editortab_api/include/EditorTabs.hpp>
 
 #include "CustomObjectsManager.hpp"
+#include "data/CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 
