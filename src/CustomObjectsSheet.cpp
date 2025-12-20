@@ -35,7 +35,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
 
     // Save the rendered image pixel data
     auto& s = render->m_pTexture->getContentSizeInPixels();
-    unsigned int w = s.width, h = s.height;
+    uint32_t w = s.width, h = s.height;
 
     std::vector<uint8_t> data(w * h * 4);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -52,7 +52,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     } // for
 
     // Reverse premultiply alpha
-    for (long i = 0; i < w * h * 4; i += 4) {
+    for (uint32_t i = 0; i < w * h * 4; i += 4) {
         float a = data[i+3];
         if (a == 0 || a == 255) continue;
 
