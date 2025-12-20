@@ -123,19 +123,19 @@ $execute {
             SetupCameraModePopup::create(obj, objs)->show();
         })
         .onActivateCustomObject([](CustomPortalObject* obj, auto level, auto player) {
-            GameObjectType type;
+            GameModeType type;
             switch (rand() % 6) {
-                case 0: type = GameObjectType::ShipPortal; break;
-                case 1: type = GameObjectType::CubePortal; break;
-                case 2: type = GameObjectType::BallPortal; break;
-                case 3: type = GameObjectType::UfoPortal; break;
-                case 4: type = GameObjectType::RobotPortal; break;
-                case 5: type = GameObjectType::SpiderPortal; break;
-                default: type = GameObjectType::CubePortal; break;
+                case 0: type = GameModeType::SHIP; break;
+                case 1: type = GameModeType::CUBE; break;
+                case 2: type = GameModeType::BALL; break;
+                case 3: type = GameModeType::UFO; break;
+                case 4: type = GameModeType::ROBOT; break;
+                case 5: type = GameModeType::SPIDER; break;
+                default: type = GameModeType::CUBE; break;
             } // switch
 
             obj->switchPlayerMode(level, player, type);
-            obj->playShineEffect(type);
+            obj->playShineEffect((GameObjectType)type);
         });
 
     mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setBatchMode(0)

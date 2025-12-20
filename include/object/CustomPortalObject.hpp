@@ -3,6 +3,17 @@
 
 #include "CustomObjectBase.hpp"
 
+enum GameModeType : int {
+    CUBE = GameObjectType::CubePortal,
+    SHIP = GameObjectType::ShipPortal,
+    BALL = GameObjectType::BallPortal,
+    UFO = GameObjectType::UfoPortal,
+    WAVE = GameObjectType::WavePortal,
+    ROBOT = GameObjectType::RobotPortal,
+    SPIDER = GameObjectType::SpiderPortal,
+    SWING = GameObjectType::SwingPortal,
+};
+
 template <class ObjectType>
 class $base(CustomPortalObject, EffectGameObject) {
 protected:
@@ -35,20 +46,20 @@ public:
         return true;
     } // init
 
-    void switchPlayerMode(GJBaseGameLayer* level, PlayerObject* player, GameObjectType type) {
-        this->m_objectType = type;
-        this->m_fakeType = type;
+    void switchPlayerMode(GJBaseGameLayer* level, PlayerObject* player, GameModeType type) {
+        this->m_objectType = (GameObjectType)type;
+        this->m_fakeType = (GameObjectType)type;
 
         level->playerWillSwitchMode(player, this);
         switch (type) {
-            case GameObjectType::ShipPortal: level->switchToFlyMode(player, this, false, 5); break;
-            case GameObjectType::BallPortal: level->switchToRollMode(player, this, false); break;
-            case GameObjectType::UfoPortal: level->switchToFlyMode(player, this, false, 19); break;
-            case GameObjectType::WavePortal: level->switchToFlyMode(player, this, false, 26); break;
-            case GameObjectType::RobotPortal: level->switchToRobotMode(player, this, false); break;
-            case GameObjectType::SpiderPortal: level->switchToSpiderMode(player, this, false); break;
-            case GameObjectType::SwingPortal: level->switchToFlyMode(player, this, false, 41); break;
-            default: player->switchedToMode(type); break;
+            case GameModeType::SHIP: level->switchToFlyMode(player, this, false, 5); break;
+            case GameModeType::BALL: level->switchToRollMode(player, this, false); break;
+            case GameModeType::UFO: level->switchToFlyMode(player, this, false, 19); break;
+            case GameModeType::WAVE: level->switchToFlyMode(player, this, false, 26); break;
+            case GameModeType::ROBOT: level->switchToRobotMode(player, this, false); break;
+            case GameModeType::SPIDER: level->switchToSpiderMode(player, this, false); break;
+            case GameModeType::SWING: level->switchToFlyMode(player, this, false, 41); break;
+            default: player->switchedToMode((GameObjectType)type); break; // cube
         } // switch
 
         player->updatePlayerArt();
