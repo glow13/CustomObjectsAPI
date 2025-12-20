@@ -11,6 +11,10 @@
 
 constexpr int SPRITE_BUFFER = 2;
 
+CCSprite makeModTriggerSprite(CCSprite sprite, std::string colorString) {
+    return sprite;
+} // makeModTriggerSprite
+
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
     auto render = CCRenderTexture::create(sheetSize.w / quality, sheetSize.h / quality);
     render->begin();
@@ -18,7 +22,9 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     // Add each sprite to the sheet
     for (auto spr : spritesCache) {
         CCSprite sprite;
-        if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.sourceFrame.c_str())) {
+        if (spr.isModTrigger) {
+            sprite = makeModTriggerSprite(sprite, spr.sourceFrame);
+        } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.sourceFrame.c_str())) {
             sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
         } else if (!sprite.initWithFile(spr.sourceFrame.c_str())) continue;
 
@@ -110,6 +116,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
     // Initialize sprites vector and find side lengths
     for (auto sprite : customSprites) {
         auto spr = CustomSheetSprite(sprite->frame, sprite->sourceFrame, sprite->rect, quality);
+        spr.isModTrigger = sprite->isModTrigger();
         if (spr.size.isZero()) continue;
 
         sprites.emplace_back(spr);

@@ -9,6 +9,7 @@ enum Quality : int;
 struct CustomSheetSprite {
     std::string frameName;
     std::string sourceFrame;
+    bool isModTrigger;
 
     CCSize size; // desired final size of the sprite in the spritesheet
     CCPoint offset; // user-defined offset of the sprite, seperate from the trim process

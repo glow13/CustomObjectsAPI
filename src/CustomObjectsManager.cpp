@@ -2,6 +2,7 @@
 #include "CustomSpritesManager.hpp"
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
+#include "ModTriggerObject.hpp"
 
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();
@@ -10,6 +11,11 @@ CustomObjectsManager* CustomObjectsManager::get() {
 
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
     auto registeredMod = new CustomObjectsMod(mod, offset);
+
+    auto& trigger = registeredMod->registerCustomObject<ModTriggerObject>("mod-trigger.png"_spr);
+    trigger.setEditorTabPriority(INT_MIN);
+    trigger.mainSprite.mod = true;
+
     registeredMods.emplace_back(registeredMod);
     return registeredMods.back();
 } // registerCustomObjectsMod

@@ -14,21 +14,27 @@ using namespace geode::prelude;
 
 #endif
 
+class CustomObjectsManager;
+
 struct CustomSpriteConfig {
 public:
     std::string frame;
     std::string sourceFrame;
-    std::string mod;
+    std::string modId;
     CCRect rect;
     bool custom;
-
+private:
+    bool mod;
+    friend CustomObjectsManager;
+public:
     CustomSpriteConfig();
-    CustomSpriteConfig(std::string frame, std::string mod, CCRect rect);
+    CustomSpriteConfig(std::string frame, std::string modId, CCRect rect);
 
     inline operator gd::string() const { return frame; }
     inline operator const char*() const { return frame.c_str(); }
     inline operator bool() const { return !frame.empty(); }
 
     bool isAnimationFrame() const;
+    bool isModTrigger() const;
     void generateFrame();
 };
