@@ -30,6 +30,11 @@ public:
         this->m_defaultZLayer = ZLayer::T1;
         this->m_particleOffset = CCPoint(-5, 0);
 
+        this->m_isTrigger = false;
+        this->m_isSpawnTriggered = false;
+        this->m_isTouchTriggered = true;
+        this->m_isMultiTriggered = false;
+
         if (!config->mainSprite) this->setDontDraw(true);
         if (!this->m_editorEnabled && config->detailSprite) {
             auto parent = cast::base_cast<CCSprite*>(GJBaseGameLayer::get()->m_game2LayerB0);

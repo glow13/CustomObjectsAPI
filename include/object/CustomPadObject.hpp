@@ -16,6 +16,11 @@ public:
         this->m_width = 25;
         this->m_height = 5;
 
+        this->m_isTrigger = false;
+        this->m_isSpawnTriggered = false;
+        this->m_isTouchTriggered = true;
+        this->m_isMultiTriggered = false;
+
         return true;
     } // init
 
