@@ -3,14 +3,14 @@
 #include "CustomObjectBase.hpp"
 
 enum GameModeType : int {
-    CUBE = GameObjectType::CubePortal,
-    SHIP = GameObjectType::ShipPortal,
-    BALL = GameObjectType::BallPortal,
-    UFO = GameObjectType::UfoPortal,
-    WAVE = GameObjectType::WavePortal,
-    ROBOT = GameObjectType::RobotPortal,
-    SPIDER = GameObjectType::SpiderPortal,
-    SWING = GameObjectType::SwingPortal,
+    CUBE = (int)GameObjectType::CubePortal,
+    SHIP = (int)GameObjectType::ShipPortal,
+    BALL = (int)GameObjectType::BallPortal,
+    UFO = (int)GameObjectType::UfoPortal,
+    WAVE = (int)GameObjectType::WavePortal,
+    ROBOT = (int)GameObjectType::RobotPortal,
+    SPIDER = (int)GameObjectType::SpiderPortal,
+    SWING = (int)GameObjectType::SwingPortal,
 };
 
 template <class ObjectType>

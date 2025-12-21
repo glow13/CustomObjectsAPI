@@ -12,8 +12,8 @@
 
 constexpr int SPRITE_BUFFER = 2;
 
-CCSprite& makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
-    if (!sprite.initWithFile("mod-trigger.png"_spr)) return sprite;
+void makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
+    if (!sprite.initWithFile("mod-trigger.png"_spr)) return;
 
     ByteVector pixels;
     CCSize size = CustomSpritesManager::getPixelDataFromSprite(&sprite, pixels);
@@ -35,8 +35,6 @@ CCSprite& makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
     auto spr = CustomSpritesManager::getSpriteFromPixelData(pixels, size);
     sprite.initWithTexture(spr->getTexture());
     spr->release();
-
-    return sprite;
 } // makeModTriggerSprite
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
@@ -47,7 +45,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     for (auto spr : spritesCache) {
         CCSprite sprite;
         if (spr.isModTrigger) {
-            if (sprite = makeModTriggerSprite(sprite, spr.sourceFrame); !sprite.getTexture()) continue;
+            if (makeModTriggerSprite(sprite, spr.sourceFrame); !sprite.getTexture()) continue;
         } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.sourceFrame.c_str())) {
             sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
         } else if (!sprite.initWithFile(spr.sourceFrame.c_str())) continue;

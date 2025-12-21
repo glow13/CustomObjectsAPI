@@ -91,12 +91,13 @@ CCSize CustomSpritesManager::getPixelDataFromSprite(CCSprite* spr, ByteVector& d
     auto texture = frame->getTexture();
     auto rect = frame->getRectInPixels();
 
-    auto keys = CCTextureCache::get()->m_pTextures->allKeysForObject(texture);
-    if (keys->count() == 0) return CCSizeZero;
+    std::string filePath = "";
+    for (auto [key, tex] : CCDictionaryExt<std::string, CCTexture2D*>(CCTextureCache::get()->m_pTextures)) {
+        if (tex == texture) { filePath = key; break; }
+    } // for
 
     CCImage image;
-    auto filePath = keys->stringAtIndex(0)->getCString();
-    if (!image.initWithImageFile(filePath)) return CCSizeZero;
+    if (filePath.empty() || !image.initWithImageFile(filePath.c_str())) return CCSizeZero;
 
     if (frame->isRotated()) rect.size.swap();
     data.resize(rect.size.width * rect.size.height * 4);
