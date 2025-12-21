@@ -7,13 +7,23 @@ public:
     std::string mod = "";
 
     bool init(const CustomObjectConfig* config) {
-        if (!CustomObjectBase::init(config)) return false;
+        auto modTriggerFrame = fmt::format("custom-objects/{}/0.0.0.0/mod-trigger.png", config->mod);
+        if (!EffectGameObject::init(modTriggerFrame.c_str())) return false;
+
+        this->m_objectType = GameObjectType::Modifier;
+        this->m_baseColor->m_defaultColorID = 0;
+        this->m_isInvisible = !this->m_editorEnabled;
+
         mod = config->mod;
         return true;
     } // init
 
     void setupCustomObject() override {
-        if (!mod.empty()) log::info("{}", mod);
-        else log::error("no mod lol");
+        if (auto lel = LevelEditorLayer::get()) {
+            auto objectID = m_objectID;
+            m_objectID = 901;
+            lel->updateObjectLabel(this);
+            m_objectID = objectID;
+        } // if
     } // setupCustomObject
 };

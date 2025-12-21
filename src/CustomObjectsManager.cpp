@@ -12,9 +12,13 @@ CustomObjectsManager* CustomObjectsManager::get() {
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
     auto registeredMod = new CustomObjectsMod(mod, offset);
 
+    auto triggerSprite = new CustomSpriteConfig("mod-trigger.png"_spr, registeredMod->modID, CCRectZero);
+    registeredMod->sprites.emplace_back(triggerSprite);
+    triggerSprite->mod = true;
+
     auto& trigger = registeredMod->registerCustomObject<ModTriggerObject>("mod-trigger.png"_spr);
     trigger.setEditorTabPriority(INT_MIN);
-    trigger.mainSprite.mod = true;
+    trigger.setDisableBatchRender();
 
     registeredMods.emplace_back(registeredMod);
     return registeredMods.back();

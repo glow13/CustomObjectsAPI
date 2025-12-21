@@ -124,11 +124,6 @@ protected:
         setupCustomObject();
     } // customSetup
 
-    void firstSetup() override {
-        ObjectBase::firstSetup();
-        setupCustomObject();
-    } // firstSetup
-
     void resetObject() override {
         ObjectBase::resetObject();
         resetCustomObject();
