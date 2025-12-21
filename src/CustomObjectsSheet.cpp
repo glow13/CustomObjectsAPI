@@ -1,4 +1,5 @@
 #include "CustomObjectsSheet.hpp"
+#include "CustomSpritesManager.hpp"
 #include "data/CustomSpriteConfig.hpp"
 #include "data/CustomSheetSprite.hpp"
 
@@ -11,7 +12,30 @@
 
 constexpr int SPRITE_BUFFER = 2;
 
-CCSprite makeModTriggerSprite(CCSprite sprite, std::string colorString) {
+CCSprite& makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
+    if (!sprite.initWithFile("mod-trigger.png"_spr)) return sprite;
+
+    ByteVector pixels;
+    CCSize size = CustomSpritesManager::getPixelDataFromSprite(&sprite, pixels);
+
+    uint32_t colorHash = geode::utils::hash(colorString);
+    uint8_t colorR = (colorHash >> 8) & 0xFF;
+    uint8_t colorG = (colorHash >> 16) & 0xFF;
+    uint8_t colorB = (colorHash >> 24) & 0xFF;
+
+    for (int i = 0; i < pixels.size(); i += 4) {
+        if (pixels[i+0] || !pixels[i+1] || pixels[i+2] || !pixels[i+3]) continue;
+
+        float a = pixels[i+1] / 255.0f;
+        pixels[i+0] = colorR * a;
+        pixels[i+1] = colorG * a;
+        pixels[i+2] = colorB * a;
+    } // for
+
+    auto spr = CustomSpritesManager::getSpriteFromPixelData(pixels, size);
+    sprite.initWithTexture(spr->getTexture());
+    spr->release();
+
     return sprite;
 } // makeModTriggerSprite
 
@@ -23,7 +47,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     for (auto spr : spritesCache) {
         CCSprite sprite;
         if (spr.isModTrigger) {
-            sprite = makeModTriggerSprite(sprite, spr.sourceFrame);
+            if (sprite = makeModTriggerSprite(sprite, spr.sourceFrame); !sprite.getTexture()) continue;
         } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.sourceFrame.c_str())) {
             sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
         } else if (!sprite.initWithFile(spr.sourceFrame.c_str())) continue;
