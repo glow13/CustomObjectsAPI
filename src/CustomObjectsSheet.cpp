@@ -13,28 +13,32 @@
 constexpr int SPRITE_BUFFER = 2;
 
 void makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
-    if (!sprite.initWithFile("mod-trigger.png"_spr)) return;
+    auto path = CCFileUtils::get()->fullPathForFilename("mod-trigger.png"_spr, false);
 
-    ByteVector pixels;
-    CCSize size = CustomSpritesManager::getPixelDataFromSprite(&sprite, pixels);
+    CCImage image;
+    if (!image.initWithImageFile(path.c_str())) return;
+    auto size = CCSize(image.getWidth(), image.getHeight());
 
     uint32_t colorHash = geode::utils::hash(colorString);
     uint8_t colorR = (colorHash >> 8) & 0xFF;
     uint8_t colorG = (colorHash >> 16) & 0xFF;
     uint8_t colorB = (colorHash >> 24) & 0xFF;
 
-    for (int i = 0; i < pixels.size(); i += 4) {
-        if (pixels[i+0] || !pixels[i+1] || pixels[i+2] || !pixels[i+3]) continue;
+    auto data = image.getData();
+    for (int i = 0; i < image.getDataLen() * 4; i += 4) {
+        if (data[i+0] || !data[i+1] || data[i+2] || !data[i+3]) continue;
 
-        float a = pixels[i+1] / 255.0f;
-        pixels[i+0] = colorR * a;
-        pixels[i+1] = colorG * a;
-        pixels[i+2] = colorB * a;
+        float a = data[i+1] / 255.0f;
+        data[i+0] = colorR * a;
+        data[i+1] = colorG * a;
+        data[i+2] = colorB * a;
     } // for
 
-    auto spr = CustomSpritesManager::getSpriteFromPixelData(pixels, size);
-    sprite.initWithTexture(spr->getTexture());
-    spr->release();
+    auto texture = new CCTexture2D();
+    if (!texture->initWithImage(&image)) return;
+    texture->autorelease();
+
+    sprite.initWithTexture(texture);
 } // makeModTriggerSprite
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {

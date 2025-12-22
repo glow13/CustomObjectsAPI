@@ -30,7 +30,4 @@ public:
     bool isTheSpritesheetCacheUpToDate();
     void saveSpritesheetDataToCache(std::string name);
     void addSpritesheetToCache(std::string name, Quality quality);
-
-    static CCSize getPixelDataFromSprite(CCSprite* spr, ByteVector& data);
-    static CCSprite* getSpriteFromPixelData(ByteVector& data, CCSize size);
 };
