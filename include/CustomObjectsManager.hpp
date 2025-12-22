@@ -4,14 +4,14 @@
 using namespace geode::prelude;
 
 struct CustomObjectsMod;
-struct ICustomObjectConfig;
+struct CustomObjectConfigBase;
 
 class CustomObjectsManager {
 private:
     static inline CustomObjectsManager* s_manager;
 
     std::vector<CustomObjectsMod*> registeredMods;
-    std::unordered_map<int, ICustomObjectConfig*> customObjectsCache;
+    std::unordered_map<int, CustomObjectConfigBase*> customObjectsCache;
 
 public:
     static CustomObjectsManager* get();
@@ -21,6 +21,6 @@ public:
     void processRegisteredMods();
     void printModObjectCount();
 
-    const ICustomObjectConfig* getCustomObjectByID(int id);
-    void forEachCustomObject(std::function<void(const ICustomObjectConfig*)> operation) const;
+    const CustomObjectConfigBase* getCustomObjectByID(int id);
+    void forEachCustomObject(std::function<void(const CustomObjectConfigBase*)> operation) const;
 };

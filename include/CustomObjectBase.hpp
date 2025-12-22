@@ -28,15 +28,15 @@ public:
     } // create
 
     bool init(const CustomObjectConfig* config) {
-        if (!ObjectBase::init(config->mainSprite)) return false;
+        if (!ObjectBase::init(config->getMainSprite().c_str())) return false;
 
         // Add sprites to custom object
-        if (!config->mainSprite) this->setDontDraw(true);
-        if (config->detailSprite) this->addCustomColorChild(config->detailSprite);
+        if (!config->hasMainSprite()) this->setDontDraw(true);
+        if (config->hasDetailSprite()) this->addCustomColorChild(config->getDetailSprite());
 
         // Add glow to custom object
         if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config->glowSprite) this->createGlow(config->glowSprite);
+        if (config->hasGlowSprite()) this->createGlow(config->getGlowSprite());
 
         return true;
     } // init
@@ -108,7 +108,7 @@ protected:
     void setStartPos(cocos2d::CCPoint p0) override {
         if (this->m_editorEnabled) {
             if (auto lel = LevelEditorLayer::get(); lel && lel->m_editorUI) {
-                p0 += config->createOffset;
+                p0 += config->getCreateOffset();
             } // if
         } // if
         ObjectBase::setStartPos(p0);
@@ -116,8 +116,8 @@ protected:
 
     void customSetup() override {
         if (this->m_particle) {
-            this->updateParticleColor(config->particleColor);
-            this->updateParticleOpacity(config->particleOpacity);
+            this->updateParticleColor(config->getParticleColor());
+            this->updateParticleOpacity(config->getParticleOpacity());
         } // if
 
         ObjectBase::customSetup();

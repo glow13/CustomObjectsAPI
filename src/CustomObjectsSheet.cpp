@@ -48,11 +48,11 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     // Add each sprite to the sheet
     for (auto spr : spritesCache) {
         CCSprite sprite;
-        if (spr.isModTrigger) {
-            if (makeModTriggerSprite(sprite, spr.sourceFrame); !sprite.getTexture()) continue;
-        } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.sourceFrame.c_str())) {
+        if (spr.isModTrigger()) {
+            if (makeModTriggerSprite(sprite, spr.getSourceFrame()); !sprite.getTexture()) continue;
+        } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.getSourceFrame().c_str())) {
             sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
-        } else if (!sprite.initWithFile(spr.sourceFrame.c_str())) continue;
+        } else if (!sprite.initWithFile(spr.getSourceFrame().c_str())) continue;
 
         int offsetX = spr.rect.flipped ? spr.size.height - spr.trim.h - spr.trim.y : spr.trim.x;
         int offsetY = spr.rect.flipped ? spr.trim.x : spr.trim.y;
@@ -111,7 +111,7 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
     file << "<dict>\n\t<key>frames</key>\n\t<dict>\n";
 
     for (auto spr : spritesCache) {
-        file << "\t\t<key>"+spr.frameName+"</key>\n\t\t<dict>\n";
+        file << "\t\t<key>"+spr.getFrameName()+"</key>\n\t\t<dict>\n";
         file << "\t\t\t<key>spriteOffset</key>\n\t\t\t<string>"+spr.offString()+"</string>\n";
         file << "\t\t\t<key>spriteSize</key>\n\t\t\t<string>"+spr.sizeString()+"</string>\n";
         file << "\t\t\t<key>spriteSourceSize</key>\n\t\t\t<string>"+spr.sourceString()+"</string>\n";
@@ -141,8 +141,7 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
 
     // Initialize sprites vector and find side lengths
     for (auto sprite : customSprites) {
-        auto spr = CustomSheetSprite(sprite->frame, sprite->sourceFrame, sprite->rect, quality);
-        spr.isModTrigger = sprite->isModTrigger();
+        auto spr = CustomSheetSprite(sprite, quality);
         if (spr.size.isZero()) continue;
 
         sprites.emplace_back(spr);

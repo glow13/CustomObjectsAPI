@@ -19,7 +19,7 @@ class $modify(EditorUI) {
             auto buttons = CCArray::create();
             auto manager = CustomObjectsManager::get();
             manager->forEachCustomObject([this, buttons](auto obj) {
-                buttons->addObject(getCreateBtn(obj->id, 4));
+                buttons->addObject(getCreateBtn(obj->getObjectID(), 4));
             });
 
             auto start = buttons->data->arr;
@@ -27,8 +27,8 @@ class $modify(EditorUI) {
                 auto objectIDA = static_cast<CreateMenuItem*>(a)->m_objectID;
                 auto objectIDB = static_cast<CreateMenuItem*>(b)->m_objectID;
 
-                auto priorityA = manager->getCustomObjectByID(objectIDA)->editorPriority;
-                auto priorityB = manager->getCustomObjectByID(objectIDB)->editorPriority;
+                auto priorityA = manager->getCustomObjectByID(objectIDA)->getEditorTabPriority();
+                auto priorityB = manager->getCustomObjectByID(objectIDB)->getEditorTabPriority();
 
                 if (priorityA == priorityB) return objectIDA < objectIDB;
                 else return priorityA < priorityB;

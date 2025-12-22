@@ -19,7 +19,7 @@ protected:
     using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!EffectGameObject::init(config->mainSprite)) return false;
+        if (!EffectGameObject::init(config->getMainSprite().c_str())) return false;
 
         this->m_objectType = GameObjectType::Modifier;
         this->m_baseColor->m_defaultColorID = 0;
@@ -35,10 +35,10 @@ public:
         this->m_isTouchTriggered = true;
         this->m_isMultiTriggered = false;
 
-        if (!config->mainSprite) this->setDontDraw(true);
-        if (!this->m_editorEnabled && config->detailSprite) {
+        if (!config->hasMainSprite()) this->setDontDraw(true);
+        if (!this->m_editorEnabled && config->hasDetailSprite()) {
             auto parent = cast::base_cast<CCSprite*>(GJBaseGameLayer::get()->m_game2LayerB0);
-            this->m_portalBack = this->addInternalChild(parent, config->detailSprite, CCPoint(0, 0), -90);
+            this->m_portalBack = this->addInternalChild(parent, config->getDetailSprite(), CCPoint(0, 0), -90);
         } // if
 
         this->template setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);

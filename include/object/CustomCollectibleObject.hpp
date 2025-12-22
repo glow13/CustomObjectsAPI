@@ -8,7 +8,7 @@ protected:
     using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
-        if (!EffectGameObject::init(config->mainSprite)) return false;
+        if (!EffectGameObject::init(config->getMainSprite().c_str())) return false;
         this->commonInteractiveSetup();
         this->setDontDraw(true);
 
@@ -18,8 +18,8 @@ public:
         this->m_width = 25;
         this->m_height = 20;
 
-        auto main = this->addCustomChild(config->mainSprite, CCPoint(0, 0), 0);
-        auto detail = this->addCustomColorChild(config->detailSprite);
+        auto main = this->addCustomChild(config->getMainSprite(), CCPoint(0, 0), 0);
+        auto detail = this->addCustomColorChild(config->getDetailSprite());
         detail->setPosition(main->getPosition());
         detail->removeFromParent();
         main->addChild(detail);

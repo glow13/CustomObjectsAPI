@@ -12,13 +12,12 @@ CustomObjectsManager* CustomObjectsManager::get() {
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
     auto registeredMod = new CustomObjectsMod(mod, offset);
 
-    auto triggerSprite = new CustomSpriteConfig("mod-trigger.png"_spr, registeredMod->modID, CCRectZero);
-    registeredMod->sprites.emplace_back(triggerSprite);
-    triggerSprite->mod = true;
-
     auto& trigger = registeredMod->registerCustomObject<ModTriggerObject>("mod-trigger.png"_spr);
     trigger.setEditorTabPriority(INT_MIN);
     trigger.setDisableBatchRender();
+
+    auto triggerSprite = new CustomSpriteConfig(registeredMod, &trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
+    registeredMod->sprites.emplace_back(triggerSprite);
 
     registeredMods.emplace_back(registeredMod);
     return registeredMods.back();
@@ -36,14 +35,10 @@ void CustomObjectsManager::processRegisteredMods() {
 
     for (auto mod : registeredMods) {
         for (auto obj : mod->objects) {
-            if (obj->isCustomRender()) {
-                obj->mainSprite.frame = obj->mainSprite.sourceFrame;
-                obj->detailSprite.frame = obj->detailSprite.sourceFrame;
-                obj->glowSprite.frame = obj->glowSprite.sourceFrame;
-
-                obj->mainSprite.custom = false;
-                obj->detailSprite.custom = false;
-                obj->glowSprite.custom = false;
+            if (!obj->isCustomBatch()) {
+                obj->mainSprite.frameName = obj->mainSprite.sourceFrame;
+                obj->detailSprite.frameName = obj->detailSprite.sourceFrame;
+                obj->glowSprite.frameName = obj->glowSprite.sourceFrame;
             } else {
                 spriteManager->registerCustomObjectSprite(&obj->mainSprite);
                 spriteManager->registerCustomObjectSprite(&obj->detailSprite);
@@ -51,17 +46,17 @@ void CustomObjectsManager::processRegisteredMods() {
             } // if
 
             if (obj->hasCustomAnimation()) {
-                auto mainAnimSprite = obj->mainSprite.frame;
-                auto detailAnimSprite = obj->detailSprite ? obj->detailSprite.frame : obj->mainSprite.frame;
+                auto mainAnimSprite = obj->getMainSprite();
+                auto detailAnimSprite = obj->hasDetailSprite() ? obj->getDetailSprite() : obj->getMainSprite();
 
                 mainAnimSprite = mainAnimSprite.substr(0, mainAnimSprite.find("_001"));
                 detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));
 
                 auto manager = GameManager::sharedState();
-                manager->addGameAnimation(obj->id, obj->framesCount, obj->frameTime, mainAnimSprite, detailAnimSprite, 1);
+                manager->addGameAnimation(obj->getObjectID(), obj->getFramesCount(), obj->getFrameTime(), mainAnimSprite, detailAnimSprite, 1);
             } // if
 
-            customObjectsCache[obj->id] = obj;
+            customObjectsCache[obj->getObjectID()] = obj;
         } // for
 
         for (auto spr : mod->sprites) {
@@ -76,11 +71,11 @@ void CustomObjectsManager::printModObjectCount() {
     log::info("A total of {} mods registered {} total custom objects", modCount, objectCount);
 } // printModObjectCount
 
-const ICustomObjectConfig* CustomObjectsManager::getCustomObjectByID(int id) {
+const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) {
     if (!customObjectsCache.contains(id)) return nullptr;
     return customObjectsCache[id];
 } // getCustomObjectByID
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(const ICustomObjectConfig*)> operation) const {
+void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfigBase*)> operation) const {
     for (auto [id, obj] : customObjectsCache) operation(obj);
 } // forEachCustomObject
