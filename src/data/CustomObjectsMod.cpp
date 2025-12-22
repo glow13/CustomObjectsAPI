@@ -1,25 +1,29 @@
 #include "data/CustomObjectsMod.hpp"
 
-CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, char offset) : mod(mod), modID(mod->getID()) {
+CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, uint8_t offset) : mod(mod) {
     uint32_t min = 10000;
     uint32_t max = INT32_MAX - 100;
 
     // Hash the mod id for a good objectID
-    uint64_t hash = geode::utils::hash(modID + offset);
+    uint64_t hash = geode::utils::hash(getModID() + (char)offset);
     uint64_t transform = min + (hash * (max - min)) / UINT32_MAX;
-    objectID = transform - (transform % 100);
+    baseObjectID = transform - (transform % 100);
 } // CustomObjectsMod
 
-void CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
+std::string CustomObjectsMod::getModID() const { return mod->getID(); }
+int CustomObjectsMod::getBaseObjectID() const { return baseObjectID; }
+
+CustomSpriteConfig& CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
     log::debug("Registered custom sprite \"{}\"", spr);
-    auto config = new CustomSpriteConfig(spr, modID, CCRect(sprOffsetX, sprOffsetY, sprWidth, sprHeight));
+    auto config = new CustomSpriteConfig(this, nullptr, spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     sprites.emplace_back(config);
+    return *config;
 } // registerCustomSprite
 
 void CustomObjectsMod::registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames) {
-    auto baseFrame = spr.substr(0, spr.find("_001"));
+    auto baseFrameName = spr.substr(0, spr.find("_001"));
     for (int i = 1; i <= frames; i++) {
-        auto animFrame = fmt::format("{}_{:03d}.png", baseFrame, i);
-        registerCustomSprite(animFrame, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
+        auto animFrameName = fmt::format("{}_{:03d}.png", baseFrameName, i);
+        registerCustomSprite(animFrameName, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     } // for
 } // registerCustomAnimation

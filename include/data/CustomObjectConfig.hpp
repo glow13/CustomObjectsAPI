@@ -5,6 +5,9 @@
 
 using namespace geode::prelude;
 
+class CustomObjectsMod;
+class CustomObjectsManager;
+
 constexpr CCSize BOX_SIZE_DEFAULT = CCSizeZero;
 constexpr CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
 constexpr int BOX_RADIUS_DEFAULT = 0;
@@ -19,10 +22,10 @@ constexpr ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
-struct ICustomObjectConfig {
-public:
-    int id;
-    std::string mod;
+struct CustomObjectConfigBase {
+protected:
+    CustomObjectsMod* mod;
+    int objectID;
 
     CustomSpriteConfig mainSprite;
     CustomSpriteConfig detailSprite;
@@ -42,23 +45,49 @@ public:
     GLubyte particleOpacity = PARTICLE_OPACITY_DEFUALT;
     int editorPriority = EDITOR_PRIORITY_DEFAULT;
 
-    ICustomObjectConfig() {}
-    ICustomObjectConfig(std::string mod, int id) : mod(mod), id(id) {}
+public:
+    CustomObjectConfigBase(CustomObjectsMod* mod, int id);
 
-    inline bool isCustomRender() const { return disableBatch || batchMode != BATCH_MODE_DEFAULT; }
-    inline bool hasCustomAnimation() const { return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame(); }
+    std::string getMainSprite() const;
+    std::string getDetailSprite() const;
+    std::string getGlowSprite() const;
 
-    virtual bool hasEditObjectFunction() const { return false; }
-    virtual bool hasEditSpecialFunction() const { return false; }
+    bool hasMainSprite() const;
+    bool hasDetailSprite() const;
+    bool hasGlowSprite() const;
 
-    virtual void customEditObject(GameObject*, CCArray*) const {}
-    virtual void customEditSpecial(GameObject*, CCArray*) const {}
+    std::string getModID() const;
+    int getObjectID() const;
+    CCSize getBoxSize() const;
+    CCPoint getBoxOffset() const;
+    int getBoxRadius() const;
+    CCPoint getCreateOffset() const;
+    GameObjectType getObjectType() const;
+    int getBatchMode() const;
+    bool isBatchRenderDisabled() const;
+    int getFramesCount() const;
+    float getFrameTime() const;
+    ccColor3B getGlowColor() const;
+    ccColor3B getParticleColor() const;
+    GLubyte getParticleOpacity() const;
+    int getEditorTabPriority() const;
 
-    virtual GameObject* create() const { return nullptr; };
+    bool isCustomBatch() const;
+    bool hasCustomAnimation() const;
+
+    virtual bool hasEditObjectFunction() const = 0;
+    virtual bool hasEditSpecialFunction() const = 0;
+
+    virtual void customEditObject(GameObject*, CCArray*) const = 0;
+    virtual void customEditSpecial(GameObject*, CCArray*) const = 0;
+
+    virtual GameObject* create() const = 0;
+
+    friend CustomObjectsManager;
 };
 
 template <class ObjectType>
-struct CustomObjectConfig : public ICustomObjectConfig {
+struct CustomObjectConfig : public CustomObjectConfigBase {
 public:
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
@@ -72,12 +101,12 @@ public:
     void customEditObject(GameObject* obj, CCArray* objs) const override { editObjectFunction(static_cast<ObjectType*>(obj), objs); }
     void customEditSpecial(GameObject* obj, CCArray* objs) const override { editSpecialFunction(static_cast<ObjectType*>(obj), objs); }
 
-    CustomObjectConfig(std::string mod, int id) : ICustomObjectConfig(mod, id) {}
+    CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
 
     // Set object sprites
-    CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int x, int y, int w, int h) { mainSprite = CustomSpriteConfig(frame, mod, CCRect(x, y, w, h)); return *this; }
-    CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int x, int y, int w, int h) { detailSprite = CustomSpriteConfig(frame, mod, CCRect(x, y, w, h)); return *this; }
-    CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int x, int y, int w, int h) { glowSprite = CustomSpriteConfig(frame, mod, CCRect(x, y, w, h)); return *this; }
+    CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int x, int y, int w, int h) { mainSprite = CustomSpriteConfig(mod, this, frame, x, y, w, h); return *this; }
+    CustomObjectConfig<ObjectType>& setDetailSprite(std::string frame, int x, int y, int w, int h) { detailSprite = CustomSpriteConfig(mod, this, frame, x, y, w, h); return *this; }
+    CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame, int x, int y, int w, int h) { glowSprite = CustomSpriteConfig(mod, this, frame, x, y, w, h); return *this; }
 
     // Inline helper functions for sprite frames
     inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int w, int h) { return setMainSprite(frame, 0, 0, w, h); }
@@ -118,7 +147,7 @@ public:
 
         // Setup custom object values
         obj->m_parentMode = 10;
-        obj->m_objectID = id;
+        obj->m_objectID = objectID;
 
         // Apply object config
         if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; }

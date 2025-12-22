@@ -6,19 +6,26 @@ using namespace geode::prelude;
 
 enum Quality : int;
 
+class CustomSpriteConfig;
+class CustomObjectsSheet;
+
 struct CustomSheetSprite {
-    std::string frameName;
-    std::string sourceFrame;
-    bool isModTrigger;
+private:
+    CustomSpriteConfig* sprite;
 
     CCSize size; // desired final size of the sprite in the spritesheet
     CCPoint offset; // user-defined offset of the sprite, seperate from the trim process
     rectpack2D::rect_xywh trim; // rect that designates the size of the not-transparent content in the scaled sprite
     rectpack2D::rect_xywhf rect; // rect that designates the size and position of this sprite in the spritesheet
 
+public:
     CustomSheetSprite();
     CustomSheetSprite(const rectpack2D::rect_xywhf& rect);
-    CustomSheetSprite(std::string frame, std::string sourceFrame, CCRect rect, Quality quality);
+    CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality);
+
+    std::string getFrameName() const;
+    std::string getSourceFrame() const;
+    bool isModTrigger() const;
 
     std::string offString() const;
     std::string sizeString() const;
@@ -28,4 +35,6 @@ struct CustomSheetSprite {
 
     inline auto& get_rect() { return rect; }
     inline const auto& get_rect() const { return rect; }
+
+    friend CustomObjectsSheet;
 };

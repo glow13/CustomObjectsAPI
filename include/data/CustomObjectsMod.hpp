@@ -6,26 +6,27 @@
 using namespace geode::prelude;
 
 class CustomGameObject;
+class CustomObjectsManager;
 
 struct CustomObjectsMod {
-public:
+private:
     geode::Mod* mod;
-    std::string modID;
+    int baseObjectID;
 
-    int objectID;
     std::vector<CustomSpriteConfig*> sprites;
-    std::vector<ICustomObjectConfig*> objects;
+    std::vector<CustomObjectConfigBase*> objects;
 
-    CustomObjectsMod(geode::Mod* mod, char offset);
+public:
+    CustomObjectsMod(geode::Mod* mod, uint8_t offset);
 
     template <class ObjectType = CustomGameObject>
     CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
-        int id = objectID + objects.size();
+        int id = baseObjectID + objects.size();
         log::debug("Registered custom object with id {}", id);
 
-        auto config = new CustomObjectConfig<ObjectType>(modID, id);
-        config->mainSprite = CustomSpriteConfig(spr, modID, CCRect(sprOffsetX, sprOffsetY, sprWidth, sprHeight));
-        objects.emplace_back(static_cast<ICustomObjectConfig*>(config));
+        auto config = new CustomObjectConfig<ObjectType>(this, id);
+        config->setMainSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
+        objects.emplace_back(static_cast<CustomObjectConfigBase*>(config));
         return *config;
     } // registerCustomObject
 
@@ -44,14 +45,19 @@ public:
         return registerCustomObject<ObjectType>(spr, 0, 0, 0, 0);
     } // registerCustomObject
 
-    void registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);
+    std::string getModID() const;
+    int getBaseObjectID() const;
+
+    CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);
     void registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames);
 
     // Inline helper functions
     inline void registerCustomAnimationSprites(std::string spr, int sprWidth, int sprHeight, int frames) { return registerCustomAnimationSprites(spr, 0, 0, sprWidth, sprHeight, frames); }
     inline void registerCustomAnimationSprites(std::string spr, int sprSize, int frames) { return registerCustomAnimationSprites(spr, 0, 0, sprSize, sprSize, frames); }
     inline void registerCustomAnimationSprites(std::string spr, int frames) { return registerCustomAnimationSprites(spr, 0, 0, 0, 0, frames); }
-    inline void registerCustomSprite(std::string spr, int sprWidth, int sprHeight) { return registerCustomSprite(spr, 0, 0, sprWidth, sprHeight); }
-    inline void registerCustomSprite(std::string spr, int sprSize) { return registerCustomSprite(spr, 0, 0, sprSize, sprSize); }
-    inline void registerCustomSprite(std::string spr) { return registerCustomSprite(spr, 0, 0, 0, 0); }
+    inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) { return registerCustomSprite(spr, 0, 0, sprWidth, sprHeight); }
+    inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprSize) { return registerCustomSprite(spr, 0, 0, sprSize, sprSize); }
+    inline CustomSpriteConfig& registerCustomSprite(std::string spr) { return registerCustomSprite(spr, 0, 0, 0, 0); }
+
+    friend CustomObjectsManager;
 };

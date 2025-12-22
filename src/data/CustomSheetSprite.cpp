@@ -1,10 +1,11 @@
 #include "data/CustomSheetSprite.hpp"
+#include "data/CustomSpriteConfig.hpp"
 
-CustomSheetSprite::CustomSheetSprite() : frameName(""), sourceFrame(""), rect({0, 0, 0, 0, false}) {}
-CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : frameName(""), sourceFrame(""), rect(rect) {}
-CustomSheetSprite::CustomSheetSprite(std::string frameName, std::string sourceFrame, CCRect rect, Quality quality) {
-    this->frameName = frameName;
-    this->sourceFrame = sourceFrame;
+CustomSheetSprite::CustomSheetSprite() : rect({0, 0, 0, 0, false}) {}
+CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : rect(rect) {}
+CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality) : sprite(sprite) {
+    auto sourceFrame = sprite->getSourceFrame();
+    auto size = sprite->getSize();
 
     CCSpriteFrame* frame;
     if (auto spr = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(sourceFrame)) {
@@ -18,24 +19,28 @@ CustomSheetSprite::CustomSheetSprite(std::string frameName, std::string sourceFr
     } // if
 
     auto originalSize = frame->getOriginalSizeInPixels();
-    rect.size = rect.size.isZero() ? originalSize : rect.size * (int)quality;
+    size = size.isZero() ? originalSize : size * (int)quality;
 
-    float scaleX = rect.size.width / originalSize.width;
-    float scaleY = rect.size.height / originalSize.height;
+    float scaleX = size.width / originalSize.width;
+    float scaleY = size.height / originalSize.height;
 
     auto offset = frame->getOffsetInPixels();
     auto trimSize = frame->getRectInPixels().size;
     offset = CCPoint(offset.x * scaleX, offset.y * scaleY);
     trimSize = CCSize(trimSize.width * scaleX, trimSize.height * scaleY);
 
-    int trimX = (rect.size.width - trimSize.width) * 0.5f + offset.x;
-    int trimY = (rect.size.height - trimSize.height) * 0.5f - offset.y;
+    int trimX = (size.width - trimSize.width) * 0.5f + offset.x;
+    int trimY = (size.height - trimSize.height) * 0.5f - offset.y;
 
-    this->size = rect.size;
-    this->offset = rect.origin * (int)quality;
+    this->size = size;
+    this->offset = sprite->getOffset() * (int)quality;
     this->trim = {trimX, trimY, (int)trimSize.width, (int)trimSize.height};
     this->rect = {0, 0, (int)trimSize.width, (int)trimSize.height, false};
 } // CustomSheetSprite
+
+std::string CustomSheetSprite::getFrameName() const { return sprite->getFrameName(); }
+std::string CustomSheetSprite::getSourceFrame() const { return sprite->getSourceFrame(); }
+bool CustomSheetSprite::isModTrigger() const { return sprite->isModTrigger(); }
 
 std::string CustomSheetSprite::offString() const {
     int offsetX = (trim.x + trim.w / 2) - (size.width / 2) + offset.x;
