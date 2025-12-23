@@ -28,8 +28,7 @@ public:
         return true;
     } // init
 
-private:
-    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const* p2) override {
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const* p2) override final {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
         this->EffectGameObject::triggerObject(level, playerID, p2);
         this->activateCustomObject(level, player);

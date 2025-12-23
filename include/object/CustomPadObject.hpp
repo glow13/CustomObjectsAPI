@@ -29,8 +29,7 @@ public:
         player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
     } // bumpPlayer
 
-private:
-    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override final {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
         level->m_effectManager->removeTriggeredID(this->m_uniqueID, player->m_uniqueID);
 
@@ -42,7 +41,7 @@ private:
         } // if
     } // triggerObject
 
-    void customSetup() override {
+    void customSetup() override final {
         if (!this->m_editorEnabled && !this->m_hasNoParticles) {
             this->createAndAddParticle(9, "bumpEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();

@@ -189,7 +189,7 @@ private:
         return true;
     } // loadSavedValuesFromString
 
-    gd::string getSaveString(GJBaseGameLayer* p0) override {
+    gd::string getSaveString(GJBaseGameLayer* p0) override final {
         std::string saveString = ObjectBase::getSaveString(p0);
 
         for (auto [key, prop] : objectProperties) {
@@ -203,7 +203,7 @@ private:
         return saveString += fmt::format(",500,{}", base64::encode(valuesString));
     } // getSaveString
 
-    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override {
+    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
         ObjectBase::customObjectSetup(propValues, propIsPresent);
         loadSavedValuesFromString(propValues[500]);
 

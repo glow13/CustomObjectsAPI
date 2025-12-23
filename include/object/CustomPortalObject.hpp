@@ -105,7 +105,8 @@ private:
     CCSprite* m_portalBack = nullptr;
     GameObjectType m_fakeType = GameObjectType::Modifier;
 
-    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override {
+public:
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override final {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
         level->m_effectManager->removeTriggeredID(this->m_uniqueID, player->m_uniqueID);
 
@@ -117,7 +118,7 @@ private:
         } // if
     } // triggerObject
 
-    void customSetup() override {
+    void customSetup() override final {
         if (!this->m_editorEnabled && !this->m_hasNoParticles) {
             this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();

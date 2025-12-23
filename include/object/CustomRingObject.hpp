@@ -20,13 +20,12 @@ public:
         return true;
     } // init
 
-private:
-    void activatedByPlayer(PlayerObject* player) override {
+    void activatedByPlayer(PlayerObject* player) override final {
         CustomObjectBase::activatedByPlayer(player);
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
 
-    void customSetup() override {
+    void customSetup() override final {
         if (!this->m_editorEnabled && !this->m_hasNoParticles) {
             this->createAndAddParticle(36, "ringEffect.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
