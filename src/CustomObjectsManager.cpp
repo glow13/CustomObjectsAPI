@@ -19,6 +19,10 @@ CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod
     auto triggerSprite = new CustomSpriteConfig(registeredMod, &trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
     registeredMod->sprites.emplace_back(triggerSprite);
 
+    trigger.onEditObjectButton([registeredMod](auto obj, auto objs) {
+        SetupModTriggerPopup::create(obj, objs, registeredMod->getModID(), registeredMod->getModName())->show();
+    });
+
     registeredMods.emplace_back(registeredMod);
     return registeredMods.back();
 } // registerCustomObjectsMod
