@@ -11,6 +11,7 @@ CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, uint8_t offset) : mod(mod) {
 } // CustomObjectsMod
 
 std::string CustomObjectsMod::getModID() const { return mod->getID(); }
+std::string CustomObjectsMod::getModName() const { return mod->getName(); }
 int CustomObjectsMod::getBaseObjectID() const { return baseObjectID; }
 
 CustomSpriteConfig& CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {

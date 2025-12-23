@@ -12,6 +12,7 @@ bool CustomObjectConfigBase::hasDetailSprite() const { return !detailSprite.getS
 bool CustomObjectConfigBase::hasGlowSprite() const { return !glowSprite.getSourceFrame().empty(); }
 
 std::string CustomObjectConfigBase::getModID() const { return mod->getModID(); }
+std::string CustomObjectConfigBase::getModName() const { return mod->getModName(); }
 int CustomObjectConfigBase:: getObjectID() const { return objectID; }
 CCSize CustomObjectConfigBase::getBoxSize() const { return boxSize; }
 CCPoint CustomObjectConfigBase::getBoxOffset() const { return boxOffset; }

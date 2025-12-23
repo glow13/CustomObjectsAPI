@@ -46,6 +46,7 @@ public:
     } // registerCustomObject
 
     std::string getModID() const;
+    std::string getModName() const;
     int getBaseObjectID() const;
 
     CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);

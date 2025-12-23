@@ -17,6 +17,7 @@ using namespace geode::prelude;
 class CustomObjectsMod;
 class CustomObjectConfigBase;
 class CustomObjectsManager;
+class CustomSpritesManager;
 
 struct CustomSpriteConfig {
 private:
@@ -41,7 +42,10 @@ public:
     bool isCustomSprite() const;
     bool isAnimationFrame() const;
     bool isModTrigger() const;
+
+private:
     void generateFrame();
 
     friend CustomObjectsManager;
+    friend CustomSpritesManager;
 };

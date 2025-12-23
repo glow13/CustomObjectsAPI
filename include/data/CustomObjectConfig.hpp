@@ -57,6 +57,7 @@ public:
     bool hasGlowSprite() const;
 
     std::string getModID() const;
+    std::string getModName() const;
     int getObjectID() const;
     CCSize getBoxSize() const;
     CCPoint getBoxOffset() const;
