@@ -79,7 +79,7 @@ public:
 
 protected:
     template <typename ValueType>
-    void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = [](){return true;}) {
+    void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = 0) {
         objectProperties[key] = new ObjectProp<ValueType>(value, cond);
     } // setupObjectProperty
 
@@ -133,10 +133,10 @@ protected:
     } // resetObject
 
 private:
-    struct IObjectProp {
-        virtual void setValue(std::string) {}
-        virtual bool hasValue() { return false; }
-        virtual std::string getValue() { return ""; }
+    struct ObjectPropBase {
+        virtual void setValue(std::string) = 0;
+        virtual std::string getValue() = 0;
+        virtual bool hasValue() = 0;
 
         bool valid(bool val) { return val; }
         bool valid(int val) {return true; }
@@ -146,23 +146,26 @@ private:
         std::string format(bool val) { return val ? "1" : "0"; }
         std::string format(int val) { return fmt::format("{}", val); }
         std::string format(float val) { return fmt::format("{:g}", val); }
-        std::string format(std::string val) { return val; }
+        std::string format(std::string val) { return base64::encode(val); }
     };
 
     template <typename ValueType>
-    struct ObjectProp : public IObjectProp {
+    struct ObjectProp : public ObjectPropBase {
         ValueType& value;
         std::function<bool(void)> cond;
         ObjectProp(ValueType& value, std::function<bool(void)> cond) : value(value), cond(cond) {}
 
-        std::string getValue() override { return IObjectProp::format(value); }
-        bool hasValue() override { return IObjectProp::valid(value) && cond(); }
-        void setValue(std::string val) override { std::stringstream(val) >> value; }
+        std::string getValue() override { return ObjectPropBase::format(value); }
+        bool hasValue() override { return ObjectPropBase::valid(value) && (!cond || cond()); }
+        void setValue(std::string val) override {
+            if constexpr (std::is_same_v<ValueType, std::string>) value = base64::decodeString(val);
+            else std::stringstream(val) >> value;
+        } // setValue
     };
 
     const CustomObjectConfig* config;
     std::unordered_map<std::string, std::string> savedValues;
-    std::unordered_map<int, IObjectProp*> objectProperties;
+    std::unordered_map<int, ObjectPropBase*> objectProperties;
 
     bool loadSavedValuesFromString(std::string saveString) {
 
