@@ -119,10 +119,13 @@ protected:
             this->updateParticleColor(config->getParticleColor());
             this->updateParticleOpacity(config->getParticleOpacity());
         } // if
-
         ObjectBase::customSetup();
-        setupCustomObject();
     } // customSetup
+
+    void firstSetup() override {
+        ObjectBase::firstSetup();
+        setupCustomObject();
+    } // firstSetup
 
     void resetObject() override {
         ObjectBase::resetObject();
@@ -204,5 +207,7 @@ private:
         for (auto [key, prop] : objectProperties) {
             if (propIsPresent[key]) prop->setValue(propValues[key]);
         } // for
+
+        setupCustomObject();
     } // customObjectSetup
 };

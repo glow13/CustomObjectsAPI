@@ -21,7 +21,6 @@ private:
     void customSetup() override {
         CustomObjectBase::customSetup();
         this->m_activateTriggerInEditor = true;
-        this->m_dontIgnoreDuration = true;
         this->m_canBeControlled = true;
         this->m_isTrigger = true;
     } // customSetup
