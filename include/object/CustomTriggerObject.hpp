@@ -13,6 +13,8 @@ public:
         this->m_objectType = GameObjectType::Modifier;
         this->m_baseColor->m_defaultColorID = 0;
         this->m_isInvisible = !this->m_editorEnabled;
+        this->m_width = 30;
+        this->m_height = 30;
 
         return true;
     } // init
@@ -37,9 +39,14 @@ public:
         this->m_isTrigger = true;
     } // customSetup
 
-    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override final {
-        auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
+    using CustomObjectBase::activateCustomObject;
+    virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player, std::vector<int> remaps) {
         this->activateCustomObject(level, player);
+    } // activateCustomObject
+
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const* remaps) override final {
+        auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
+        this->activateCustomObject(level, player, remaps ? *remaps : std::vector<int>());
     } // triggerObject
 };
 
