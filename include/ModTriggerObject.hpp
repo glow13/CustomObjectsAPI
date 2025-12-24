@@ -11,6 +11,8 @@ public:
         m_objectType = GameObjectType::Modifier;
         m_baseColor->m_defaultColorID = 0;
         m_isInvisible = !m_editorEnabled;
+        m_width = 30;
+        m_height = 30;
 
         setupObjectProperty<int>(51, m_targetGroupID);
         setupObjectProperty<bool>(56, m_activateGroup);
@@ -22,6 +24,11 @@ public:
         m_dontIgnoreDuration = false;
         updateObjectLabel();
     } // setupCustomObject
+
+    void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player, std::vector<int> remaps) override {
+        if (m_activateGroup) level->spawnGroup(m_targetGroupID, false, 0, remaps, m_uniqueID, 0);
+        level->toggleGroup(m_targetGroupID, m_activateGroup);
+    } // activateCustomObject
 };
 
 class SetupModTriggerPopup : public SetupTriggerPopup {
