@@ -6,7 +6,6 @@
 using namespace geode::prelude;
 
 class CustomObjectsMod;
-class CustomObjectsManager;
 
 constexpr CCSize BOX_SIZE_DEFAULT = CCSizeZero;
 constexpr CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
@@ -45,8 +44,17 @@ protected:
     GLubyte particleOpacity = PARTICLE_OPACITY_DEFUALT;
     int editorPriority = EDITOR_PRIORITY_DEFAULT;
 
+    template <class ObjectType, class ObjectBase>
+    friend class CustomObjectBase;
+    friend class CustomObjectsManager;
+    friend class CustomEditorUI;
+
 public:
     CustomObjectConfigBase(CustomObjectsMod* mod, int id);
+
+    std::string getModID() const;
+    std::string getModName() const;
+    int getObjectID() const;
 
     std::string getMainSprite() const;
     std::string getDetailSprite() const;
@@ -55,23 +63,6 @@ public:
     bool hasMainSprite() const;
     bool hasDetailSprite() const;
     bool hasGlowSprite() const;
-
-    std::string getModID() const;
-    std::string getModName() const;
-    int getObjectID() const;
-    CCSize getBoxSize() const;
-    CCPoint getBoxOffset() const;
-    int getBoxRadius() const;
-    CCPoint getCreateOffset() const;
-    GameObjectType getObjectType() const;
-    int getBatchMode() const;
-    bool isBatchRenderDisabled() const;
-    int getFramesCount() const;
-    float getFrameTime() const;
-    ccColor3B getGlowColor() const;
-    ccColor3B getParticleColor() const;
-    GLubyte getParticleOpacity() const;
-    int getEditorTabPriority() const;
 
     bool isCustomBatch() const;
     bool hasCustomAnimation() const;
@@ -83,19 +74,21 @@ public:
     virtual void customEditSpecial(GameObject*, CCArray*) const = 0;
 
     virtual GameObject* create() const = 0;
-
-    friend CustomObjectsManager;
 };
 
 template <class ObjectType>
 struct CustomObjectConfig : public CustomObjectConfigBase {
-public:
+private:
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
     std::function<void(ObjectType*, CCArray*)> editObjectFunction;
     std::function<void(ObjectType*, CCArray*)> editSpecialFunction;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectFunction;
 
+    template <class ObjectType, class ObjectBase>
+    friend class CustomObjectBase;
+
+public:
     bool hasEditObjectFunction() const override { return (bool)editObjectFunction; }
     bool hasEditSpecialFunction() const override { return (bool)editSpecialFunction; }
 

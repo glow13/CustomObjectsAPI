@@ -7,7 +7,6 @@ using namespace geode::prelude;
 enum Quality : int;
 
 class CustomSpriteConfig;
-class CustomObjectsSheet;
 
 struct CustomSheetSprite {
 private:
@@ -17,6 +16,8 @@ private:
     CCPoint offset; // user-defined offset of the sprite, seperate from the trim process
     rectpack2D::rect_xywh trim; // rect that designates the size of the not-transparent content in the scaled sprite
     rectpack2D::rect_xywhf rect; // rect that designates the size and position of this sprite in the spritesheet
+
+    friend class CustomObjectsSheet;
 
 public:
     CustomSheetSprite();
@@ -35,6 +36,4 @@ public:
 
     inline auto& get_rect() { return rect; }
     inline const auto& get_rect() const { return rect; }
-
-    friend CustomObjectsSheet;
 };

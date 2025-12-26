@@ -6,7 +6,6 @@
 using namespace geode::prelude;
 
 class CustomGameObject;
-class CustomObjectsManager;
 
 struct CustomObjectsMod {
 private:
@@ -15,6 +14,8 @@ private:
 
     std::vector<CustomSpriteConfig*> sprites;
     std::vector<CustomObjectConfigBase*> objects;
+
+    friend class CustomObjectsManager;
 
 public:
     CustomObjectsMod(geode::Mod* mod, uint8_t offset);
@@ -59,6 +60,4 @@ public:
     inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) { return registerCustomSprite(spr, 0, 0, sprWidth, sprHeight); }
     inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprSize) { return registerCustomSprite(spr, 0, 0, sprSize, sprSize); }
     inline CustomSpriteConfig& registerCustomSprite(std::string spr) { return registerCustomSprite(spr, 0, 0, 0, 0); }
-
-    friend CustomObjectsManager;
 };

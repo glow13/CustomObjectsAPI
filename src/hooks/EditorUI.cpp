@@ -7,7 +7,7 @@
 
 using namespace geode::prelude;
 
-class $modify(EditorUI) {
+class $modify(CustomEditorUI, EditorUI) {
     bool init(LevelEditorLayer* editorLayer) {
         if (!EditorUI::init(editorLayer)) return false;
 
@@ -27,8 +27,8 @@ class $modify(EditorUI) {
                 auto objectIDA = static_cast<CreateMenuItem*>(a)->m_objectID;
                 auto objectIDB = static_cast<CreateMenuItem*>(b)->m_objectID;
 
-                auto priorityA = manager->getCustomObjectByID(objectIDA)->getEditorTabPriority();
-                auto priorityB = manager->getCustomObjectByID(objectIDB)->getEditorTabPriority();
+                auto priorityA = manager->getCustomObjectByID(objectIDA)->editorPriority;
+                auto priorityB = manager->getCustomObjectByID(objectIDB)->editorPriority;
 
                 if (priorityA == priorityB) return objectIDA < objectIDB;
                 else return priorityA < priorityB;

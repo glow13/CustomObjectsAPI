@@ -57,7 +57,7 @@ void CustomObjectsManager::processRegisteredMods() {
                 detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));
 
                 auto manager = GameManager::sharedState();
-                manager->addGameAnimation(obj->getObjectID(), obj->getFramesCount(), obj->getFrameTime(), mainAnimSprite, detailAnimSprite, 1);
+                manager->addGameAnimation(obj->getObjectID(), obj->framesCount, obj->frameTime, mainAnimSprite, detailAnimSprite, 1);
             } // if
 
             customObjectsCache[obj->getObjectID()] = obj;
