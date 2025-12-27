@@ -63,3 +63,17 @@ namespace CustomObjectsAPI {
         return registerCustomAnimationSprites(spr, 0, 0, 0, 0, frames);
     }
 }
+
+#ifdef GEODE_MOD_ID
+
+#define GEODE_SPRITE1(name) SPRITE5(name, 0, 0, 0, 0)
+#define GEODE_SPRITE2(name, s) SPRITE5(name, 0, 0, s, s)
+#define GEODE_SPRITE3(name, w, h) SPRITE5(name, 0, 0, w, h)
+
+#define GEODE_SPRITE5(name,x,y,w,h) GEODE_CONCAT("custom-objects/",GEODE_MOD_ID)GEODE_STR(/x.y.w.h/)name##".png"
+#define $sprite(...) (GEODE_INVOKE(GEODE_CONCAT(GEODE_SPRITE,GEODE_NUMBER_OF_ARGS(__VA_ARGS__)),__VA_ARGS__))
+
+#endif
+
+#define $object(ObjectType, ObjectBase) ObjectType final : public ObjectBase##Base<ObjectType>
+#define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>

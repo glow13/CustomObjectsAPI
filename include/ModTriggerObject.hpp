@@ -2,7 +2,7 @@
 
 #include "object/CustomTriggerObject.hpp"
 
-class $object(ModTriggerObject, CustomTriggerObject) {
+class ModTriggerObject final : public CustomTriggerObjectBase<ModTriggerObject> {
 public:
     bool init(const CustomObjectConfig* config) {
         auto modTriggerFrame = fmt::format("custom-objects/{}/0.0.0.0/mod-trigger.png", config->getModID());
