@@ -51,4 +51,4 @@ public:
     } // triggerObject
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomTriggerObject);
+class $generic(CustomTriggerObject);

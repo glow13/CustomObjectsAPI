@@ -18,4 +18,4 @@ public:
     } // init
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomAnimatedObject);
+class $generic(CustomAnimatedObject);

@@ -37,4 +37,4 @@ public:
     } // init
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomRotateObject);
+class $generic(CustomRotateObject);

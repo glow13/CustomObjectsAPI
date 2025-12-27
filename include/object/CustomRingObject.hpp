@@ -40,4 +40,4 @@ public:
     } // canAllowMultiActivate
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomRingObject);
+class $generic(CustomRingObject);

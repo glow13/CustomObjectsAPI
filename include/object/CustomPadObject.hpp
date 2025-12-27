@@ -56,4 +56,4 @@ public:
     } // canAllowMultiActivate
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomPadObject);
+class $generic(CustomPadObject);

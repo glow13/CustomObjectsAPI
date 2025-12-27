@@ -17,4 +17,4 @@ public:
     } // init
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomGameObject);
+class $generic(CustomGameObject);

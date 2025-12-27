@@ -36,4 +36,4 @@ public:
     } // triggerObject
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomCollectibleObject);
+class $generic(CustomCollectibleObject);

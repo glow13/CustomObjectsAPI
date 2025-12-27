@@ -166,4 +166,4 @@ public:
     } // canAllowMultiActivate
 };
 
-class CUSTOM_OBJECTS_DLL $generic(CustomPortalObject);
+class $generic(CustomPortalObject);
