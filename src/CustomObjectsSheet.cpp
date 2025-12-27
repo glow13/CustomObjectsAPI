@@ -62,7 +62,10 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
         sprite.setScaleX(spr.size.width / (sprite.getContentWidth() * (int)quality));
         sprite.setScaleY(spr.size.height / (sprite.getContentHeight() * (int)quality));
         sprite.setRotation(spr.rect.flipped ? 90 : 0);
+
+        sprite.getTexture()->setAliasTexParameters();
         sprite.visit();
+        sprite.getTexture()->setAntiAliasTexParameters();
     } // for
 
     // Save the rendered image pixel data
