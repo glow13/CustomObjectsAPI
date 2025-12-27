@@ -14,6 +14,16 @@
     "dependencies": {
         "alphalaneous.editortab_api": ">=v1.0.17"
     },
+    "api": {
+        "include": [
+            "include/CustomObjectsAPI.hpp",
+            "include/CustomObjectBase.hpp",
+            "include/data/CustomSpriteConfig.hpp",
+            "include/data/CustomObjectConfig.hpp",
+            "include/data/CustomObjectsMod.hpp",
+            "include/object/*.hpp"
+        ]
+    },
     "resources": {
         "sprites": [
             "resources/*.png"
