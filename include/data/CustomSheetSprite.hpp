@@ -24,6 +24,7 @@ public:
     CustomSheetSprite(const rectpack2D::rect_xywhf& rect);
     CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality);
 
+    std::string getModID() const;
     std::string getFrameName() const;
     std::string getSourceFrame() const;
     bool isModTrigger() const;

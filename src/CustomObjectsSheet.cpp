@@ -49,7 +49,7 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
     for (auto spr : spritesCache) {
         CCSprite sprite;
         if (spr.isModTrigger()) {
-            if (makeModTriggerSprite(sprite, spr.getSourceFrame()); !sprite.getTexture()) continue;
+            if (makeModTriggerSprite(sprite, spr.getModID()); !sprite.getTexture()) continue;
         } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.getSourceFrame().c_str())) {
             sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
         } else if (!sprite.initWithFile(spr.getSourceFrame().c_str())) continue;

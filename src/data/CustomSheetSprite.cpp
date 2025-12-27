@@ -38,6 +38,7 @@ CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality
     this->rect = {0, 0, (int)trimSize.width, (int)trimSize.height, false};
 } // CustomSheetSprite
 
+std::string CustomSheetSprite::getModID() const { return sprite->getModID(); }
 std::string CustomSheetSprite::getFrameName() const { return sprite->getFrameName(); }
 std::string CustomSheetSprite::getSourceFrame() const { return sprite->getSourceFrame(); }
 bool CustomSheetSprite::isModTrigger() const { return sprite->isModTrigger(); }
