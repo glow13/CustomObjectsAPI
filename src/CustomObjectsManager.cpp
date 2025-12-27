@@ -12,7 +12,7 @@ CustomObjectsManager* CustomObjectsManager::get() {
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
     auto registeredMod = new CustomObjectsMod(mod, offset);
 
-    auto& trigger = registeredMod->registerCustomObject<ModTriggerObject>("mod-trigger.png"_spr);
+    auto& trigger = registeredMod->registerCustomObject<ModTriggerObject>("mod-trigger.png"_spr, 0, 0, 0, 0);
     trigger.setEditorTabPriority(INT_MIN);
     trigger.setDisableBatchRender();
 

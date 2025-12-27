@@ -1,9 +1,5 @@
-#include "CustomObjectsManager.hpp"
+#include "CustomObjectsAPI.hpp"
 
-#include "data/CustomObjectConfig.hpp"
-#include "data/CustomObjectsMod.hpp"
-
-#include "object/CustomGameObject.hpp"
 #include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"
 #include "object/CustomPadObject.hpp"
@@ -66,38 +62,37 @@ public:
 };
 
 $execute {
-    auto manager = CustomObjectsManager::get();
-    auto mod = manager->registerCustomObjectsMod(Mod::get(), 4);
+    CustomObjectsAPI::setCollisionOffset(4);
 
-    mod->registerCustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
-    mod->registerCustomObject<SmileGameObject>("smile-block.png"_spr);
-    mod->registerCustomObject<ContainerGameObject>("container.png"_spr);
+    CustomObjectsAPI::registerCustomObject("frown-block.png"_spr).setBoxSize(20, 20).setObjectType(GameObjectType::Hazard);
+    CustomObjectsAPI::registerCustomObject<SmileGameObject>("smile-block.png"_spr);
+    CustomObjectsAPI::registerCustomObject<ContainerGameObject>("container.png"_spr);
 
-    mod->registerCustomObject("block-1.png"_spr);
-    mod->registerCustomObject("block-2.png"_spr);
-    mod->registerCustomObject("block-3.png"_spr);
-    mod->registerCustomObject("block-4.png"_spr);
-    mod->registerCustomObject("block-5.png"_spr);
-    mod->registerCustomObject("block-6.png"_spr);
-    mod->registerCustomObject("block-7.png"_spr, 60, 30);
-    mod->registerCustomObject("block-8.png"_spr, 60, 30);
-    mod->registerCustomObject("block-9.png"_spr, 60, 30);
-    mod->registerCustomObject("block-10.png"_spr, 60);
-    mod->registerCustomObject("block-11.png"_spr, 60);
-    mod->registerCustomObject("block-12.png"_spr, 60);
+    CustomObjectsAPI::registerCustomObject("block-1.png"_spr);
+    CustomObjectsAPI::registerCustomObject("block-2.png"_spr);
+    CustomObjectsAPI::registerCustomObject("block-3.png"_spr);
+    CustomObjectsAPI::registerCustomObject("block-4.png"_spr);
+    CustomObjectsAPI::registerCustomObject("block-5.png"_spr);
+    CustomObjectsAPI::registerCustomObject("block-6.png"_spr);
+    CustomObjectsAPI::registerCustomObject("block-7.png"_spr, 60, 30);
+    CustomObjectsAPI::registerCustomObject("block-8.png"_spr, 60, 30);
+    CustomObjectsAPI::registerCustomObject("block-9.png"_spr, 60, 30);
+    CustomObjectsAPI::registerCustomObject("block-10.png"_spr, 60);
+    CustomObjectsAPI::registerCustomObject("block-11.png"_spr, 60);
+    CustomObjectsAPI::registerCustomObject("block-12.png"_spr, 60);
 
-    mod->registerCustomObject("spike_01_001.png").setGlowSprite("spike_01_glow_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
-    mod->registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
-    mod->registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setDisableBatchRender();
+    CustomObjectsAPI::registerCustomObject("spike_01_001.png").setGlowSprite("spike_01_glow_001.png").setBoxSize(5, 20).setObjectType(GameObjectType::Hazard);
+    CustomObjectsAPI::registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
+    CustomObjectsAPI::registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setDisableBatchRender();
 
-    mod->registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setCreateOffset(0, -13).setBatchMode(0)
+    CustomObjectsAPI::registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setCreateOffset(0, -13).setBatchMode(0)
         .onActivateCustomObject([](CustomPadObject* obj, auto level, auto player) {
             obj->bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
             if (rand() % 50 == 0) level->destroyPlayer(player, obj);
         });
 
-    mod->registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setBatchMode(0);
-    mod->registerCustomObject<CustomPortalObject>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setParticleColor(255, 255, 0).setBatchMode(1)
+    CustomObjectsAPI::registerCustomObject<CustomRotateObject>("blade_02_001.png").setGlowSprite("blade_02_glow_001.png").setBoxRadius(22).setObjectType(GameObjectType::Hazard).setBatchMode(0);
+    CustomObjectsAPI::registerCustomObject<CustomPortalObject>("portal_18_front_001.png").setDetailSprite("portal_18_back_001.png").setParticleColor(255, 255, 0).setBatchMode(1)
         .onEditObjectButton([](auto obj, auto objs) {
             SetupCameraModePopup::create(obj, objs)->show();
         })
@@ -117,11 +112,11 @@ $execute {
             obj->playShineEffect((GameObjectType)type);
         });
 
-    mod->registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setBatchMode(0)
+    CustomObjectsAPI::registerCustomObject<CustomCollectibleObject>("d_key01_001.png").setDetailSprite("d_key01_color_001.png").setBatchMode(0)
         .onActivateCustomObject([](auto, auto, auto) {
             log::info("COLLECTED ME!!!!!!!");
         });
 
-    mod->registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03).setEditorTabPriority(-1);
-    mod->registerCustomAnimationSprites("cat_001.png"_spr, 94);
+    CustomObjectsAPI::registerCustomObject<CustomAnimatedObject>("cat_001.png"_spr).setFramesCount(94).setFrameTime(0.03).setEditorTabPriority(-1);
+    CustomObjectsAPI::registerCustomAnimationSprites("cat_001.png"_spr, 94);
 }
