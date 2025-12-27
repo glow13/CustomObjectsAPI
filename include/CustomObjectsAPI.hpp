@@ -30,7 +30,7 @@ namespace CustomObjectsUtils {
 
 namespace CustomObjectsAPI {
     inline void setCollisionOffset(uint8_t offset) {
-        return CustomObjectsUtils::setCollisionOffset(Mod::get(), offset);
+        CustomObjectsUtils::setCollisionOffset(Mod::get(), offset);
     }
 
     template <class ObjectType = CustomGameObject>
@@ -85,3 +85,5 @@ namespace CustomObjectsAPI {
         return registerCustomAnimationSprites(spr, 0, 0, 0, 0, frames);
     }
 }
+
+using namespace CustomObjectsAPI;

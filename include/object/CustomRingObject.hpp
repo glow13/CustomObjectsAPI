@@ -22,6 +22,8 @@ public:
     } // init
 
     void activatedByPlayer(PlayerObject* player) override final {
+        player->m_lastActivatedPortal = this;
+        player->m_lastPortalPos = this->getPosition();
         CustomObjectBase::activatedByPlayer(player);
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer

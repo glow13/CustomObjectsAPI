@@ -22,6 +22,7 @@ constexpr ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
+#if __INTELLISENSE__ != 1
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 protected:
     CustomObjectsMod* mod;
@@ -76,10 +77,12 @@ public:
 
     virtual GameObject* create() const = 0;
 };
+#endif
 
 template <class ObjectType>
 struct CustomObjectConfig : public CustomObjectConfigBase {
 private:
+#if __INTELLISENSE__ != 1
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
     std::function<void(ObjectType*, CCArray*)> editObjectFunction;
@@ -97,6 +100,8 @@ public:
     void customEditSpecial(GameObject* obj, CCArray* objs) const override { editSpecialFunction(static_cast<ObjectType*>(obj), objs); }
 
     CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
+#endif
+public:
 
     // Set object sprites
     CustomObjectConfig<ObjectType>& setMainSprite(std::string frame, int x, int y, int w, int h) { mainSprite = CustomSpriteConfig(mod, this, frame, x, y, w, h); return *this; }
@@ -136,6 +141,7 @@ public:
     CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectFunction = callback; return *this; }
 
+#if __INTELLISENSE__ != 1
     // Create new object using this config
     ObjectType* create() const override {
         ObjectType* obj = ObjectType::create(this);
@@ -155,4 +161,5 @@ public:
 
         return obj;
     } // create
+#endif
 };
