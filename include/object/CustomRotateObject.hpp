@@ -6,6 +6,7 @@ template <class ObjectType>
 class $base(CustomRotateObject, EnhancedGameObject) {
 protected:
     using CustomObjectBase = CustomObjectBase<ObjectType, EnhancedGameObject>::Base;
+    using CustomRotateObject = CustomRotateObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EnhancedGameObject::init(config->getMainSprite().c_str())) return false;

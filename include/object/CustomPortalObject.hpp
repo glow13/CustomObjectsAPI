@@ -17,6 +17,7 @@ template <class ObjectType>
 class $base(CustomPortalObject, EffectGameObject) {
 protected:
     using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
+    using CustomPortalObject = CustomPortalObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!EffectGameObject::init(config->getMainSprite().c_str())) return false;

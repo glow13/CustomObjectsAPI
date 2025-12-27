@@ -6,6 +6,7 @@ template <class ObjectType>
 class $base(CustomRingObject, RingObject) {
 protected:
     using CustomObjectBase = CustomObjectBase<ObjectType, RingObject>::Base;
+    using CustomRingObject = CustomRingObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
         if (!CustomObjectBase::init(config)) return false;
