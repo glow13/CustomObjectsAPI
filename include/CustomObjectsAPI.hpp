@@ -1,20 +1,12 @@
 #pragma once
 
+#include "CustomObjectsDLL.hpp"
+
 #include "data/CustomSpriteConfig.hpp"
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
 
 #include "object/CustomGameObject.hpp"
-
-#ifdef GEODE_IS_WINDOWS
-    #ifdef CUSTOM_OBJECTS_EXPORTING
-        #define CUSTOM_OBJECTS_DLL __declspec(dllexport)
-    #else
-        #define CUSTOM_OBJECTS_DLL __declspec(dllimport)
-    #endif
-#else
-    #define CUSTOM_OBJECTS_DLL __attribute__((visibility("default")))
-#endif
 
 #ifdef GEODE_MOD_ID
 
@@ -31,27 +23,27 @@
 #define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>
 
 namespace CustomObjectsAPI {
-    CustomObjectsMod* getMod();
+    CUSTOM_OBJECTS_DLL CustomObjectsMod* getMod();
 
     CUSTOM_OBJECTS_DLL void setCollisionOffset(uint8_t offset);
 
     template <class ObjectType = CustomGameObject>
-    CUSTOM_OBJECTS_DLL inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
+    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         return getMod()->registerCustomObject<ObjectType>(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     }
 
     template <class ObjectType = CustomGameObject>
-    CUSTOM_OBJECTS_DLL inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
+    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
         return registerCustomObject<ObjectType>(spr, 0, 0, sprWidth, sprHeight);
     }
 
     template <class ObjectType = CustomGameObject>
-    CUSTOM_OBJECTS_DLL inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) {
+    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) {
         return registerCustomObject<ObjectType>(spr, 0, 0, sprSize, sprSize);
     }
 
     template <class ObjectType = CustomGameObject>
-    CUSTOM_OBJECTS_DLL inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) {
+    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) {
         return registerCustomObject<ObjectType>(spr, 0, 0, 0, 0);
     }
 

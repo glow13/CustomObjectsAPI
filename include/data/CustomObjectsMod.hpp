@@ -1,13 +1,14 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "data/CustomObjectConfig.hpp"
+#include "../CustomObjectsDLL.hpp"
+#include "CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 
 class CustomGameObject;
 
-struct CustomObjectsMod {
+struct CUSTOM_OBJECTS_DLL CustomObjectsMod {
 private:
     geode::Mod* mod;
     int baseObjectID;

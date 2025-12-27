@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CustomObjectBase.hpp"
+#include "../CustomObjectBase.hpp"
 
 template <class ObjectType>
 class $base(CustomCollectibleObject, EffectGameObject) {
@@ -36,4 +36,4 @@ public:
     } // triggerObject
 };
 
-class $generic(CustomCollectibleObject);
+class CUSTOM_OBJECTS_DLL $generic(CustomCollectibleObject);

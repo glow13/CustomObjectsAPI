@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CustomObjectBase.hpp"
+#include "../CustomObjectBase.hpp"
 
 template <class ObjectType>
 class $base(CustomPadObject, EffectGameObject) {
@@ -56,4 +56,4 @@ public:
     } // canAllowMultiActivate
 };
 
-class $generic(CustomPadObject);
+class CUSTOM_OBJECTS_DLL $generic(CustomPadObject);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CustomObjectBase.hpp"
+#include "../CustomObjectBase.hpp"
 
 template <class ObjectType>
 class $base(CustomAnimatedObject, EnhancedGameObject) {
@@ -18,4 +18,4 @@ public:
     } // init
 };
 
-class $generic(CustomAnimatedObject);
+class CUSTOM_OBJECTS_DLL $generic(CustomAnimatedObject);

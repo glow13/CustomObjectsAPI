@@ -1,6 +1,7 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "../CustomObjectsDLL.hpp"
 #include "CustomSpriteConfig.hpp"
 
 using namespace geode::prelude;
@@ -21,7 +22,7 @@ constexpr ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
-struct CustomObjectConfigBase {
+struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 protected:
     CustomObjectsMod* mod;
     int objectID;

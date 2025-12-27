@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CustomObjectBase.hpp"
+#include "../CustomObjectBase.hpp"
 
 template <class ObjectType>
 class $base(CustomRingObject, RingObject) {
@@ -40,4 +40,4 @@ public:
     } // canAllowMultiActivate
 };
 
-class $generic(CustomRingObject);
+class CUSTOM_OBJECTS_DLL $generic(CustomRingObject);

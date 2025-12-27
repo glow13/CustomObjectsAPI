@@ -1,12 +1,14 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
+#include "../CustomObjectsDLL.hpp"
+
 using namespace geode::prelude;
 
 class CustomObjectsMod;
 class CustomObjectConfigBase;
 
-struct CustomSpriteConfig {
+struct CUSTOM_OBJECTS_DLL CustomSpriteConfig {
 private:
     CustomObjectsMod* mod;
     CustomObjectConfigBase* object;

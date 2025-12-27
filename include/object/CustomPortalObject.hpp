@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CustomObjectBase.hpp"
+#include "../CustomObjectBase.hpp"
 
 enum GameModeType : int {
     CUBE = (int)GameObjectType::CubePortal,
@@ -166,4 +166,4 @@ public:
     } // canAllowMultiActivate
 };
 
-class $generic(CustomPortalObject);
+class CUSTOM_OBJECTS_DLL $generic(CustomPortalObject);
