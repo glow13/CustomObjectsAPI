@@ -4,6 +4,7 @@
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
 
+#include "CustomObjectBase.hpp"
 #include "object/CustomGameObject.hpp"
 
 #ifdef GEODE_MOD_ID
@@ -20,68 +21,73 @@
 #define $object(ObjectType, ObjectBase) ObjectType final : public ObjectBase##Base<ObjectType>
 #define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>
 
-namespace CustomObjectsUtils {
-    CUSTOM_OBJECTS_DLL CustomObjectsMod* getMod(geode::Mod* mod);
+class CUSTOM_OBJECTS_DLL CustomObjectsUtils {
+private:
+    static geode::Mod* currentGeodeMod;
+    static CustomObjectsMod* currentMod;
+    static int currentOffset;
 
-    CUSTOM_OBJECTS_DLL void setCollisionOffset(geode::Mod* mod, uint8_t offset);
-}
+    static CustomObjectsMod* getMod(geode::Mod* mod);
+    static void setCollisionOffset(geode::Mod* mod, uint8_t offset);
 
-namespace CustomObjectsAPI {
-    inline void setCollisionOffset(uint8_t offset) {
+    friend class CustomObjectsAPI;
+};
+
+class CustomObjectsAPI {
+public:
+    static void setCollisionOffset(uint8_t offset) {
         CustomObjectsUtils::setCollisionOffset(Mod::get(), offset);
     }
 
     template <class ObjectType = CustomGameObject>
-    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
+    static CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         return CustomObjectsUtils::getMod(Mod::get())->registerCustomObject<ObjectType>(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     }
 
     template <class ObjectType = CustomGameObject>
-    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
+    static CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprWidth, int sprHeight) {
         return registerCustomObject<ObjectType>(spr, 0, 0, sprWidth, sprHeight);
     }
 
     template <class ObjectType = CustomGameObject>
-    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) {
+    static CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprSize) {
         return registerCustomObject<ObjectType>(spr, 0, 0, sprSize, sprSize);
     }
 
     template <class ObjectType = CustomGameObject>
-    inline CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) {
+    static CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr) {
         return registerCustomObject<ObjectType>(spr, 0, 0, 0, 0);
     }
 
-    inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
+    static CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         return CustomObjectsUtils::getMod(Mod::get())->registerCustomSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     }
 
-    inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
+    static CustomSpriteConfig& registerCustomSprite(std::string spr, int sprWidth, int sprHeight) {
         return registerCustomSprite(spr, 0, 0, sprWidth, sprHeight);
     }
 
-    inline CustomSpriteConfig& registerCustomSprite(std::string spr, int sprSize) {
+    static CustomSpriteConfig& registerCustomSprite(std::string spr, int sprSize) {
         return registerCustomSprite(spr, 0, 0, sprSize, sprSize);
     }
 
-    inline CustomSpriteConfig& registerCustomSprite(std::string spr) {
+    static CustomSpriteConfig& registerCustomSprite(std::string spr) {
         return registerCustomSprite(spr, 0, 0, 0, 0);
     }
 
-    inline void registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames) {
+    static void registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames) {
         return CustomObjectsUtils::getMod(Mod::get())->registerCustomAnimationSprites(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight, frames);
     }
 
-    inline void registerCustomAnimationSprites(std::string spr, int sprWidth, int sprHeight, int frames) {
+    static void registerCustomAnimationSprites(std::string spr, int sprWidth, int sprHeight, int frames) {
         return registerCustomAnimationSprites(spr, 0, 0, sprWidth, sprHeight, frames);
     }
 
-    inline void registerCustomAnimationSprites(std::string spr, int sprSize, int frames) {
+    static void registerCustomAnimationSprites(std::string spr, int sprSize, int frames) {
         return registerCustomAnimationSprites(spr, 0, 0, sprSize, sprSize, frames);
     }
 
-    inline void registerCustomAnimationSprites(std::string spr, int frames) {
+    static void registerCustomAnimationSprites(std::string spr, int frames) {
         return registerCustomAnimationSprites(spr, 0, 0, 0, 0, frames);
     }
-}
-
-using namespace CustomObjectsAPI;
+};

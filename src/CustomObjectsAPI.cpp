@@ -2,32 +2,28 @@
 
 #include "CustomObjectsManager.hpp"
 
-namespace CustomObjectsUtils {
-    namespace {
-        inline geode::Mod* currentGeodeMod;
+geode::Mod* CustomObjectsUtils::currentGeodeMod = nullptr;
+CustomObjectsMod* CustomObjectsUtils::currentMod = nullptr;
+int CustomObjectsUtils::currentOffset = 0;
 
-        inline int currentOffset;
-        inline CustomObjectsMod* currentMod;
-    }
+CustomObjectsMod* CustomObjectsUtils::getMod(geode::Mod* mod) {
+    log::info("old {} {} {}", currentGeodeMod, currentMod ? currentMod->getModID() : "no", currentOffset);
+    if (mod != currentGeodeMod) {
+        currentGeodeMod = mod;
+        currentOffset = 0;
+    } // if
 
-    CustomObjectsMod* getMod(geode::Mod* mod) {
-        log::info("old {} {} {}", currentGeodeMod, currentMod ? currentMod->getModID() : "no", currentOffset);
-        if (mod != currentGeodeMod) {
-            currentGeodeMod = mod;
-            currentOffset = 0;
-        } // if
+    if (!currentMod || currentMod->getModID() != currentGeodeMod->getID()) {
+        currentMod = CustomObjectsManager::get()->registerCustomObjectsMod(currentGeodeMod, currentOffset);
+    } // if
+    log::info("new {} {} {}", currentGeodeMod, currentMod->getModID(), currentOffset);
+    return currentMod;
+} // getMod
 
-        if (!currentMod || currentMod->getModID() != currentGeodeMod->getID()) {
-            currentMod = CustomObjectsManager::get()->registerCustomObjectsMod(currentGeodeMod, currentOffset);
-        } // if
-        log::info("new {} {} {}", currentGeodeMod, currentMod->getModID(), currentOffset);
-        return currentMod;
-    } // getMod
-
-    void setCollisionOffset(geode::Mod* mod, uint8_t offset) {
-        if (mod != currentGeodeMod) {
-            currentGeodeMod = mod;
-        } // if
-        currentOffset = offset;
-    } // setCollisionOffset
-}
+void CustomObjectsUtils::setCollisionOffset(geode::Mod* mod, uint8_t offset) {
+    if (mod != currentGeodeMod) {
+        currentGeodeMod = mod;
+    } // if
+    assert(currentMod->getModID() != currentGeodeMod->getID() && "must set collision offset before registering any objects lol");
+    currentOffset = offset;
+} // setCollisionOffset
