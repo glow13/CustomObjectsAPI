@@ -9,15 +9,16 @@ struct CustomSheetSprite;
 
 enum Quality : int;
 
-class CustomObjectsSheet final : public CCNode {
+class CustomObjectsSheet final {
 public:
     std::vector<CustomSheetSprite> spritesCache;
     rectpack2D::rect_wh sheetSize;
     Quality quality;
 
+    CustomObjectsSheet(const std::vector<CustomSpriteConfig*> customSprites, Quality quality);
+
     bool saveSpritesheetImage(std::string name, std::string path) const;
     bool saveSpritesheetPlist(std::string name, std::string path) const;
-    static CustomObjectsSheet* create(const std::vector<CustomSpriteConfig*> customSprites, Quality quality);
 
 private:
     static rectpack2D::rect_wh binPacking(std::vector<CustomSheetSprite> &sprites);

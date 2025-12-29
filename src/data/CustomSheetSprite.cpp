@@ -44,8 +44,8 @@ std::string CustomSheetSprite::getSourceFrame() const { return sprite->getSource
 bool CustomSheetSprite::isModTrigger() const { return sprite->isModTrigger(); }
 
 std::string CustomSheetSprite::offString() const {
-    int offsetX = (trim.x + trim.w / 2) - (size.width / 2) + offset.x;
-    int offsetY = (size.height / 2) - (trim.y + trim.h / 2) + offset.y;
+    int offsetX = (trim.x + trim.w * 0.5f) - (size.width * 0.5f) + offset.x;
+    int offsetY = (size.height * 0.5f) - (trim.y + trim.h * 0.5f) + offset.y;
     return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
 } // offString
 

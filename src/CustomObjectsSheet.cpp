@@ -137,9 +137,7 @@ bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path
     return true;
 } // saveSpritesheetPlist
 
-CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteConfig*> customSprites, Quality quality) {
-    if (customSprites.size() == 0) return nullptr;
-    std::vector<CustomSheetSprite> sprites;
+CustomObjectsSheet::CustomObjectsSheet(const std::vector<CustomSpriteConfig*> customSprites, Quality quality) {
     float totalArea = 0;
 
     // Initialize sprites vector and find side lengths
@@ -147,28 +145,22 @@ CustomObjectsSheet* CustomObjectsSheet::create(const std::vector<CustomSpriteCon
         auto spr = CustomSheetSprite(sprite, quality);
         if (spr.size.isZero()) continue;
 
-        sprites.emplace_back(spr);
+        this->spritesCache.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;
     } // for
 
     // Run the bin packing algorithm
-    auto size = CustomObjectsSheet::binPacking(sprites);
+    auto size = CustomObjectsSheet::binPacking(this->spritesCache);
     size.w = std::ceil(size.w / (float)quality) * (int)quality;
     size.h = std::ceil(size.h / (float)quality) * (int)quality;
 
-    // Create the spritesheet object
-    auto sheet = new CustomObjectsSheet();
-    sheet->spritesCache = sprites;
-    sheet->sheetSize = size;
-    sheet->quality = quality;
-    sheet->autorelease();
+    // Set values
+    this->sheetSize = size;
+    this->quality = quality;
 
     // Calculate total coverage
     float coverage = std::min(totalArea / (size.w * size.h) * 100, 100.0f);
     log::debug("Generated the spritesheet with dimensions ({} x {}) and {}% total coverage", size.w, size.h, coverage);
-
-    // Return the final spritesheet object
-    return sheet;
 } // create
 
 rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomSheetSprite> &sprites) {

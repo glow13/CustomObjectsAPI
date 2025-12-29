@@ -1,6 +1,8 @@
 #include "CustomSpritesManager.hpp"
-#include "CustomObjectsSheet.hpp"
 #include "data/CustomSpriteConfig.hpp"
+
+#include "CustomObjectsSheet.hpp"
+#include "data/CustomSheetSprite.hpp"
 
 CustomSpritesManager* CustomSpritesManager::get() {
     if (!s_manager) s_manager = new CustomSpritesManager();
@@ -68,16 +70,12 @@ void CustomSpritesManager::saveSpritesheetDataToCache(std::string name) {
 } // saveSpritesheetDataToCache
 
 void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quality) {
-    auto spritesheet = CustomObjectsSheet::create(customSpritesCache, quality);
-    if (!spritesheet) {
-        log::error("Failed to create spritesheet!!!");
-        return;
-    } // if
+    auto spritesheet = CustomObjectsSheet(customSpritesCache, quality);
 
     log::info("Spritesheet generation was successful, saving spritesheet to the cache...");
     auto path = getCacheDirectory();
-    bool saved = spritesheet->saveSpritesheetImage(name, path);
-    saved = saved && spritesheet->saveSpritesheetPlist(name, path);
+    bool saved = spritesheet.saveSpritesheetImage(name, path);
+    saved = saved && spritesheet.saveSpritesheetPlist(name, path);
 
     // Save the frames in the sprite cache
     if (saved) {
