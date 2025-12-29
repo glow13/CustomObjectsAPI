@@ -17,7 +17,6 @@
     "api": {
         "include": [
             "include/CustomObjectsAPI.hpp",
-            "include/CustomObjectsDLL.hpp",
             "include/CustomObjectBase.hpp",
             "include/data/CustomSpriteConfig.hpp",
             "include/data/CustomObjectConfig.hpp",

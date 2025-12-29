@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CustomObjectsDLL.hpp"
-
 #include "data/CustomSpriteConfig.hpp"
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"

@@ -1,7 +1,6 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "../CustomObjectsDLL.hpp"
 #include "CustomObjectConfig.hpp"
 
 using namespace geode::prelude;

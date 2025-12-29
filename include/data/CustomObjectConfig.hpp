@@ -1,7 +1,6 @@
 #pragma once
 #include <Geode/Geode.hpp>
 
-#include "../CustomObjectsDLL.hpp"
 #include "CustomSpriteConfig.hpp"
 
 using namespace geode::prelude;
@@ -22,8 +21,8 @@ constexpr ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
-#if __INTELLISENSE__ != 1
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
+#if __INTELLISENSE__ != 1
 protected:
     CustomObjectsMod* mod;
     int objectID;
@@ -76,8 +75,8 @@ public:
     virtual void customEditSpecial(GameObject*, CCArray*) const = 0;
 
     virtual GameObject* create() const = 0;
-};
 #endif
+};
 
 template <class ObjectType>
 struct CustomObjectConfig : public CustomObjectConfigBase {
