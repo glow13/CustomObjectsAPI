@@ -21,7 +21,7 @@
 #define $object(ObjectType, ObjectBase) ObjectType final : public ObjectBase##Base<ObjectType>
 #define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>
 
-class CUSTOM_OBJECTS_DLL CustomObjectsUtils {
+class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:
     static geode::Mod* currentGeodeMod;
     static CustomObjectsMod* currentMod;
@@ -33,7 +33,7 @@ private:
     friend class CustomObjectsAPI;
 };
 
-class CustomObjectsAPI {
+class CustomObjectsAPI final {
 public:
     static void setCollisionOffset(uint8_t offset) {
         CustomObjectsUtils::setCollisionOffset(Mod::get(), offset);

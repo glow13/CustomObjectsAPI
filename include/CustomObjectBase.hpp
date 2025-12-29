@@ -148,7 +148,7 @@ private:
     };
 
     template <typename ValueType>
-    struct ObjectProp : public ObjectPropBase {
+    struct ObjectProp final : public ObjectPropBase {
         ValueType& value;
         std::function<bool(void)> cond;
         ObjectProp(ValueType& value, std::function<bool(void)> cond) : value(value), cond(cond) {}

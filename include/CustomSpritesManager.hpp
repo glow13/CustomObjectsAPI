@@ -11,7 +11,7 @@ enum Quality : int {
     HIGH = 4
 };
 
-class CustomSpritesManager {
+class CustomSpritesManager final {
 private:
     static inline CustomSpritesManager* s_manager;
 

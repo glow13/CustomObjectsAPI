@@ -6,7 +6,7 @@ using namespace geode::prelude;
 struct CustomObjectsMod;
 struct CustomObjectConfigBase;
 
-class CustomObjectsManager {
+class CustomObjectsManager final {
 private:
     static inline CustomObjectsManager* s_manager;
 

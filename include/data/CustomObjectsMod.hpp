@@ -7,7 +7,7 @@ using namespace geode::prelude;
 
 class CustomGameObject;
 
-struct CUSTOM_OBJECTS_DLL CustomObjectsMod {
+struct CUSTOM_OBJECTS_DLL CustomObjectsMod final {
 private:
     geode::Mod* mod;
     int baseObjectID;
@@ -16,8 +16,15 @@ private:
     std::vector<CustomObjectConfigBase*> objects;
 
     friend class CustomObjectsManager;
+    friend class CustomObjectsAPI;
 
 public:
+
+    std::string getModID() const;
+    std::string getModName() const;
+    int getBaseObjectID() const;
+
+protected:
     CustomObjectsMod(geode::Mod* mod, uint8_t offset);
 
     template <class ObjectType = CustomGameObject>
@@ -30,10 +37,6 @@ public:
         objects.emplace_back(static_cast<CustomObjectConfigBase*>(config));
         return *config;
     } // registerCustomObject
-
-    std::string getModID() const;
-    std::string getModName() const;
-    int getBaseObjectID() const;
 
     CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);
     void registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames);

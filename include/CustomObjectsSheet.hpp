@@ -9,7 +9,7 @@ struct CustomSheetSprite;
 
 enum Quality : int;
 
-class CustomObjectsSheet : public CCNode {
+class CustomObjectsSheet final : public CCNode {
 public:
     std::vector<CustomSheetSprite> spritesCache;
     rectpack2D::rect_wh sheetSize;

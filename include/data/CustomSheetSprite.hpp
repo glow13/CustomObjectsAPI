@@ -8,7 +8,7 @@ enum Quality : int;
 
 class CustomSpriteConfig;
 
-struct CustomSheetSprite {
+struct CustomSheetSprite final {
 private:
     CustomSpriteConfig* sprite;
 

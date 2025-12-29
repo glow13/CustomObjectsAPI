@@ -79,7 +79,7 @@ public:
 };
 
 template <class ObjectType>
-struct CustomObjectConfig : public CustomObjectConfigBase {
+struct CustomObjectConfig final : public CustomObjectConfigBase {
 private:
 #if __INTELLISENSE__ != 1
     std::function<void(ObjectType*)> setupCustomObjectFunction;

@@ -16,7 +16,7 @@ using namespace geode::prelude;
 class CustomObjectsMod;
 class CustomObjectConfigBase;
 
-struct CUSTOM_OBJECTS_DLL CustomSpriteConfig {
+struct CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
 private:
     CustomObjectsMod* mod;
     CustomObjectConfigBase* object;
