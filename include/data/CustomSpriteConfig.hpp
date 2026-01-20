@@ -17,6 +17,7 @@ class CustomObjectsMod;
 class CustomObjectConfigBase;
 
 struct CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
+#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
 private:
     CustomObjectsMod* mod;
     CustomObjectConfigBase* object;
@@ -34,7 +35,8 @@ private:
 public:
     CustomSpriteConfig() : frameName(""), sourceFrame(""), offset(CCPointZero), size(CCSizeZero) {}
     CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
-
+#endif
+public:
     std::string getModID() const;
     std::string getFrameName() const;
     std::string getSourceFrame() const;

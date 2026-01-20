@@ -42,7 +42,10 @@ void makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
 } // makeModTriggerSprite
 
 bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path) const {
-    auto render = CCRenderTexture::create(sheetSize.w / quality, sheetSize.h / quality);
+    if (sheetSize.w <= 0 || sheetSize.h <= 0) return false;
+
+    auto texQuality = CustomSpritesManager::getTextureQuality();
+    auto render = CCRenderTexture::create(sheetSize.w / texQuality, sheetSize.h / texQuality);
     render->begin();
 
     // Add each sprite to the sheet
@@ -57,10 +60,10 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
         int offsetX = spr.rect.flipped ? spr.size.height - spr.trim.h - spr.trim.y : spr.trim.x;
         int offsetY = spr.rect.flipped ? spr.trim.x : spr.trim.y;
 
-        sprite.setPosition(CCPoint(spr.rect.x - offsetX, sheetSize.h - spr.rect.y + offsetY) / quality);
+        sprite.setPosition(CCPoint(spr.rect.x - offsetX, sheetSize.h - spr.rect.y + offsetY) / texQuality);
         sprite.setAnchorPoint(spr.rect.flipped ? CCPoint(0, 0) : CCPoint(0, 1));
-        sprite.setScaleX(spr.size.width / (sprite.getContentWidth() * (int)quality));
-        sprite.setScaleY(spr.size.height / (sprite.getContentHeight() * (int)quality));
+        sprite.setScaleX(spr.size.width / (sprite.getContentWidth() * (int)texQuality));
+        sprite.setScaleY(spr.size.height / (sprite.getContentHeight() * (int)texQuality));
         sprite.setRotation(spr.rect.flipped ? 90 : 0);
 
         sprite.getTexture()->setAliasTexParameters();
@@ -184,7 +187,7 @@ rectpack2D::rect_wh CustomObjectsSheet::binPacking(std::vector<CustomSheetSprite
         return callback_result::ABORT_PACKING;
     };
 
-    while (size.w == 0 || size.h == 0) {
+    while ((size.w == 0 || size.h == 0) && width < totalWidth * 100) {
         auto finderInput = make_finder_input(
             width, -4,
             onBinPackingSuccess,

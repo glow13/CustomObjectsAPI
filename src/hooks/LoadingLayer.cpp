@@ -71,9 +71,18 @@ class $modify(LoadingLayer) {
     void generateCustomSpritesheet() {
         if (m_fields->m_shouldGenerateSpritesheet) {
             auto manager = CustomSpritesManager::get();
-            auto sheetQuality = manager->getTextureQuality();
-            auto sheetName = manager->getSpritesheetQualityName();
-            manager->addSpritesheetToCache(sheetName, sheetQuality);
+            switch (manager->getTextureQuality()) {
+                case Quality::HIGH:
+                    manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
+                    [[fallthrough]];
+                case Quality::MEDIUM:
+                    manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
+                    [[fallthrough]];
+                case Quality::LOW:
+                    manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
+                    [[fallthrough]];
+                default: break;
+            } // switch
         } // if
 
         if (auto smallLabel = getChildByID("geode-small-label")) {
@@ -85,18 +94,15 @@ class $modify(LoadingLayer) {
     } // generateCustomSpritesheet
 
     void loadCustomSpritesheet() {
-        auto manager = CustomSpritesManager::get();
-
-        auto png = manager->getSpritesheetQualityName() + ".png";
-        auto plist = manager->getSpritesheetQualityName() + ".plist";
+        auto png = CustomSpritesManager::getSpritesheetQualityName() + ".png";
+        auto plist = CustomSpritesManager::getSpritesheetQualityName() + ".plist";
 
         auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
         CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
         if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
 
         auto toolbox = ObjectToolbox::sharedState();
-        auto objectManager = CustomObjectsManager::get();
-        objectManager->forEachCustomObject([this, toolbox](auto obj) {
+        CustomObjectsManager::get()->forEachCustomObject([this, toolbox](auto obj) {
             toolbox->m_allKeys.insert(std::pair(obj->getObjectID(), obj->getMainSprite()));
         });
 

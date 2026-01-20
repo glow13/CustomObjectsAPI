@@ -20,9 +20,9 @@ private:
 public:
     static CustomSpritesManager* get();
 
-    std::string getCacheDirectory();
-    Quality getTextureQuality();
-    std::string getSpritesheetQualityName();
+    static std::string getCacheDirectory();
+    static Quality getTextureQuality();
+    static std::string getSpritesheetQualityName();
 
     void registerCustomObjectSprite(CustomSpriteConfig* spr);
     void processRegisteredSprites();

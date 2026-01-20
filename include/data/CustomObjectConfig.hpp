@@ -22,7 +22,7 @@ constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
-#if __INTELLISENSE__ != 1
+#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
 protected:
     CustomObjectsMod* mod;
     int objectID;
@@ -140,7 +140,7 @@ public:
     CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectFunction = callback; return *this; }
 
-#if __INTELLISENSE__ != 1
+#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
     // Create new object using this config
     ObjectType* create() const override {
         ObjectType* obj = ObjectType::create(this);

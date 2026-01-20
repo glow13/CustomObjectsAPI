@@ -42,9 +42,7 @@ public:
     void setupLayers() {
         GJBaseGameLayer::setupLayers();
 
-        auto manager = CustomSpritesManager::get();
-        auto path = manager->getCacheDirectory() + manager->getSpritesheetQualityName() + ".png";
-
+        auto path = CustomSpritesManager::getCacheDirectory() + CustomSpritesManager::getSpritesheetQualityName() + ".png";
         auto sheet = CCTextureCache::get()->textureForKey(path.c_str());
         if (!sheet) {
             log::error("Failed to load the custom objects spritesheet! Batch rendering is disabled");

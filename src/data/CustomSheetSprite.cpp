@@ -1,5 +1,6 @@
 #include "data/CustomSheetSprite.hpp"
 #include "data/CustomSpriteConfig.hpp"
+#include "CustomSpritesManager.hpp"
 
 CustomSheetSprite::CustomSheetSprite() : rect({0, 0, 0, 0, false}) {}
 CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : rect(rect) {}
@@ -18,14 +19,15 @@ CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality
         return;
     } // if
 
-    auto originalSize = frame->getOriginalSizeInPixels();
+    float qualityScale = (float)quality / (float)CustomSpritesManager::getTextureQuality();
+    auto originalSize = frame->getOriginalSizeInPixels() * qualityScale;
     size = size.isZero() ? originalSize : size * (int)quality;
 
     float scaleX = size.width / originalSize.width;
     float scaleY = size.height / originalSize.height;
 
-    auto offset = frame->getOffsetInPixels();
-    auto trimSize = frame->getRectInPixels().size;
+    auto offset = frame->getOffsetInPixels() * qualityScale;
+    auto trimSize = frame->getRectInPixels().size * qualityScale;
     offset = CCPoint(offset.x * scaleX, offset.y * scaleY);
     trimSize = CCSize(trimSize.width * scaleX, trimSize.height * scaleY);
 

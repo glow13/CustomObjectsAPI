@@ -7,7 +7,7 @@ CustomObjectsMod* CustomObjectsUtils::currentMod = nullptr;
 int CustomObjectsUtils::currentOffset = 0;
 
 CustomObjectsMod* CustomObjectsUtils::getMod(geode::Mod* mod) {
-    log::info("old {} {} {}", currentGeodeMod, currentMod ? currentMod->getModID() : "no", currentOffset);
+    // log::info("old {} {} {}", currentGeodeMod, currentMod ? currentMod->getModID() : "no", currentOffset);
     if (mod != currentGeodeMod) {
         currentGeodeMod = mod;
         currentOffset = 0;
@@ -16,7 +16,7 @@ CustomObjectsMod* CustomObjectsUtils::getMod(geode::Mod* mod) {
     if (!currentMod || currentMod->getModID() != currentGeodeMod->getID()) {
         currentMod = CustomObjectsManager::get()->registerCustomObjectsMod(currentGeodeMod, currentOffset);
     } // if
-    log::info("new {} {} {}", currentGeodeMod, currentMod->getModID(), currentOffset);
+    // log::info("new {} {} {}", currentGeodeMod, currentMod->getModID(), currentOffset);
     return currentMod;
 } // getMod
 
