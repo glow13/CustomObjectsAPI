@@ -39,27 +39,6 @@ public:
         return true;
     } // init
 
-    template <typename ValueType>
-    ValueType getSavedValue(std::string key, ValueType defaultValue = ValueType{}) {
-        if (!savedValues.contains(key)) return defaultValue;
-        std::stringstream valueString(savedValues[key]);
-
-        ValueType value;
-        valueString >> value;
-        return value;
-    } // getSavedValue
-
-    template <typename ValueType>
-    ValueType setSavedValue(std::string key, ValueType value) {
-        ValueType oldValue = getSavedValue<ValueType>(key);
-        std::stringstream valueString;
-        valueString.precision(2);
-        valueString << value;
-
-        savedValues[key] = valueString.str();
-        return oldValue;
-    } // setSavedValue
-
     virtual void setupCustomObject() {
         if (!(config->setupCustomObjectFunction)) return;
         (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
@@ -78,7 +57,13 @@ public:
 protected:
     template <typename ValueType>
     void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = 0) {
-        objectProperties[key] = new ObjectProp<ValueType>(value, cond);
+        if (objectProperties.contains(key)) {
+            auto prop = static_cast<ObjectProp<std::string>*>(objectProperties[key]);
+            prop->fromString(&value, prop->value);
+            objectProperties.erase(key);
+            delete prop;
+        } //if
+        objectProperties[key] = new ObjectProp<ValueType>(&value, cond);
     } // setupObjectProperty
 
     void addMainSpriteToParent(bool p0) override {
@@ -141,72 +126,48 @@ private:
         bool valid(float val) { return true; }
         bool valid(std::string val) { return !val.empty(); }
 
-        std::string format(bool val) { return val ? "1" : "0"; }
-        std::string format(int val) { return fmt::format("{}", val); }
-        std::string format(float val) { return fmt::format("{:g}", val); }
-        std::string format(std::string val) { return base64::encode(val); }
+        std::string toString(bool val) { return val ? "1" : "0"; }
+        std::string toString(int val) { return fmt::format("{}", val); }
+        std::string toString(float val) { return fmt::format("{:g}", val); }
+        std::string toString(std::string val) { return base64::encode(val); }
+
+        void fromString(bool* value, std::string val) { *value = val == "1"; }
+        void fromString(int* value, std::string val) { *value = std::stoi(val); }
+        void fromString(float* value, std::string val) { *value = std::stof(val); }
+        void fromString(std::string* value, std::string val) { *value = base64::decodeString(val).unwrapOrDefault(); }
     };
 
     template <typename ValueType>
     struct ObjectProp final : public ObjectPropBase {
-        ValueType& value;
+        ValueType* var;
+        ValueType value;
         std::function<bool(void)> cond;
-        ObjectProp(ValueType& value, std::function<bool(void)> cond) : value(value), cond(cond) {}
+        ObjectProp(ValueType* var, std::function<bool(void)> cond, ValueType value = ValueType()) : var(var), value(var ? *var : value), cond(cond) {}
 
-        std::string getValue() override { return ObjectPropBase::format(value); }
-        bool hasValue() override { return ObjectPropBase::valid(value) && (!cond || cond()); }
-        void setValue(std::string val) override {
-            if constexpr (std::is_same_v<ValueType, std::string>) value = base64::decodeString(val);
-            else std::stringstream(val) >> value;
-        } // setValue
+        std::string getValue() override { return var ? ObjectPropBase::toString(*var) : ""; }
+        bool hasValue() override { return var && ObjectPropBase::valid(*var) && (!cond || cond()); }
+        void setValue(std::string val) override { if (var) ObjectPropBase::fromString(var, val); }
     };
 
     const CustomObjectConfig* config;
-    std::unordered_map<std::string, std::string> savedValues;
     std::unordered_map<int, ObjectPropBase*> objectProperties;
 
-    bool loadSavedValuesFromString(std::string saveString) {
-
-        // Are there any saved values to load?
-        if (saveString.empty()) return false;
-
-        // Base64 decode the saved string
-        auto result = base64::decodeString(saveString);
-        if (!result.isOk()) return false;
-
-        // Parse the string and load the values
-        std::stringstream valuesString(result.unwrap());
-        std::string key, valueStr;
-
-        savedValues.clear();
-        while (std::getline(valuesString, key, ',')) {
-            std::getline(valuesString, valueStr, ',');
-            savedValues[key] = valueStr;
-        } // while
-
-        return true;
-    } // loadSavedValuesFromString
-
     gd::string getSaveString(GJBaseGameLayer* p0) override final {
-        std::string saveString = ObjectBase::getSaveString(p0);
-
+        std::string propertyString;
         for (auto [key, prop] : objectProperties) {
-            if (prop->hasValue()) saveString += fmt::format(",{},{}", key, prop->getValue());
+            if (prop->hasValue()) propertyString += fmt::format(",{},{}", key, prop->getValue());
         } // for
-        if (savedValues.empty()) return saveString;
 
-        std::string valuesString;
-        for (auto [key, value] : savedValues) valuesString += fmt::format("{},{},", key, value);
-        valuesString = valuesString.substr(0, valuesString.length() - 1);
-        return saveString += fmt::format(",500,{}", base64::encode(valuesString));
+        return ObjectBase::getSaveString(p0) + propertyString;
     } // getSaveString
 
     void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
         ObjectBase::customObjectSetup(propValues, propIsPresent);
-        loadSavedValuesFromString(propValues[500]);
 
-        for (auto [key, prop] : objectProperties) {
-            if (propIsPresent[key]) prop->setValue(propValues[key]);
+        for (int key = 4; key < propValues.size(); key++) {
+            if (!propIsPresent[key]) continue;
+            if (objectProperties.contains(key)) objectProperties[key]->setValue(propValues[key]);
+            else objectProperties[key] = new ObjectProp<std::string>(nullptr, 0, propValues[key]);
         } // for
 
         setupCustomObject();

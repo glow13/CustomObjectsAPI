@@ -52,7 +52,7 @@ public:
     } // setupCustomObject
 
     void resetCustomObject() override {
-        m_bouncePower = getSavedValue<int>("bounce", 8);
+        m_bouncePower = 8;
     } // resetCustomObject
 
     void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) override {
