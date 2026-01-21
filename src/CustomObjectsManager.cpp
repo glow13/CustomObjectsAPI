@@ -4,6 +4,8 @@
 #include "data/CustomObjectsMod.hpp"
 #include "ModTriggerObject.hpp"
 
+using namespace geode::prelude;
+
 CustomObjectsManager* CustomObjectsManager::get() {
     if (!s_manager) s_manager = new CustomObjectsManager();
     return s_manager;

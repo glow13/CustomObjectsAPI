@@ -1,5 +1,7 @@
 #include "data/CustomObjectsMod.hpp"
 
+using namespace geode::prelude;
+
 CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, uint8_t offset) : mod(mod) {
     uint32_t min = 10000;
     uint32_t max = INT32_MAX - 100;

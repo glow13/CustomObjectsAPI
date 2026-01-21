@@ -2,8 +2,6 @@
 #include <Geode/Geode.hpp>
 #include <rect_structs.h>
 
-using namespace geode::prelude;
-
 struct CustomSpriteConfig;
 struct CustomSheetSprite;
 

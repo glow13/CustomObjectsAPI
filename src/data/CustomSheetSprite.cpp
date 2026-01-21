@@ -2,6 +2,8 @@
 #include "data/CustomSpriteConfig.hpp"
 #include "CustomSpritesManager.hpp"
 
+using namespace geode::prelude;
+
 CustomSheetSprite::CustomSheetSprite() : rect({0, 0, 0, 0, false}) {}
 CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : rect(rect) {}
 CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality) : sprite(sprite) {

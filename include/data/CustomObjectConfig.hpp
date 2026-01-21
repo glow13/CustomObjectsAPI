@@ -3,21 +3,19 @@
 
 #include "CustomSpriteConfig.hpp"
 
-using namespace geode::prelude;
-
 class CustomObjectsMod;
 
-constexpr CCSize BOX_SIZE_DEFAULT = CCSizeZero;
-constexpr CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
+constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = {0, 0};
+constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = {0, 0};
 constexpr int BOX_RADIUS_DEFAULT = 0;
-constexpr CCPoint CREATE_OFFSET_DEFAULT = CCPointZero;
+constexpr cocos2d::CCPoint CREATE_OFFSET_DEFAULT = {0, 0};
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
 constexpr int BATCH_MODE_DEFAULT = 10;
 constexpr bool DISABLE_BATCH_DEFAULT = false;
 constexpr int FRAMES_COUNT_DEFAULT = 0;
 constexpr float FRAME_TIME_DEFAULT = 1.0f;
-constexpr ccColor3B GLOW_COLOR_DEFAULT = {255, 255, 255};
-constexpr ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
+constexpr cocos2d::ccColor3B GLOW_COLOR_DEFAULT = {255, 255, 255};
+constexpr cocos2d::ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
 constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
@@ -31,17 +29,17 @@ protected:
     CustomSpriteConfig detailSprite;
     CustomSpriteConfig glowSprite;
 
-    CCSize boxSize = BOX_SIZE_DEFAULT;
-    CCPoint boxOffset = BOX_OFFSET_DEFAULT;
+    cocos2d::CCSize boxSize = BOX_SIZE_DEFAULT;
+    cocos2d::CCPoint boxOffset = BOX_OFFSET_DEFAULT;
     int boxRadius = BOX_RADIUS_DEFAULT;
-    CCPoint createOffset = CREATE_OFFSET_DEFAULT;
+    cocos2d::CCPoint createOffset = CREATE_OFFSET_DEFAULT;
     GameObjectType objectType = OBJECT_TYPE_DEFAULT;
     int batchMode = BATCH_MODE_DEFAULT;
     bool disableBatch = DISABLE_BATCH_DEFAULT;
     int framesCount = FRAMES_COUNT_DEFAULT;
     float frameTime = FRAME_TIME_DEFAULT;
-    ccColor3B glowColor = GLOW_COLOR_DEFAULT;
-    ccColor3B particleColor = PARTICLE_COLOR_DEFAULT;
+    cocos2d::ccColor3B glowColor = GLOW_COLOR_DEFAULT;
+    cocos2d::ccColor3B particleColor = PARTICLE_COLOR_DEFAULT;
     GLubyte particleOpacity = PARTICLE_OPACITY_DEFUALT;
     int editorPriority = EDITOR_PRIORITY_DEFAULT;
 
@@ -71,8 +69,8 @@ public:
     virtual bool hasEditObjectFunction() const = 0;
     virtual bool hasEditSpecialFunction() const = 0;
 
-    virtual void customEditObject(GameObject*, CCArray*) const = 0;
-    virtual void customEditSpecial(GameObject*, CCArray*) const = 0;
+    virtual void customEditObject(GameObject*, cocos2d::CCArray*) const = 0;
+    virtual void customEditSpecial(GameObject*, cocos2d::CCArray*) const = 0;
 
     virtual GameObject* create() const = 0;
 #endif
@@ -84,8 +82,8 @@ private:
 #if __INTELLISENSE__ != 1
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
-    std::function<void(ObjectType*, CCArray*)> editObjectFunction;
-    std::function<void(ObjectType*, CCArray*)> editSpecialFunction;
+    std::function<void(ObjectType*, cocos2d::CCArray*)> editObjectFunction;
+    std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialFunction;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectFunction;
 
     template <class ObjectType, class ObjectBase>
@@ -95,8 +93,8 @@ public:
     bool hasEditObjectFunction() const override { return (bool)editObjectFunction; }
     bool hasEditSpecialFunction() const override { return (bool)editSpecialFunction; }
 
-    void customEditObject(GameObject* obj, CCArray* objs) const override { editObjectFunction(static_cast<ObjectType*>(obj), objs); }
-    void customEditSpecial(GameObject* obj, CCArray* objs) const override { editSpecialFunction(static_cast<ObjectType*>(obj), objs); }
+    void customEditObject(GameObject* obj, cocos2d::CCArray* objs) const override { editObjectFunction(static_cast<ObjectType*>(obj), objs); }
+    void customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const override { editSpecialFunction(static_cast<ObjectType*>(obj), objs); }
 
     CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
 #endif
@@ -119,10 +117,10 @@ public:
     inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame) { return setGlowSprite(frame, 0, 0, 0, 0); }
 
     // Set object config values
-    CustomObjectConfig<ObjectType>& setBoxSize(int w, int h) { boxSize = CCSize(w, h); return *this; }
-    CustomObjectConfig<ObjectType>& setBoxOffset(int x, int y) { boxOffset = CCPoint(x, y); return *this; }
+    CustomObjectConfig<ObjectType>& setBoxSize(int w, int h) { boxSize = cocos2d::CCSize(w, h); return *this; }
+    CustomObjectConfig<ObjectType>& setBoxOffset(int x, int y) { boxOffset = cocos2d::CCPoint(x, y); return *this; }
     CustomObjectConfig<ObjectType>& setBoxRadius(int radius) { boxRadius = radius; return *this; }
-    CustomObjectConfig<ObjectType>& setCreateOffset(int x, int y) { createOffset = CCPoint(x, y); return *this; }
+    CustomObjectConfig<ObjectType>& setCreateOffset(int x, int y) { createOffset = cocos2d::CCPoint(x, y); return *this; }
     CustomObjectConfig<ObjectType>& setObjectType(GameObjectType type) { objectType = type; return *this; }
     CustomObjectConfig<ObjectType>& setBatchMode(int mode) { batchMode = mode; return *this; }
     CustomObjectConfig<ObjectType>& setDisableBatchRender() { disableBatch = true; return *this; }
@@ -134,8 +132,8 @@ public:
     CustomObjectConfig<ObjectType>& setEditorTabPriority(int priority) { editorPriority = priority; return *this; }
 
     // Set callback functions
-    CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, CCArray*)> callback) { editObjectFunction = callback; return *this; }
-    CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, CCArray*)> callback) { editSpecialFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, cocos2d::CCArray*)> callback) { editObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, cocos2d::CCArray*)> callback) { editSpecialFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectFunction = callback; return *this; }

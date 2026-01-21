@@ -3,8 +3,6 @@
 
 #include "CustomObjectConfig.hpp"
 
-using namespace geode::prelude;
-
 class CustomGameObject;
 
 struct CUSTOM_OBJECTS_DLL CustomObjectsMod final {
@@ -30,7 +28,7 @@ protected:
     template <class ObjectType = CustomGameObject>
     CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         int id = baseObjectID + objects.size();
-        log::debug("Registered custom object with id {}", id);
+        geode::log::debug("Registered custom object with id {}", id);
 
         auto config = new CustomObjectConfig<ObjectType>(this, id);
         config->setMainSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);

@@ -4,6 +4,8 @@
 #include "CustomObjectsSheet.hpp"
 #include "data/CustomSheetSprite.hpp"
 
+using namespace geode::prelude;
+
 CustomSpritesManager* CustomSpritesManager::get() {
     if (!s_manager) s_manager = new CustomSpritesManager();
     return s_manager;

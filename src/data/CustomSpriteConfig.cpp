@@ -2,6 +2,8 @@
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
 
+using namespace geode::prelude;
+
 CustomSpriteConfig::CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH) : 
     frameName(""), sourceFrame(frame), mod(mod), object(object), offset(CCPoint(offX, offY)), size(CCSize(sizeW, sizeH)) {}
 

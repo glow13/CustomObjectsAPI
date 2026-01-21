@@ -29,7 +29,7 @@ public:
         this->m_greenDebugDraw = true;
         this->m_zFixedZLayer = true;
         this->m_defaultZLayer = ZLayer::T1;
-        this->m_particleOffset = CCPoint(-5, 0);
+        this->m_particleOffset = cocos2d::CCPoint(-5, 0);
 
         this->m_isTrigger = false;
         this->m_isSpawnTriggered = false;
@@ -38,8 +38,8 @@ public:
 
         if (!config->hasMainSprite()) this->setDontDraw(true);
         if (!this->m_editorEnabled && config->hasDetailSprite()) {
-            auto parent = cast::base_cast<CCSprite*>(GJBaseGameLayer::get()->m_game2LayerB0);
-            this->m_portalBack = this->addInternalChild(parent, config->getDetailSprite(), CCPoint(0, 0), -90);
+            auto parent = geode::cast::base_cast<cocos2d::CCSprite*>(GJBaseGameLayer::get()->m_game2LayerB0);
+            this->m_portalBack = this->addInternalChild(parent, config->getDetailSprite(), {0, 0}, -90);
         } // if
 
         this->template setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
@@ -103,7 +103,7 @@ public:
     } // playShineEffect
 
 private:
-    CCSprite* m_portalBack = nullptr;
+    cocos2d::CCSprite* m_portalBack = nullptr;
     GameObjectType m_fakeType = GameObjectType::Modifier;
 
 public:
@@ -121,7 +121,7 @@ public:
 
     void customSetup() override final {
         if (!this->m_editorEnabled && !this->m_hasNoParticles) {
-            this->createAndAddParticle(6, "portalEffect02.plist", 4, tCCPositionType::kCCPositionTypeGrouped);
+            this->createAndAddParticle(6, "portalEffect02.plist", 4, cocos2d::tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
         } // if
         CustomObjectBase::customSetup();

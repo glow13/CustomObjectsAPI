@@ -2,8 +2,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/utils/base64.hpp>
 
-using namespace geode::prelude;
-
 #define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
 #define $generic(BaseType) BaseType final : public BaseType##Base<BaseType> {}
 
@@ -134,7 +132,7 @@ private:
     SERIALIZE_DEFS(bool, val, val ? "1" : "0", val == "1");
     SERIALIZE_DEFS(int, true, std::to_string(val), std::stoi(val));
     SERIALIZE_DEFS(float, true, std::to_string(val), std::stof(val));
-    SERIALIZE_DEFS(std::string, !val.empty(), base64::encode(val), base64::decodeString(val).unwrapOr(""));
+    SERIALIZE_DEFS(std::string, !val.empty(), geode::utils::base64::encode(val), geode::utils::base64::decodeString(val).unwrapOr(""));
 
     const CustomObjectConfig* config;
     std::unordered_map<int, ObjectProp> objectProps;

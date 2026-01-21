@@ -1,6 +1,8 @@
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
 
+using namespace geode::prelude;
+
 CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod, int id) : mod(mod), objectID(id) {}
 
 std::string CustomObjectConfigBase::getModID() const { return mod->getModID(); }

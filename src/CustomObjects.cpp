@@ -8,6 +8,8 @@
 #include "object/CustomCollectibleObject.hpp"
 #include "object/CustomAnimatedObject.hpp"
 
+using namespace geode::prelude;
+
 /*
     m_objectType == 0x388
     m_objectID == 0x3f4

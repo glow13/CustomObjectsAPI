@@ -1,12 +1,13 @@
 #include "CustomObjectsAPI.hpp"
-
 #include "CustomObjectsManager.hpp"
 
-geode::Mod* CustomObjectsUtils::currentGeodeMod = nullptr;
+using namespace geode::prelude;
+
+Mod* CustomObjectsUtils::currentGeodeMod = nullptr;
 CustomObjectsMod* CustomObjectsUtils::currentMod = nullptr;
 int CustomObjectsUtils::currentOffset = 0;
 
-CustomObjectsMod* CustomObjectsUtils::getMod(geode::Mod* mod) {
+CustomObjectsMod* CustomObjectsUtils::getMod(Mod* mod) {
     // log::info("old {} {} {}", currentGeodeMod, currentMod ? currentMod->getModID() : "no", currentOffset);
     if (mod != currentGeodeMod) {
         currentGeodeMod = mod;
@@ -20,7 +21,7 @@ CustomObjectsMod* CustomObjectsUtils::getMod(geode::Mod* mod) {
     return currentMod;
 } // getMod
 
-void CustomObjectsUtils::setCollisionOffset(geode::Mod* mod, uint8_t offset) {
+void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
     if (mod != currentGeodeMod) {
         currentGeodeMod = mod;
     } // if

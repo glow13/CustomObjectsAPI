@@ -10,6 +10,8 @@
 #include <finders_interface.h>
 #include <lodepng.h>
 
+using namespace geode::prelude;
+
 constexpr int SPRITE_BUFFER = 2;
 
 void makeModTriggerSprite(CCSprite& sprite, std::string colorString) {

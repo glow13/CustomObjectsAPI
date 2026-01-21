@@ -11,8 +11,6 @@
     #define CUSTOM_OBJECTS_DLL __attribute__((visibility("default")))
 #endif
 
-using namespace geode::prelude;
-
 class CustomObjectsMod;
 class CustomObjectConfigBase;
 
@@ -24,8 +22,8 @@ private:
 
     std::string frameName;
     std::string sourceFrame;
-    CCPoint offset;
-    CCSize size;
+    cocos2d::CCPoint offset;
+    cocos2d::CCSize size;
 
     void generateFrame();
 
@@ -33,15 +31,15 @@ private:
     friend class CustomSpritesManager;
 
 public:
-    CustomSpriteConfig() : frameName(""), sourceFrame(""), offset(CCPointZero), size(CCSizeZero) {}
+    CustomSpriteConfig() : frameName(""), sourceFrame(""), offset({0, 0}), size({0, 0}) {}
     CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
 #endif
 public:
     std::string getModID() const;
     std::string getFrameName() const;
     std::string getSourceFrame() const;
-    CCPoint getOffset() const;
-    CCSize getSize() const;
+    cocos2d::CCPoint getOffset() const;
+    cocos2d::CCSize getSize() const;
 
     bool isCustomSprite() const;
     bool isAnimationFrame() const;

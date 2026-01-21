@@ -2,8 +2,6 @@
 #include <Geode/Geode.hpp>
 #include <rect_structs.h>
 
-using namespace geode::prelude;
-
 enum Quality : int;
 
 class CustomSpriteConfig;
@@ -12,8 +10,8 @@ struct CustomSheetSprite final {
 private:
     CustomSpriteConfig* sprite;
 
-    CCSize size; // desired final size of the sprite in the spritesheet
-    CCPoint offset; // user-defined offset of the sprite, seperate from the trim process
+    cocos2d::CCSize size; // desired final size of the sprite in the spritesheet
+    cocos2d::CCPoint offset; // user-defined offset of the sprite, seperate from the trim process
     rectpack2D::rect_xywh trim; // rect that designates the size of the not-transparent content in the scaled sprite
     rectpack2D::rect_xywhf rect; // rect that designates the size and position of this sprite in the spritesheet
 
