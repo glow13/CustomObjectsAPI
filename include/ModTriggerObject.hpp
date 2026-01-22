@@ -2,6 +2,8 @@
 
 #include "object/CustomTriggerObject.hpp"
 
+using namespace geode::prelude;
+
 class ModTriggerObject final : public CustomTriggerObjectBase<ModTriggerObject> {
 public:
     bool init(const CustomObjectConfig* config) {

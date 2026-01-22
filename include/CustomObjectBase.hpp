@@ -59,13 +59,17 @@ public:
 
 protected:
     template <class ValueType>
-    void setupObjectProperty(int key, ValueType& value, std::function<bool(void)> cond = 0) {
+    void setupObjectProperty(int key, ValueType& value, std::function<bool()> cond = nullptr) {
         auto& prop = objectProps.try_emplace(key).first->second;
         if (!prop.loadedSaveValue.empty()) value = deserializeValue<ValueType>(prop.loadedSaveValue);
+        prop.loadedSaveValue.clear();
 
-        prop.serialize = [&value](){ return serializeValue<ValueType>(value); };
-        prop.deserialize = [&value](std::string str){ value = deserializeValue<ValueType>(str); };
-        prop.isValid = [&value, cond](){ return isValid<ValueType>(value) && (!cond || cond()); };
+        prop.value = &value;
+        prop.cond = std::move(cond);
+
+        prop.isValid = [](void* val){ return isValid<ValueType>(*static_cast<ValueType*>(val)); };
+        prop.serialize = [](void* val){ return serializeValue<ValueType>(*static_cast<ValueType*>(val)); };
+        prop.deserialize = [](void* val, std::string str){ *static_cast<ValueType*>(val) = deserializeValue<ValueType>(str); };
     } // setupObjectProperty
 
     void addMainSpriteToParent(bool p0) override {
@@ -120,9 +124,13 @@ protected:
 private:
     struct ObjectProp final {
         std::string loadedSaveValue;
-        std::function<std::string()> serialize;
-        std::function<void(std::string)> deserialize;
-        std::function<bool()> isValid;
+
+        void* value = nullptr;
+        std::function<bool()> cond = nullptr;
+
+        bool (*isValid)(void*) = nullptr;
+        std::string (*serialize)(void*) = nullptr;
+        void (*deserialize)(void*, std::string) = nullptr;
     };
 
     template<class ValueType> static bool isValid(ValueType);
@@ -141,8 +149,8 @@ private:
         auto saveString = ObjectBase::getSaveString(p0);
 
         for (auto [key, prop] : objectProps) {
-            if (prop.isValid && prop.isValid()) {
-                saveString += fmt::format(",{},{}", key, prop.serialize());
+            if (prop.isValid && prop.isValid(prop.value) && (!prop.cond || prop.cond())) {
+                saveString += fmt::format(",{},{}", key, prop.serialize(prop.value));
             } // if
         } // for
 
@@ -156,7 +164,7 @@ private:
             if (!propIsPresent[key]) continue;
 
             auto& prop = objectProps.try_emplace(key).first->second;
-            if (prop.deserialize) prop.deserialize(propValues[key]);
+            if (prop.deserialize) prop.deserialize(prop.value, propValues[key]);
             prop.loadedSaveValue = propValues[key];
         } // for
 
