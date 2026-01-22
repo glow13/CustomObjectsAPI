@@ -5,10 +5,11 @@
 #define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
 #define $generic(BaseType) BaseType final : public BaseType##Base<BaseType> {}
 
-#define SERIALIZE_DEFS(type, valid, serialize, deserialize) \
-    template<> static bool isValid<type>(type val) { return valid; }; \
-    template<> static std::string serializeValue<type>(type val) { return serialize; }; \
-    template<> static type deserializeValue<type>(std::string val) { return deserialize; };
+#define SERIALIZER_TYPE(type, valid, serialize, deserialize) \
+    template<> inline Serializer serializer<type> = { \
+    [](const void* v)->bool { auto val = *static_cast<const type*>(v); return valid; }, \
+    [](const void* v)->std::string { auto val = *static_cast<const type*>(v); return serialize; }, \
+    [](void* v, const std::string& val) { *static_cast<type*>(v) = deserialize; }};
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
@@ -60,16 +61,16 @@ public:
 protected:
     template <class ValueType>
     void setupObjectProperty(int key, ValueType& value, std::function<bool()> cond = nullptr) {
-        auto& prop = objectProps.try_emplace(key).first->second;
-        if (!prop.loadedSaveValue.empty()) value = deserializeValue<ValueType>(prop.loadedSaveValue);
-        prop.loadedSaveValue.clear();
+        if (auto it = loadedSaveValues.find(key); it != loadedSaveValues.end()) {
+            serializer<ValueType>.deserialize(&value, it->second);
+            loadedSaveValues.erase(it);
+        } // if
 
-        prop.value = &value;
-        prop.cond = std::move(cond);
-
-        prop.isValid = [](void* val){ return isValid<ValueType>(*static_cast<ValueType*>(val)); };
-        prop.serialize = [](void* val){ return serializeValue<ValueType>(*static_cast<ValueType*>(val)); };
-        prop.deserialize = [](void* val, std::string str){ *static_cast<ValueType*>(val) = deserializeValue<ValueType>(str); };
+        objectProps.emplace(key, ObjectProp{
+            &value,
+            std::move(cond),
+            &serializer<ValueType>
+        });
     } // setupObjectProperty
 
     void addMainSpriteToParent(bool p0) override {
@@ -121,37 +122,11 @@ protected:
         resetCustomObject();
     } // resetObject
 
-private:
-    struct ObjectProp final {
-        std::string loadedSaveValue;
-
-        void* value = nullptr;
-        std::function<bool()> cond = nullptr;
-
-        bool (*isValid)(void*) = nullptr;
-        std::string (*serialize)(void*) = nullptr;
-        void (*deserialize)(void*, std::string) = nullptr;
-    };
-
-    template<class ValueType> static bool isValid(ValueType);
-    template<class ValueType> static std::string serializeValue(ValueType);
-    template<class ValueType> static ValueType deserializeValue(std::string);
-
-    SERIALIZE_DEFS(bool, val, val ? "1" : "0", val == "1");
-    SERIALIZE_DEFS(int, true, std::to_string(val), std::stoi(val));
-    SERIALIZE_DEFS(float, true, std::to_string(val), std::stof(val));
-    SERIALIZE_DEFS(std::string, !val.empty(), geode::utils::base64::encode(val), geode::utils::base64::decodeString(val).unwrapOr(""));
-
-    const CustomObjectConfig* config;
-    std::unordered_map<int, ObjectProp> objectProps;
-
     gd::string getSaveString(GJBaseGameLayer* p0) override final {
         auto saveString = ObjectBase::getSaveString(p0);
 
-        for (auto [key, prop] : objectProps) {
-            if (prop.isValid && prop.isValid(prop.value) && (!prop.cond || prop.cond())) {
-                saveString += fmt::format(",{},{}", key, prop.serialize(prop.value));
-            } // if
+        for (auto [key, prop] : objectProps) if (prop.isValid()) {
+            saveString += fmt::format(",{},{}", key, prop.serialize());
         } // for
 
         return saveString;
@@ -163,11 +138,40 @@ private:
         for (int key = 4; key < propValues.size(); key++) {
             if (!propIsPresent[key]) continue;
 
-            auto& prop = objectProps.try_emplace(key).first->second;
-            if (prop.deserialize) prop.deserialize(prop.value, propValues[key]);
-            prop.loadedSaveValue = propValues[key];
+            if (auto it = objectProps.find(key); it != objectProps.end()) {
+                it->second.deserialize(propValues[key]);
+            } else loadedSaveValues.emplace(key, propValues[key]);
         } // for
 
         setupCustomObject();
     } // customObjectSetup
+
+private:
+    struct Serializer final {
+        bool (*isValid)(const void*) = nullptr;
+        std::string (*serialize)(const void*) = nullptr;
+        void (*deserialize)(void*, const std::string&) = nullptr;
+    };
+
+    template <typename ValueType>
+    static inline Serializer serializer;
+
+    SERIALIZER_TYPE(bool, val, val ? "1" : "0", val == "1");
+    SERIALIZER_TYPE(int, true, std::to_string(val), std::stoi(val));
+    SERIALIZER_TYPE(float, true, std::to_string(val), std::stof(val));
+    SERIALIZER_TYPE(std::string, !val.empty(), geode::utils::base64::encode(val), geode::utils::base64::decodeString(val).unwrapOr(""));
+
+    struct ObjectProp final {
+        void* value = nullptr;
+        std::function<bool()> cond = nullptr;
+        const Serializer* serializer = nullptr;
+
+        inline bool isValid() { return serializer ? serializer->isValid(value) && (!cond || cond()) : false; }
+        inline std::string serialize() { return serializer ? serializer->serialize(value) : ""; }
+        inline void deserialize(const std::string& str) { if (serializer) serializer->deserialize(value, str); }
+    };
+
+    const CustomObjectConfig* config;
+    std::unordered_map<uint16_t, ObjectProp> objectProps;
+    std::unordered_map<uint16_t, std::string> loadedSaveValues;
 };
