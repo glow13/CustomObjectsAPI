@@ -5,7 +5,7 @@
 template <class ObjectType>
 class $base(CustomCollectibleObject, EffectGameObject) {
 protected:
-    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
+    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>;
     using CustomCollectibleObject = CustomCollectibleObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {

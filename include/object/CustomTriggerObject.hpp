@@ -5,7 +5,7 @@
 template <class ObjectType>
 class $base(CustomTriggerObject, EffectGameObject) {
 protected:
-    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
+    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>;
     using CustomTriggerObject = CustomTriggerObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {

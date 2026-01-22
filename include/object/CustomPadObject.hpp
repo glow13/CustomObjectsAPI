@@ -5,7 +5,7 @@
 template <class ObjectType>
 class $base(CustomPadObject, EffectGameObject) {
 protected:
-    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
+    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>;
     using CustomPadObject = CustomPadObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {

@@ -16,7 +16,7 @@ enum GameModeType : int {
 template <class ObjectType>
 class $base(CustomPortalObject, EffectGameObject) {
 protected:
-    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>::Base;
+    using CustomObjectBase = CustomObjectBase<ObjectType, EffectGameObject>;
     using CustomPortalObject = CustomPortalObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {
@@ -42,11 +42,11 @@ public:
             this->m_portalBack = this->addInternalChild(parent, config->getDetailSprite(), {0, 0}, -90);
         } // if
 
-        this->template setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
-        this->template setupObjectProperty<bool>(112, this->m_cameraEditCameraSettings);
-        this->template setupObjectProperty<float>(113, this->m_cameraEasingValue, [this](){return this->m_cameraEditCameraSettings;});
-        this->template setupObjectProperty<float>(114, this->m_cameraPaddingValue, [this](){return this->m_cameraEditCameraSettings;});
-        this->template setupObjectProperty<bool>(370, this->m_cameraDisableGridSnap);
+        this->setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
+        this->setupObjectProperty<bool>(112, this->m_cameraEditCameraSettings);
+        this->setupObjectProperty<float>(113, this->m_cameraEasingValue, [this](){return this->m_cameraEditCameraSettings;});
+        this->setupObjectProperty<float>(114, this->m_cameraPaddingValue, [this](){return this->m_cameraEditCameraSettings;});
+        this->setupObjectProperty<bool>(370, this->m_cameraDisableGridSnap);
 
         return true;
     } // init

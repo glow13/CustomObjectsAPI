@@ -5,7 +5,7 @@
 template <class ObjectType>
 class $base(CustomGameObject, GameObject) {
 protected:
-    using CustomObjectBase = CustomObjectBase<ObjectType, GameObject>::Base;
+    using CustomObjectBase = CustomObjectBase<ObjectType, GameObject>;
     using CustomGameObject = CustomGameObjectBase<ObjectType>;
 public:
     bool init(const CustomObjectConfig<ObjectType>* config) {

@@ -14,7 +14,6 @@
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
 protected:
-    using Base = CustomObjectBase<ObjectType, ObjectBase>;
     using CustomObjectConfig = CustomObjectConfig<ObjectType>;
 public:
     static ObjectType* create(const CustomObjectConfig* config) {
@@ -58,7 +57,6 @@ public:
         (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this), level, player);
     } // activateCustomObject
 
-protected:
     template <class ValueType>
     void setupObjectProperty(int key, ValueType& value, std::function<bool()> cond = nullptr) {
         if (auto it = loadedSaveValues.find(key); it != loadedSaveValues.end()) {
@@ -72,6 +70,30 @@ protected:
             &serializer<ValueType>
         });
     } // setupObjectProperty
+
+    gd::string getSaveString(GJBaseGameLayer* p0) override final {
+        auto saveString = ObjectBase::getSaveString(p0);
+
+        for (auto [key, prop] : objectProps) if (prop.isValid()) {
+            saveString += fmt::format(",{},{}", key, prop.serialize());
+        } // for
+
+        return saveString;
+    } // getSaveString
+
+    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
+        ObjectBase::customObjectSetup(propValues, propIsPresent);
+
+        for (int key = 4; key < propValues.size(); key++) {
+            if (!propIsPresent[key]) continue;
+
+            if (auto it = objectProps.find(key); it != objectProps.end()) {
+                it->second.deserialize(propValues[key]);
+            } else loadedSaveValues.emplace(key, propValues[key]);
+        } // for
+
+        setupCustomObject();
+    } // customObjectSetup
 
     void addMainSpriteToParent(bool p0) override {
         bool disableBlend = (this->m_parentMode == 4);
@@ -121,30 +143,6 @@ protected:
         ObjectBase::resetObject();
         resetCustomObject();
     } // resetObject
-
-    gd::string getSaveString(GJBaseGameLayer* p0) override final {
-        auto saveString = ObjectBase::getSaveString(p0);
-
-        for (auto [key, prop] : objectProps) if (prop.isValid()) {
-            saveString += fmt::format(",{},{}", key, prop.serialize());
-        } // for
-
-        return saveString;
-    } // getSaveString
-
-    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
-        ObjectBase::customObjectSetup(propValues, propIsPresent);
-
-        for (int key = 4; key < propValues.size(); key++) {
-            if (!propIsPresent[key]) continue;
-
-            if (auto it = objectProps.find(key); it != objectProps.end()) {
-                it->second.deserialize(propValues[key]);
-            } else loadedSaveValues.emplace(key, propValues[key]);
-        } // for
-
-        setupCustomObject();
-    } // customObjectSetup
 
 private:
     struct Serializer final {
