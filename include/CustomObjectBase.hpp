@@ -151,8 +151,11 @@ private:
         void (*deserialize)(void*, const std::string&) = nullptr;
     };
 
-    template <typename ValueType>
-    static inline Serializer serializer;
+    template <class ValueType>
+    static inline Serializer serializer = []{
+        static_assert(std::is_same_v<ValueType, void>, "Object properties currently only support bool, int, float, and std::string");
+        return Serializer{nullptr, nullptr, nullptr};
+    }();
 
     SERIALIZER_TYPE(bool, val, val ? "1" : "0", val == "1");
     SERIALIZER_TYPE(int, true, std::to_string(val), std::stoi(val));
