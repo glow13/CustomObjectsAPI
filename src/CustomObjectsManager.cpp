@@ -62,7 +62,7 @@ void CustomObjectsManager::processRegisteredMods() {
                 manager->addGameAnimation(obj->getObjectID(), obj->framesCount, obj->frameTime, mainAnimSprite, detailAnimSprite, 1);
             } // if
 
-            customObjectsCache[obj->getObjectID()] = obj;
+            customObjectsCache.emplace(obj->getObjectID(), obj);
         } // for
 
         for (auto spr : mod->sprites) {
@@ -78,8 +78,8 @@ void CustomObjectsManager::printModObjectCount() {
 } // printModObjectCount
 
 const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) {
-    if (!customObjectsCache.contains(id)) return nullptr;
-    return customObjectsCache[id];
+    auto it = customObjectsCache.find(id);
+    return it != customObjectsCache.end() ? it->second : nullptr;
 } // getCustomObjectByID
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfigBase*)> operation) const {
