@@ -6,6 +6,7 @@ using namespace geode::prelude;
 
 CustomSheetSprite::CustomSheetSprite() : rect({0, 0, 0, 0, false}) {}
 CustomSheetSprite::CustomSheetSprite(const rectpack2D::rect_xywhf& rect) : rect(rect) {}
+
 CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality) : sprite(sprite) {
     auto sourceFrame = sprite->getSourceFrame();
     auto size = sprite->getSize();

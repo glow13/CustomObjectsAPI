@@ -11,9 +11,11 @@ enum Quality : int {
 
 class CustomSpritesManager final {
 private:
-    static inline CustomSpritesManager* s_manager;
-
     std::vector<CustomSpriteConfig*> customSpritesCache;
+
+    explicit CustomSpritesManager() = default;
+    CustomSpritesManager(const CustomSpritesManager&) = delete;
+    CustomSpritesManager& operator=(const CustomSpritesManager&) = delete;
 
 public:
     static CustomSpritesManager* get();

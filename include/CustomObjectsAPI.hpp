@@ -59,6 +59,11 @@ public:
         return registerCustomObject<ObjectType>(spr, 0, 0, 0, 0);
     }
 
+    template <class ObjectType = CustomGameObject>
+    static CustomObjectConfig<ObjectType>& registerCustomObject() {
+        return registerCustomObject<ObjectType>("", 0, 0, 0, 0);
+    }
+
     static CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         return CustomObjectsUtils::getMod(geode::Mod::get())->registerCustomSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     }

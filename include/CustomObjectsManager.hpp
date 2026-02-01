@@ -6,10 +6,12 @@ struct CustomObjectConfigBase;
 
 class CustomObjectsManager final {
 private:
-    static inline CustomObjectsManager* s_manager;
-
     std::vector<CustomObjectsMod*> registeredMods;
     std::unordered_map<int, CustomObjectConfigBase*> customObjectsCache;
+
+    explicit CustomObjectsManager() = default;
+    CustomObjectsManager(const CustomObjectsManager&) = delete;
+    CustomObjectsManager& operator=(const CustomObjectsManager&) = delete;
 
 public:
     static CustomObjectsManager* get();

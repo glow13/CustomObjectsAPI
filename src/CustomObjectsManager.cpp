@@ -7,8 +7,8 @@
 using namespace geode::prelude;
 
 CustomObjectsManager* CustomObjectsManager::get() {
-    if (!s_manager) s_manager = new CustomObjectsManager();
-    return s_manager;
+    static CustomObjectsManager manager;
+    return &manager;
 } // get
 
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {

@@ -17,12 +17,11 @@ private:
     friend class CustomObjectsAPI;
 
 public:
-
     std::string getModID() const;
     std::string getModName() const;
     int getBaseObjectID() const;
 
-protected:
+private:
     CustomObjectsMod(geode::Mod* mod, uint8_t offset);
 
     template <class ObjectType = CustomGameObject>
