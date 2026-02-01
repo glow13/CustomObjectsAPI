@@ -117,15 +117,6 @@ public:
         } // if
     } // activateObject
 
-    void setStartPos(cocos2d::CCPoint p0) override {
-        if (this->m_editorEnabled) {
-            if (auto lel = LevelEditorLayer::get(); lel && lel->m_editorUI) {
-                p0 += config->createOffset;
-            } // if
-        } // if
-        ObjectBase::setStartPos(p0);
-    } // setStartPos
-
     void customSetup() override {
         if (this->m_particle) {
             this->updateParticleColor(config->particleColor);

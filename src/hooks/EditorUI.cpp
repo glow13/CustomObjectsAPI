@@ -88,6 +88,11 @@ class $modify(CustomEditorUI, EditorUI) {
         } else EditorUI::editObjectSpecial(p0);
     } // editObjectSpecial
 
+    CCPoint offsetForKey(int id) {
+        if (id < 10000) return EditorUI::offsetForKey(id);
+        return CustomObjectsManager::get()->getCustomObjectByID(id)->objectOffset;
+    } // offsetForKey
+
     // #define $compare1(var) if (obj1->var != obj2->var) log::info(#var" = {}, {}", obj1->var, obj2->var)
     // #define $compare2(var) if (obj1->var != obj2->var) log::info(#var)
 
@@ -148,7 +153,7 @@ class $modify(CustomEditorUI, EditorUI) {
     //     $compare1(m_particleUseObjectColor);
     //     $compare1(m_hasColorSprite);
     //     $compare2(m_particleOffset);
-    //     $compare1(m_isSomeSpriteScalable);
+    //     $compare1(m_isParticleSpriteLocked);
     //     $compare1(m_textureRect);
     //     $compare1(m_isDirty);
     //     $compare1(m_isObjectPosDirty);

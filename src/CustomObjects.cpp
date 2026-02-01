@@ -87,7 +87,7 @@ $execute {
     CustomObjectsAPI::registerCustomObject("block005_02_001.png", 60).setDetailSprite("block005_02_color_001.png", 60).setObjectType(GameObjectType::Decoration);
     CustomObjectsAPI::registerCustomObject("player_134_001.png").setDetailSprite("player_134_2_001.png").setObjectType(GameObjectType::Decoration).setDisableBatchRender();
 
-    CustomObjectsAPI::registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setCreateOffset(0, -13).setBatchMode(0)
+    CustomObjectsAPI::registerCustomObject<CustomPadObject>("bump_03_001.png").setGlowSprite("bump_03_glow_001.png").setGlowColor(255, 0, 255).setParticleColor(255, 0, 255).setObjectOffset(0, -13).setBatchMode(0)
         .onActivateCustomObject([](CustomPadObject* obj, auto level, auto player) {
             obj->bumpPlayer(player, 0.65f, GameObjectType::PinkJumpPad);
             if (rand() % 50 == 0) level->destroyPlayer(player, obj);

@@ -8,7 +8,7 @@ class CustomObjectsMod;
 constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = {0, 0};
 constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = {0, 0};
 constexpr int BOX_RADIUS_DEFAULT = 0;
-constexpr cocos2d::CCPoint CREATE_OFFSET_DEFAULT = {0, 0};
+constexpr cocos2d::CCPoint OBJECT_OFFSET_DEFAULT = {0, 0};
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
 constexpr int BATCH_MODE_DEFAULT = 10;
 constexpr bool DISABLE_BATCH_DEFAULT = false;
@@ -33,7 +33,7 @@ protected:
     cocos2d::CCSize boxSize = BOX_SIZE_DEFAULT;
     cocos2d::CCPoint boxOffset = BOX_OFFSET_DEFAULT;
     int boxRadius = BOX_RADIUS_DEFAULT;
-    cocos2d::CCPoint createOffset = CREATE_OFFSET_DEFAULT;
+    cocos2d::CCPoint objectOffset = OBJECT_OFFSET_DEFAULT;
     GameObjectType objectType = OBJECT_TYPE_DEFAULT;
     int batchMode = BATCH_MODE_DEFAULT;
     bool disableBatch = DISABLE_BATCH_DEFAULT;
@@ -118,7 +118,7 @@ public:
     CustomObjectConfig<ObjectType>& setBoxSize(int w, int h) { boxSize = cocos2d::CCSize(w, h); return *this; }
     CustomObjectConfig<ObjectType>& setBoxOffset(int x, int y) { boxOffset = cocos2d::CCPoint(x, y); return *this; }
     CustomObjectConfig<ObjectType>& setBoxRadius(int radius) { boxRadius = radius; return *this; }
-    CustomObjectConfig<ObjectType>& setCreateOffset(int x, int y) { createOffset = cocos2d::CCPoint(x, y); return *this; }
+    CustomObjectConfig<ObjectType>& setObjectOffset(int x, int y) { objectOffset = cocos2d::CCPoint(x, y); return *this; }
     CustomObjectConfig<ObjectType>& setObjectType(GameObjectType type) { objectType = type; return *this; }
     CustomObjectConfig<ObjectType>& setBatchMode(int mode) { batchMode = mode; return *this; }
     CustomObjectConfig<ObjectType>& setDisableBatchRender() { disableBatch = true; return *this; }
