@@ -21,7 +21,7 @@ constexpr bool PARTICLE_BLENDING_DEFAULT = true;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
-#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
+#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 protected:
     CustomObjectsMod* mod;
     int objectID;
@@ -81,7 +81,7 @@ public:
 template <class ObjectType>
 struct CustomObjectConfig final : public CustomObjectConfigBase {
 private:
-#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
+#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
     std::function<void(ObjectType*)> setupCustomObjectFunction;
     std::function<void(ObjectType*)> resetCustomObjectFunction;
     std::function<void(ObjectType*, cocos2d::CCArray*)> editObjectFunction;
@@ -136,7 +136,7 @@ public:
     CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
     CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectFunction = callback; return *this; }
 
-#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
+#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 
     // Create new object using this config
     ObjectType* create() const override {

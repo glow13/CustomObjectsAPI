@@ -10,12 +10,15 @@
 #else
     #define CUSTOM_OBJECTS_DLL __attribute__((visibility("default")))
 #endif
+#if (__INTELLISENSE__ != 1 && !defined(__CLION_IDE__)) || CUSTOM_OBJECTS_EXPORTING
+    #define CUSTOM_OBJECTS_INTELLISENSE_DISABLED
+#endif
 
 class CustomObjectsMod;
 class CustomObjectConfigBase;
 
 struct CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
-#if __INTELLISENSE__ != 1 || CUSTOM_OBJECTS_EXPORTING
+#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 private:
     CustomObjectsMod* mod;
     CustomObjectConfigBase* object;
