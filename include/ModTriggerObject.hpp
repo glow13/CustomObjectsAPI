@@ -6,9 +6,11 @@ using namespace geode::prelude;
 
 class ModTriggerObject final : public CustomTriggerObjectBase<ModTriggerObject> {
 public:
+    int modTriggerMode;
+
     bool init(const CustomObjectConfig* config) {
-        auto modTriggerFrame = fmt::format("custom-objects/{}/0.0.0.0/mod-trigger.png", config->getModID());
-        if (!EffectGameObject::init(modTriggerFrame.c_str())) return false;
+        auto modTriggerSpr = fmt::format("custom-objects/{}/0.0.0.0/mod-trigger.png", config->getModID());
+        if (!EffectGameObject::init(modTriggerSpr.c_str())) return false;
 
         m_objectType = GameObjectType::Modifier;
         m_baseColor->m_defaultColorID = 0;
@@ -17,7 +19,7 @@ public:
         m_height = 30;
 
         setupObjectProperty<int>(51, m_targetGroupID);
-        setupObjectProperty<bool>(56, m_activateGroup);
+        setupObjectProperty<int>(82, modTriggerMode);
 
         return true;
     } // init
@@ -28,8 +30,8 @@ public:
     } // setupCustomObject
 
     void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player, std::vector<int> remaps) override {
-        if (m_activateGroup) level->spawnGroup(m_targetGroupID, false, 0, remaps, m_uniqueID, 0);
-        level->toggleGroup(m_targetGroupID, m_activateGroup);
+        if (modTriggerMode < 2) level->toggleGroup(m_targetGroupID, modTriggerMode == 0);
+        else level->spawnGroup(m_targetGroupID, false, 0, remaps, m_uniqueID, 0);
     } // activateCustomObject
 };
 
@@ -47,7 +49,7 @@ public:
     } // create
 
     bool init(ModTriggerObject* obj, cocos2d::CCArray* objs, std::string modID, std::string modName) {
-        if (!SetupTriggerPopup::init(obj, objs, 300, 240, 1)) return false;
+        if (!SetupTriggerPopup::init(obj, objs, 320, 260, 1)) return false;
         preSetup();
 
         auto winSize = CCDirector::get()->getWinSize();
@@ -68,15 +70,37 @@ public:
         modIDTitle->setScale(0.3);
         m_mainLayer->addChild(modIDTitle);
 
-        auto groupIDPosition = CCPoint(winSize.width * 0.5, winSize.height * 0.5 + 30);
+        auto groupIDPosition = CCPoint(winSize.width * 0.5, winSize.height * 0.5 + 35);
         createValueControlAdvanced(51, "Group ID", groupIDPosition, 0.9, true, InputValueType::Uint, 6, true, 0, 100, 0, 0, GJInputStyle::GoldLabel, 2, false);
 
-        auto activatePosition = CCPoint(winSize.width * 0.5 - 50, winSize.height * 0.5 - 20);
-        createToggleValueControl(56, "Activate Group", activatePosition, false, 0, 0, 1);
+        auto mode = obj ? obj->modTriggerMode : -1;
+        if (!obj) for(auto go : CCArrayExt<ModTriggerObject*>(m_gameObjects)) {
+            if (mode == -1) mode = go->modTriggerMode;
+            else if (mode != go->modTriggerMode) { mode = 0; break; }
+        } // for
+
+        auto toggleOnPosition = CCPoint(winSize.width * 0.5 - 60, winSize.height * 0.5 - 30);
+        createCustomToggleValueControl(0, mode == 0, false, "On", toggleOnPosition, true, 0, 0);
+
+        auto toggleOffPosition = CCPoint(winSize.width * 0.5, winSize.height * 0.5 - 30);
+        createCustomToggleValueControl(1, mode == 1, false, "Off", toggleOffPosition, true, 0, 0);
+
+        auto spawnOnlyPosition = CCPoint(winSize.width * 0.5 + 60, winSize.height * 0.5 - 30);
+        createCustomToggleValueControl(2, mode == 2, false, "Spawn", spawnOnlyPosition, true, 0, 0);
 
         postSetup();
         return true;
     } // init
+
+    void onCustomToggleTriggerValue(cocos2d::CCObject* sender) override {
+        auto value = sender->getTag();
+        updateCustomToggleTrigger(0, value == 0);
+        updateCustomToggleTrigger(1, value == 1);
+        updateCustomToggleTrigger(2, value == 2);
+
+        if (auto obj = static_cast<ModTriggerObject*>(m_gameObject)) obj->modTriggerMode = value;
+        else for(auto obj : CCArrayExt<ModTriggerObject*>(m_gameObjects)) obj->modTriggerMode = value;
+    } // onCustomToggleTriggerValue
 
     void onClose(cocos2d::CCObject* sender) override {
         if (auto obj = static_cast<ModTriggerObject*>(m_gameObject)) obj->updateObjectLabel();
