@@ -54,11 +54,12 @@ public:
 
         auto winSize = CCDirector::get()->getWinSize();
         auto helpMessage = fmt::format("This object is used to detect if a mod using the <cg>Custom Objects API</c> is installed.\n"
-                                       "The trigger will activate only if the mod <cl>\"{}\"</c> is installed.\n"
-                                       "Otherwise this object will not exist and therefore <cr>will not be triggered</c>.", modID);
+                                       "The trigger will activate only if the mod <cl>\"{}\"</c> is installed. "
+                                       "Otherwise this object will not exist and therefore <cr>will not be triggered</c>.\n"
+                                       "You can either toggle on, toggle off, or just spawn any group ID.", modID);
 
         addTitle(modName);
-        addHelpButton("Mod Trigger Help", helpMessage, 0.8);
+        addHelpButton("Mod Trigger Help", helpMessage, 0.9);
         createMultiTriggerItemsDefault();
         addCloseButton("OK");
 
