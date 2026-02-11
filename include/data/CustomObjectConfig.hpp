@@ -5,21 +5,6 @@
 
 class CustomObjectsMod;
 
-constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = {0, 0};
-constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = {0, 0};
-constexpr int BOX_RADIUS_DEFAULT = 0;
-constexpr cocos2d::CCPoint OBJECT_OFFSET_DEFAULT = {0, 0};
-constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
-constexpr int BATCH_MODE_DEFAULT = 10;
-constexpr bool DISABLE_BATCH_DEFAULT = false;
-constexpr int FRAMES_COUNT_DEFAULT = 0;
-constexpr float FRAME_TIME_DEFAULT = 1.0f;
-constexpr cocos2d::ccColor3B GLOW_COLOR_DEFAULT = {255, 255, 255};
-constexpr cocos2d::ccColor3B PARTICLE_COLOR_DEFAULT = {255, 255, 255};
-constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
-constexpr bool PARTICLE_BLENDING_DEFAULT = true;
-constexpr int EDITOR_PRIORITY_DEFAULT = 0;
-
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 protected:
@@ -30,20 +15,20 @@ protected:
     CustomSpriteConfig detailSprite;
     CustomSpriteConfig glowSprite;
 
-    cocos2d::CCSize boxSize = BOX_SIZE_DEFAULT;
-    cocos2d::CCPoint boxOffset = BOX_OFFSET_DEFAULT;
-    int boxRadius = BOX_RADIUS_DEFAULT;
-    cocos2d::CCPoint objectOffset = OBJECT_OFFSET_DEFAULT;
-    GameObjectType objectType = OBJECT_TYPE_DEFAULT;
-    int batchMode = BATCH_MODE_DEFAULT;
-    bool disableBatch = DISABLE_BATCH_DEFAULT;
-    int framesCount = FRAMES_COUNT_DEFAULT;
-    float frameTime = FRAME_TIME_DEFAULT;
-    cocos2d::ccColor3B glowColor = GLOW_COLOR_DEFAULT;
-    cocos2d::ccColor3B particleColor = PARTICLE_COLOR_DEFAULT;
-    GLubyte particleOpacity = PARTICLE_OPACITY_DEFUALT;
-    bool particleBlending = PARTICLE_BLENDING_DEFAULT;
-    int editorPriority = EDITOR_PRIORITY_DEFAULT;
+    cocos2d::CCSize boxSize;
+    cocos2d::CCPoint boxOffset;
+    int boxRadius;
+    cocos2d::CCPoint objectOffset;
+    GameObjectType objectType;
+    int batchMode;
+    bool disableBatch;
+    int framesCount;
+    float frameTime;
+    cocos2d::ccColor3B glowColor;
+    cocos2d::ccColor3B particleColor;
+    GLubyte particleOpacity;
+    bool particleBlending;
+    int editorPriority;
 
     template <class ObjectType, class ObjectBase>
     friend class CustomObjectBase;
@@ -74,6 +59,7 @@ public:
     virtual void customEditObject(GameObject*, cocos2d::CCArray*) const = 0;
     virtual void customEditSpecial(GameObject*, cocos2d::CCArray*) const = 0;
 
+    void applyConfigValues(GameObject*) const;
     virtual GameObject* create() const = 0;
 #endif
 };
@@ -141,20 +127,7 @@ public:
     // Create new object using this config
     ObjectType* create() const override {
         ObjectType* obj = ObjectType::create(this);
-
-        // Setup custom object values
-        obj->m_parentMode = 10;
-        obj->m_objectID = objectID;
-
-        // Apply object config values
-        if (boxSize != BOX_SIZE_DEFAULT) { obj->m_width = boxSize.width; obj->m_height = boxSize.height; }
-        if (boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = boxOffset;
-        if (boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = boxRadius;
-        if (objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = objectType;
-        if (batchMode != BATCH_MODE_DEFAULT) obj->m_parentMode = batchMode;
-        if (disableBatch) { obj->m_parentMode = 4; obj->m_addToNodeContainer = true; }
-        if (glowColor != GLOW_COLOR_DEFAULT) obj->setGlowColor(glowColor);
-
+        applyConfigValues(static_cast<GameObject*>(obj));
         return obj;
     } // create
 #endif
