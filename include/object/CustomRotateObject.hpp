@@ -22,7 +22,7 @@ public:
 
         if (config->hasGlowSprite() && !this->m_editorEnabled && !this->m_hasNoGlow) {
             this->createGlow(config->getGlowSprite());
-            auto glow = this->addInternalGlowChild(config->getGlowSprite(), {0, 0});
+            this->addInternalGlowChild(config->getGlowSprite(), {0, 0});
             this->m_glowSprite->setDontDraw(true);
         } // if
 

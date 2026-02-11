@@ -121,6 +121,10 @@ public:
         if (this->m_particle) {
             this->updateParticleColor(config->particleColor);
             this->updateParticleOpacity(config->particleOpacity);
+
+            if (!config->particleBlending) {
+                this->m_particle->setBlendFunc({GL_ONE, GL_ZERO});
+            } // if
         } // if
         ObjectBase::customSetup();
     } // customSetup
