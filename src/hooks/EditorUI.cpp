@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/EditorUI.hpp>
-#include <alphalaneous.editortab_api/include/EditorTabs.hpp>
+#include <alphalaneous.editortab_api/include/EditorTabAPI.hpp>
 
 #include "CustomObjectsManager.hpp"
 #include "data/CustomObjectConfig.hpp"
@@ -11,19 +11,15 @@ class $modify(CustomEditorUI, EditorUI) {
     bool init(LevelEditorLayer* editorLayer) {
         if (!EditorUI::init(editorLayer)) return false;
 
-        EditorTabs::addTab(this, TabType::BUILD, "custom-objects"_spr, [this](EditorUI* ui, CCMenuItemToggler* toggler) -> CCNode* {
-            CCLabelBMFont* textLabel = CCLabelBMFont::create("+", "bigFont.fnt");
-            textLabel->setScale(0.5f);
-            EditorTabUtils::setTabIcon(toggler, textLabel);
-
-            auto buttons = CCArray::create();
+        alpha::editor_tabs::addTab("custom-objects"_spr, alpha::editor_tabs::BUILD, [this] {
+            std::vector<Ref<CCNode>> buttons;
             auto manager = CustomObjectsManager::get();
-            manager->forEachCustomObject([this, buttons](auto obj) {
-                buttons->addObject(getCreateBtn(obj->getObjectID(), 4));
+            manager->forEachCustomObject([this, &buttons](const CustomObjectConfigBase* obj) {
+                auto button = getCreateBtn(obj->getObjectID(), 4);
+                buttons.push_back(static_cast<CCNode*>(button));
             });
 
-            auto start = buttons->data->arr;
-            std::sort(start, start + buttons->count(), [manager](auto a, auto b) {
+            std::sort(buttons.begin(), buttons.end(), [manager](CCNode* a, CCNode* b) {
                 auto objectIDA = static_cast<CreateMenuItem*>(a)->m_objectID;
                 auto objectIDB = static_cast<CreateMenuItem*>(b)->m_objectID;
 
@@ -33,8 +29,12 @@ class $modify(CustomEditorUI, EditorUI) {
                 if (priorityA == priorityB) return objectIDA < objectIDB;
                 else return priorityA < priorityB;
             });
- 
-            return EditorTabUtils::createEditButtonBar(buttons, ui);
+
+            return alpha::editor_tabs::createEditButtonBar(buttons);
+        }, [] {
+            CCLabelBMFont* textLabel = CCLabelBMFont::create("+", "bigFont.fnt");
+            textLabel->setScale(0.5f);
+            return textLabel;
         });
 
         return true;
