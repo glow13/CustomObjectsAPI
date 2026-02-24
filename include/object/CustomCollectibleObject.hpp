@@ -19,7 +19,7 @@ public:
         this->m_width = 25;
         this->m_height = 20;
 
-        auto main = this->addCustomChild(config->getMainSprite(), {0, 0}, 0);
+        auto main = this->addCustomChild(config->getMainSprite(), cocos2d::CCPoint(0, 0), 0);
         auto detail = this->addCustomColorChild(config->getDetailSprite());
         detail->setPosition(main->getPosition());
         detail->removeFromParent();

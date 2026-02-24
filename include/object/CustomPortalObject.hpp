@@ -39,14 +39,14 @@ public:
         if (!config->hasMainSprite()) this->setDontDraw(true);
         if (!this->m_editorEnabled && config->hasDetailSprite()) {
             auto parent = geode::cast::base_cast<cocos2d::CCSprite*>(GJBaseGameLayer::get()->m_game2LayerB0);
-            this->m_portalBack = this->addInternalChild(parent, config->getDetailSprite(), {0, 0}, -90);
+            this->m_portalBack = this->addInternalChild(parent, config->getDetailSprite(), cocos2d::CCPoint(0, 0), -90);
         } // if
 
-        this->setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
-        this->setupObjectProperty<bool>(112, this->m_cameraEditCameraSettings);
-        this->setupObjectProperty<float>(113, this->m_cameraEasingValue, [this](){return this->m_cameraEditCameraSettings;});
-        this->setupObjectProperty<float>(114, this->m_cameraPaddingValue, [this](){return this->m_cameraEditCameraSettings;});
-        this->setupObjectProperty<bool>(370, this->m_cameraDisableGridSnap);
+        this->template setupObjectProperty<bool>(111, this->m_cameraIsFreeMode);
+        this->template setupObjectProperty<bool>(112, this->m_cameraEditCameraSettings);
+        this->template setupObjectProperty<float>(113, this->m_cameraEasingValue, [this](){return this->m_cameraEditCameraSettings;});
+        this->template setupObjectProperty<float>(114, this->m_cameraPaddingValue, [this](){return this->m_cameraEditCameraSettings;});
+        this->template setupObjectProperty<bool>(370, this->m_cameraDisableGridSnap);
 
         return true;
     } // init

@@ -74,7 +74,7 @@ private:
     std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
-    template <class ObjectType, class ObjectBase>
+    template <class T, class B>
     friend class CustomObjectBase;
 
 public:

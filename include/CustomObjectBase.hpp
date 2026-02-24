@@ -72,7 +72,7 @@ public:
     } // setupObjectProperty
 
     gd::string getSaveString(GJBaseGameLayer* p0) override final {
-        auto saveString = ObjectBase::getSaveString(p0);
+        std::string saveString = ObjectBase::getSaveString(p0);
 
         for (auto [key, prop] : objectProps) if (prop.isValid()) {
             saveString += fmt::format(",{},{}", key, prop.serialize());

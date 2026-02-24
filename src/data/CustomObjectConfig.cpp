@@ -3,10 +3,10 @@
 
 using namespace geode::prelude;
 
-constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = {0, 0};
-constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = {0, 0};
+constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = CCSizeZero;
+constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
 constexpr int BOX_RADIUS_DEFAULT = 0;
-constexpr cocos2d::CCPoint OBJECT_OFFSET_DEFAULT = {0, 0};
+constexpr cocos2d::CCPoint OBJECT_OFFSET_DEFAULT = CCPointZero;
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
 constexpr int BATCH_MODE_DEFAULT = 10;
 constexpr bool DISABLE_BATCH_DEFAULT = false;
