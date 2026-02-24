@@ -7,20 +7,6 @@
 #include "CustomObjectBase.hpp"
 #include "object/CustomGameObject.hpp"
 
-#ifdef GEODE_MOD_ID
-
-#define CUSTOM_SPRITE1(name) CUSTOM_SPRITE5(name, 0, 0, 0, 0)
-#define CUSTOM_SPRITE2(name, s) CUSTOM_SPRITE5(name, 0, 0, s, s)
-#define CUSTOM_SPRITE3(name, w, h) CUSTOM_SPRITE5(name, 0, 0, w, h)
-
-#define CUSTOM_SPRITE5(name,x,y,w,h) GEODE_CONCAT("custom-objects/",GEODE_MOD_ID)GEODE_STR(/x.y.w.h/)name##".png"
-#define $sprite(...) (GEODE_INVOKE(GEODE_CONCAT(CUSTOM_SPRITE,GEODE_NUMBER_OF_ARGS(__VA_ARGS__)),__VA_ARGS__))
-
-#endif
-
-#define $object(ObjectType, ObjectBase) ObjectType final : public ObjectBase##Base<ObjectType>
-#define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>
-
 class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:
     static geode::Mod* currentGeodeMod;
@@ -96,3 +82,14 @@ public:
         return registerCustomAnimationSprites(spr, 0, 0, 0, 0, frames);
     }
 };
+
+#define CUSTOM_SPRITE1(name) CUSTOM_SPRITE5(name, 0, 0, 0, 0)
+#define CUSTOM_SPRITE2(name, s) CUSTOM_SPRITE5(name, 0, 0, s, s)
+#define CUSTOM_SPRITE3(name, w, h) CUSTOM_SPRITE5(name, 0, 0, w, h)
+
+#define CUSTOM_SPRITE5(name,x,y,w,h) GEODE_CONCAT("custom-objects/",GEODE_MOD_ID)GEODE_STR(/x.y.w.h/)name##".png"
+
+#define $sprite(...) (GEODE_INVOKE(GEODE_CONCAT(CUSTOM_SPRITE,GEODE_NUMBER_OF_ARGS(__VA_ARGS__)),__VA_ARGS__))
+
+#define $object(ObjectType, ObjectBase) ObjectType final : public ObjectBase##Base<ObjectType>
+#define $object2(ObjectType, ObjectBase) ObjectType final : public CustomObjectBase<ObjectType, ObjectBase>
