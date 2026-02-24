@@ -43,10 +43,21 @@ CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality
     this->rect = {0, 0, (int)trimSize.width, (int)trimSize.height, false};
 } // CustomSheetSprite
 
-std::string CustomSheetSprite::getModID() const { return sprite->getModID(); }
-std::string CustomSheetSprite::getFrameName() const { return sprite->getFrameName(); }
-std::string CustomSheetSprite::getSourceFrame() const { return sprite->getSourceFrame(); }
-bool CustomSheetSprite::isModTrigger() const { return sprite->isModTrigger(); }
+std::string CustomSheetSprite::getModID() const {
+    return sprite->getModID();
+} // getModID
+
+std::string CustomSheetSprite::getFrameName() const {
+    return sprite->getFrameName();
+} // getFrameName
+
+std::string CustomSheetSprite::getSourceFrame() const {
+    return sprite->getSourceFrame();
+} // getSourceFrame
+
+bool CustomSheetSprite::isModTrigger() const {
+    return sprite->isModTrigger();
+} // isModTrigger
 
 std::string CustomSheetSprite::offString() const {
     int offsetX = (trim.x + trim.w * 0.5f) - (size.width * 0.5f) + offset.x;

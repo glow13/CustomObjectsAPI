@@ -68,21 +68,21 @@ template <class ObjectType>
 struct CustomObjectConfig final : public CustomObjectConfigBase {
 private:
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
-    std::function<void(ObjectType*)> setupCustomObjectFunction;
-    std::function<void(ObjectType*)> resetCustomObjectFunction;
-    std::function<void(ObjectType*, cocos2d::CCArray*)> editObjectFunction;
-    std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialFunction;
-    std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectFunction;
+    std::function<void(ObjectType*)> setupCustomObjectCallback;
+    std::function<void(ObjectType*)> resetCustomObjectCallback;
+    std::function<void(ObjectType*, cocos2d::CCArray*)> editObjectCallback;
+    std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
+    std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
     template <class ObjectType, class ObjectBase>
     friend class CustomObjectBase;
 
 public:
-    bool hasEditObjectFunction() const override { return (bool)editObjectFunction; }
-    bool hasEditSpecialFunction() const override { return (bool)editSpecialFunction; }
+    bool hasEditObjectFunction() const override { return (bool)editObjectCallback; }
+    bool hasEditSpecialFunction() const override { return (bool)editSpecialCallback; }
 
-    void customEditObject(GameObject* obj, cocos2d::CCArray* objs) const override { editObjectFunction(static_cast<ObjectType*>(obj), objs); }
-    void customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const override { editSpecialFunction(static_cast<ObjectType*>(obj), objs); }
+    void customEditObject(GameObject* obj, cocos2d::CCArray* objs) const override { editObjectCallback(static_cast<ObjectType*>(obj), objs); }
+    void customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const override { editSpecialCallback(static_cast<ObjectType*>(obj), objs); }
 
     CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
 #endif
@@ -116,11 +116,11 @@ public:
     CustomObjectConfig<ObjectType>& setParticleBlending(bool blending) { particleBlending = blending; return *this; }
     CustomObjectConfig<ObjectType>& setEditorTabPriority(int priority) { editorPriority = priority; return *this; }
 
-    CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, cocos2d::CCArray*)> callback) { editObjectFunction = callback; return *this; }
-    CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, cocos2d::CCArray*)> callback) { editSpecialFunction = callback; return *this; }
-    CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectFunction = callback; return *this; }
-    CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectFunction = callback; return *this; }
-    CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectFunction = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onEditObjectButton(std::function<void(ObjectType*, cocos2d::CCArray*)> callback) { editObjectCallback = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onEditSpecialButton(std::function<void(ObjectType*, cocos2d::CCArray*)> callback) { editSpecialCallback = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onSetupCustomObject(std::function<void(ObjectType*)> callback) { setupCustomObjectCallback = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onResetCustomObject(std::function<void(ObjectType*)> callback) { resetCustomObjectCallback = callback; return *this; }
+    CustomObjectConfig<ObjectType>& onActivateCustomObject(std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> callback) { activateCustomObjectCallback = callback; return *this; }
 
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 

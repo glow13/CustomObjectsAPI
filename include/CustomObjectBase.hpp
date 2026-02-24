@@ -43,18 +43,18 @@ public:
     } // init
 
     virtual void setupCustomObject() {
-        if (!(config->setupCustomObjectFunction)) return;
-        (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
+        if (!(config->setupCustomObjectCallback)) return;
+        (config->setupCustomObjectCallback)(static_cast<ObjectType*>(this));
     } // setupCustomObject
 
     virtual void resetCustomObject() {
-        if (!(config->resetCustomObjectFunction)) return;
-        (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
+        if (!(config->resetCustomObjectCallback)) return;
+        (config->resetCustomObjectCallback)(static_cast<ObjectType*>(this));
     } // resetCustomObject
 
     virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
-        if (!(config->activateCustomObjectFunction)) return;
-        (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this), level, player);
+        if (!(config->activateCustomObjectCallback)) return;
+        (config->activateCustomObjectCallback)(static_cast<ObjectType*>(this), level, player);
     } // activateCustomObject
 
     template <class ValueType>

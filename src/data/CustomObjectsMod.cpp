@@ -12,9 +12,17 @@ CustomObjectsMod::CustomObjectsMod(geode::Mod* mod, uint8_t offset) : mod(mod) {
     baseObjectID = transform - (transform % 100);
 } // CustomObjectsMod
 
-std::string CustomObjectsMod::getModID() const { return mod->getID(); }
-std::string CustomObjectsMod::getModName() const { return mod->getName(); }
-int CustomObjectsMod::getBaseObjectID() const { return baseObjectID; }
+std::string CustomObjectsMod::getModID() const {
+    return mod->getID();
+} // getModID
+
+std::string CustomObjectsMod::getModName() const {
+    return mod->getName();
+} // getModName
+
+int CustomObjectsMod::getBaseObjectID() const {
+    return baseObjectID;
+} // getBaseObjectID
 
 CustomSpriteConfig& CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
     log::debug("Registered custom sprite \"{}\"", spr);
