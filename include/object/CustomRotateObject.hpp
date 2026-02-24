@@ -12,17 +12,17 @@ public:
         if (!EnhancedGameObject::init(config->getMainSprite().c_str())) return false;
 
         this->setDontDraw(true);
-        this->addCustomChild(config->getMainSprite(), {0, 0}, 0);
+        this->addCustomChild(config->getMainSprite(), cocos2d::CCPoint(0, 0), 0);
 
         if (config->hasDetailSprite()) {
             auto detail = this->addCustomColorChild(config->getDetailSprite());
-            this->addInternalCustomColorChild(config->getDetailSprite(), {0, 0}, 0);
+            this->addInternalCustomColorChild(config->getDetailSprite(), cocos2d::CCPoint(0, 0), 0);
             detail->setDontDraw(true);
         } // if
 
         if (config->hasGlowSprite() && !this->m_editorEnabled && !this->m_hasNoGlow) {
             this->createGlow(config->getGlowSprite());
-            this->addInternalGlowChild(config->getGlowSprite(), {0, 0});
+            this->addInternalGlowChild(config->getGlowSprite(), cocos2d::CCPoint(0, 0));
             this->m_glowSprite->setDontDraw(true);
         } // if
 

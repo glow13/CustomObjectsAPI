@@ -43,18 +43,18 @@ public:
     } // init
 
     virtual void setupCustomObject() {
-        if (!(config->setupCustomObjectFunction)) return;
-        (config->setupCustomObjectFunction)(static_cast<ObjectType*>(this));
+        if (!(config->setupCustomObjectCallback)) return;
+        (config->setupCustomObjectCallback)(static_cast<ObjectType*>(this));
     } // setupCustomObject
 
     virtual void resetCustomObject() {
-        if (!(config->resetCustomObjectFunction)) return;
-        (config->resetCustomObjectFunction)(static_cast<ObjectType*>(this));
+        if (!(config->resetCustomObjectCallback)) return;
+        (config->resetCustomObjectCallback)(static_cast<ObjectType*>(this));
     } // resetCustomObject
 
     virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
-        if (!(config->activateCustomObjectFunction)) return;
-        (config->activateCustomObjectFunction)(static_cast<ObjectType*>(this), level, player);
+        if (!(config->activateCustomObjectCallback)) return;
+        (config->activateCustomObjectCallback)(static_cast<ObjectType*>(this), level, player);
     } // activateCustomObject
 
     template <class ValueType>
@@ -72,7 +72,7 @@ public:
     } // setupObjectProperty
 
     gd::string getSaveString(GJBaseGameLayer* p0) override final {
-        auto saveString = ObjectBase::getSaveString(p0);
+        std::string saveString = ObjectBase::getSaveString(p0);
 
         for (auto [key, prop] : objectProps) if (prop.isValid()) {
             saveString += fmt::format(",{},{}", key, prop.serialize());
@@ -153,8 +153,8 @@ private:
     }();
 
     SERIALIZER_TYPE(bool, val, val ? "1" : "0", val == "1");
-    SERIALIZER_TYPE(int, true, std::to_string(val), std::stoi(val));
-    SERIALIZER_TYPE(float, true, std::to_string(val), std::stof(val));
+    SERIALIZER_TYPE(int, true, std::to_string(val), geode::utils::numFromString<int>(val).unwrapOrDefault());
+    SERIALIZER_TYPE(float, true, std::to_string(val), geode::utils::numFromString<float>(val).unwrapOrDefault());
     SERIALIZER_TYPE(std::string, !val.empty(), geode::utils::base64::encode(val), geode::utils::base64::decodeString(val).unwrapOr(""));
 
     struct ObjectProp final {

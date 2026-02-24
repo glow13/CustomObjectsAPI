@@ -3,10 +3,10 @@
 
 using namespace geode::prelude;
 
-constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = {0, 0};
-constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = {0, 0};
+constexpr cocos2d::CCSize BOX_SIZE_DEFAULT = CCSizeZero;
+constexpr cocos2d::CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
 constexpr int BOX_RADIUS_DEFAULT = 0;
-constexpr cocos2d::CCPoint OBJECT_OFFSET_DEFAULT = {0, 0};
+constexpr cocos2d::CCPoint OBJECT_OFFSET_DEFAULT = CCPointZero;
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
 constexpr int BATCH_MODE_DEFAULT = 10;
 constexpr bool DISABLE_BATCH_DEFAULT = false;
@@ -18,9 +18,7 @@ constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr bool PARTICLE_BLENDING_DEFAULT = true;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
-CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod, int id) : 
-    mod(mod),
-    objectID(id),
+CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod, int id) : mod(mod), objectID(id),
     boxSize(BOX_SIZE_DEFAULT),
     boxOffset(BOX_OFFSET_DEFAULT),
     boxRadius(BOX_RADIUS_DEFAULT),
@@ -36,20 +34,49 @@ CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod, int id) :
     particleBlending(PARTICLE_BLENDING_DEFAULT),
     editorPriority(EDITOR_PRIORITY_DEFAULT) {}
 
-std::string CustomObjectConfigBase::getModID() const { return mod->getModID(); }
-std::string CustomObjectConfigBase::getModName() const { return mod->getModName(); }
-int CustomObjectConfigBase::getObjectID() const { return objectID; }
+std::string CustomObjectConfigBase::getModID() const {
+    return mod->getModID();
+} // getModID
 
-std::string CustomObjectConfigBase::getMainSprite() const { return mainSprite.getFrameName(); }
-std::string CustomObjectConfigBase::getDetailSprite() const { return detailSprite.getFrameName(); }
-std::string CustomObjectConfigBase::getGlowSprite() const { return glowSprite.getFrameName(); }
+std::string CustomObjectConfigBase::getModName() const {
+    return mod->getModName();
+} // getModName
 
-bool CustomObjectConfigBase::hasMainSprite() const { return !mainSprite.getSourceFrame().empty(); }
-bool CustomObjectConfigBase::hasDetailSprite() const { return !detailSprite.getSourceFrame().empty(); }
-bool CustomObjectConfigBase::hasGlowSprite() const { return !glowSprite.getSourceFrame().empty(); }
+int CustomObjectConfigBase::getObjectID() const {
+    return objectID;
+} // getObjectID
 
-bool CustomObjectConfigBase::isCustomBatch() const { return !disableBatch && batchMode == BATCH_MODE_DEFAULT; }
-bool CustomObjectConfigBase::hasCustomAnimation() const { return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame(); }
+std::string CustomObjectConfigBase::getMainSprite() const {
+    return mainSprite.getFrameName();
+} // getMainSprite
+
+std::string CustomObjectConfigBase::getDetailSprite() const {
+    return detailSprite.getFrameName();
+} // getDetailSprite
+
+std::string CustomObjectConfigBase::getGlowSprite() const {
+    return glowSprite.getFrameName();
+} // getGlowSprite
+
+bool CustomObjectConfigBase::hasMainSprite() const {
+    return !mainSprite.getSourceFrame().empty();
+} // hasMainSprite
+
+bool CustomObjectConfigBase::hasDetailSprite() const {
+    return !detailSprite.getSourceFrame().empty();
+} // hasDetailSprite
+
+bool CustomObjectConfigBase::hasGlowSprite() const {
+    return !glowSprite.getSourceFrame().empty();
+} // hasGlowSprite
+
+bool CustomObjectConfigBase::isCustomBatch() const {
+    return !disableBatch && batchMode == BATCH_MODE_DEFAULT;
+} // isCustomBatch
+
+bool CustomObjectConfigBase::hasCustomAnimation() const {
+    return framesCount != FRAMES_COUNT_DEFAULT && mainSprite.isAnimationFrame();
+} // hasCustomAnimation
 
 void CustomObjectConfigBase::applyConfigValues(GameObject* obj) const {
     obj->m_parentMode = 10;

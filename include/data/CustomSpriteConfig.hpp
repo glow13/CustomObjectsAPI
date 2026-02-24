@@ -34,7 +34,7 @@ private:
     friend class CustomSpritesManager;
 
 public:
-    CustomSpriteConfig() : frameName(""), sourceFrame(""), offset({0, 0}), size({0, 0}) {}
+    CustomSpriteConfig() : frameName(""), sourceFrame(""), offset(cocos2d::CCPoint(0, 0)), size(cocos2d::CCSize(0, 0)) {}
     CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
 #endif
 public:

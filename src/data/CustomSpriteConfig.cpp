@@ -7,15 +7,37 @@ using namespace geode::prelude;
 CustomSpriteConfig::CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH) : 
     frameName(""), sourceFrame(frame), mod(mod), object(object), offset(CCPoint(offX, offY)), size(CCSize(sizeW, sizeH)) {}
 
-std::string CustomSpriteConfig::getModID() const { return mod->getModID(); }
-std::string CustomSpriteConfig::getFrameName() const { return frameName.empty() ? sourceFrame : frameName; }
-std::string CustomSpriteConfig::getSourceFrame() const { return sourceFrame; }
-CCPoint CustomSpriteConfig::getOffset() const { return offset; }
-CCSize CustomSpriteConfig::getSize() const { return size; }
+std::string CustomSpriteConfig::getModID() const {
+    return mod->getModID();
+} // getModID
 
-bool CustomSpriteConfig::isCustomSprite() const { return frameName != sourceFrame && !sourceFrame.empty(); }
-bool CustomSpriteConfig::isAnimationFrame() const { return sourceFrame.find("_001") != std::string::npos; }
-bool CustomSpriteConfig::isModTrigger() const { return object && object->getObjectID() == mod->getBaseObjectID(); }
+std::string CustomSpriteConfig::getFrameName() const {
+    return frameName.empty() ? sourceFrame : frameName;
+} // getFrameName
+
+std::string CustomSpriteConfig::getSourceFrame() const {
+    return sourceFrame;
+} // getSourceFrame
+
+CCPoint CustomSpriteConfig::getOffset() const {
+    return offset;
+} // getOffset
+
+CCSize CustomSpriteConfig::getSize() const {
+    return size;
+} // getSize
+
+bool CustomSpriteConfig::isCustomSprite() const {
+    return frameName != sourceFrame && !sourceFrame.empty();
+} // isCustomSprite
+
+bool CustomSpriteConfig::isAnimationFrame() const {
+    return sourceFrame.find("_001") != std::string::npos;
+} // isAnimationFrame
+
+bool CustomSpriteConfig::isModTrigger() const {
+    return object && object->getObjectID() == mod->getBaseObjectID();
+} // isModTrigger
 
 void CustomSpriteConfig::generateFrame() {
     if (sourceFrame.empty()) return;
