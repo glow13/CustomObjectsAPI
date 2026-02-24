@@ -1,5 +1,5 @@
 {
-    "geode": "5.0.0-alpha.2",
+    "geode": "5.0.1",
     "gd": {
         "win": "2.2081",
         "android": "2.2081",
@@ -12,7 +12,7 @@
     "developer": "glow12",
     "description": "Add custom objects to Geometry Dash!",
     "dependencies": {
-        "alphalaneous.editortab_api": ">=v2.0.0-alpha.2"
+        "alphalaneous.editortab_api": ">=v2.0.4"
     },
     "api": {
         "include": [

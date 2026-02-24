@@ -153,8 +153,8 @@ private:
     }();
 
     SERIALIZER_TYPE(bool, val, val ? "1" : "0", val == "1");
-    SERIALIZER_TYPE(int, true, std::to_string(val), std::stoi(val));
-    SERIALIZER_TYPE(float, true, std::to_string(val), std::stof(val));
+    SERIALIZER_TYPE(int, true, std::to_string(val), geode::utils::numFromString<int>(val).unwrapOrDefault());
+    SERIALIZER_TYPE(float, true, std::to_string(val), geode::utils::numFromString<float>(val).unwrapOrDefault());
     SERIALIZER_TYPE(std::string, !val.empty(), geode::utils::base64::encode(val), geode::utils::base64::decodeString(val).unwrapOr(""));
 
     struct ObjectProp final {
