@@ -136,7 +136,7 @@ public:
     /**
      * Registers a sprite to be added to the custom object spritesheet.
      * The sprite is registered with no custom offset.
-     * The size in the spritesheet not changed from the sprite's actual size.
+     * The size in the spritesheet is not changed from the sprite's actual size.
      * 
      * @param spr The name of the sprite to register.
      * @return The CustomSpriteConfig for the sprite.
