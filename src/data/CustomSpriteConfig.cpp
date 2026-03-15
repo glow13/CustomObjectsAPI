@@ -4,11 +4,23 @@
 
 using namespace geode::prelude;
 
-CustomSpriteConfig::CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH) : 
-    frameName(""), sourceFrame(frame), mod(mod), object(object), offset(CCPoint(offX, offY)), size(CCSize(sizeW, sizeH)) {}
+CustomSpriteConfig::CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offsetX, int offsetY, int sizeW, int sizeH) : 
+    frameName(""), sourceFrame(frame), mod(mod), object(object), offset(CCPoint(offsetX, offsetY)), size(CCSize(sizeW, sizeH)) {}
+
+CustomSpriteConfig& CustomSpriteConfig::operator=(const CustomSpriteConfig& spr) {
+    set(spr.sourceFrame, spr.offset.x, spr.offset.y, spr.size.width, spr.size.height);
+    return *this;
+} // operator=
+
+CustomSpriteConfig& CustomSpriteConfig::set(std::string frame, int offsetX, int offsetY, int width, int height) {
+    sourceFrame = frame;
+    offset = CCPoint(offsetX, offsetY);
+    size = CCSize(width, height);
+    return *this;
+} // set
 
 std::string CustomSpriteConfig::getModID() const {
-    return mod->getModID();
+    return mod ? mod->getModID() : "";
 } // getModID
 
 std::string CustomSpriteConfig::getFrameName() const {

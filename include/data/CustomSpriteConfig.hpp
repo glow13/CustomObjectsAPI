@@ -32,12 +32,39 @@ private:
 
     friend class CustomObjectsManager;
     friend class CustomSpritesManager;
+    friend struct CustomObjectsMod;
+    friend struct CustomObjectConfigBase;
 
-public:
     CustomSpriteConfig() : frameName(""), sourceFrame(""), offset(cocos2d::CCPoint(0, 0)), size(cocos2d::CCSize(0, 0)) {}
     CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
+public:
+    CustomSpriteConfig& operator=(const CustomSpriteConfig&);
 #endif
 public:
+    CustomSpriteConfig& set(
+        std::string frame, int offsetX, int offsetY, int width, int height
+    );
+
+    CustomSpriteConfig& set(std::string frame, int width, int height) {
+        return set(frame, 0, 0, width, height);
+    }
+
+    CustomSpriteConfig& set(std::string frame, int size) {
+        return set(frame, 0, 0, size, size);
+    }
+
+    CustomSpriteConfig& set(std::string frame) {
+        return set(frame, 0, 0, 0, 0);
+    }
+
+    CustomSpriteConfig& setOffset(int x, int y) {
+        offset = cocos2d::CCPoint(x, y); return *this;
+    }
+
+    CustomSpriteConfig& setSize(int width, int height) {
+        size = cocos2d::CCSize(width, height); return *this;
+    }
+
     std::string getModID() const;
     std::string getFrameName() const;
     std::string getSourceFrame() const;

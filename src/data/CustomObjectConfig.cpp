@@ -32,7 +32,10 @@ CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod, int id) : 
     particleColor(PARTICLE_COLOR_DEFAULT),
     particleOpacity(PARTICLE_OPACITY_DEFUALT),
     particleBlending(PARTICLE_BLENDING_DEFAULT),
-    editorPriority(EDITOR_PRIORITY_DEFAULT) {}
+    editorPriority(EDITOR_PRIORITY_DEFAULT),
+    mainSprite(mod, this, "", 0, 0, 0, 0),
+    detailSprite(mod, this, "", 0, 0, 0, 0),
+    glowSprite(mod, this, "", 0, 0, 0, 0) {}
 
 std::string CustomObjectConfigBase::getModID() const {
     return mod->getModID();

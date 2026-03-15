@@ -17,7 +17,6 @@ private:
 
     friend class CustomObjectsSheet;
 
-public:
     CustomSheetSprite();
     CustomSheetSprite(const rectpack2D::rect_xywhf& rect);
     CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality);
@@ -33,6 +32,7 @@ public:
     std::string sourceString() const;
     std::string rotatedString() const;
 
+public:
     inline auto& get_rect() { return rect; }
     inline const auto& get_rect() const { return rect; }
 };

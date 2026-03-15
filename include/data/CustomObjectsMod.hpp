@@ -24,6 +24,9 @@ public:
 private:
     CustomObjectsMod(geode::Mod* mod, uint8_t offset);
 
+    CustomObjectsMod(const CustomObjectsMod&) = delete;
+    CustomObjectsMod& operator=(const CustomObjectsMod&) = delete;
+
     template <class ObjectType = CustomGameObject>
     CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         int id = baseObjectID + objects.size();

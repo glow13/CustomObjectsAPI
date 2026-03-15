@@ -11,10 +11,6 @@ protected:
     CustomObjectsMod* mod;
     int objectID;
 
-    CustomSpriteConfig mainSprite;
-    CustomSpriteConfig detailSprite;
-    CustomSpriteConfig glowSprite;
-
     cocos2d::CCSize boxSize;
     cocos2d::CCPoint boxOffset;
     int boxRadius;
@@ -36,6 +32,10 @@ protected:
     friend class CustomEditorUI;
 
 public:
+    CustomSpriteConfig mainSprite;
+    CustomSpriteConfig detailSprite;
+    CustomSpriteConfig glowSprite;
+
     CustomObjectConfigBase(CustomObjectsMod* mod, int id);
 
     std::string getModID() const;
@@ -86,7 +86,7 @@ private:
     std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
-    template <class T, class B>
+    template <class, class>
     friend class CustomObjectBase;
 
 public:
@@ -113,7 +113,7 @@ public:
     CustomObjectConfig<ObjectType>& setMainSprite(
         std::string frame, int offsetX, int offsetY, int width, int height
     ) {
-        mainSprite = CustomSpriteConfig(mod, this, frame, offsetX, offsetY, width, height); return *this;
+        mainSprite.set(frame, offsetX, offsetY, width, height); return *this;
     }
 
     /**
@@ -130,7 +130,7 @@ public:
     CustomObjectConfig<ObjectType>& setDetailSprite(
         std::string frame, int offsetX, int offsetY, int width, int height
     ) {
-        detailSprite = CustomSpriteConfig(mod, this, frame, offsetX, offsetY, width, height); return *this;
+        detailSprite.set(frame, offsetX, offsetY, width, height); return *this;
     }
 
     /**
@@ -147,7 +147,7 @@ public:
     CustomObjectConfig<ObjectType>& setGlowSprite(
         std::string frame, int offsetX, int offsetY, int width, int height
     ) {
-        glowSprite = CustomSpriteConfig(mod, this, frame, offsetX, offsetY, width, height); return *this;
+        glowSprite.set(frame, offsetX, offsetY, width, height); return *this;
     }
 
     /**
@@ -181,6 +181,10 @@ public:
      */
     inline CustomObjectConfig<ObjectType>& setMainSprite(std::string frame) {
         return setMainSprite(frame, 0, 0, 0, 0);
+    }
+
+    CustomObjectConfig<ObjectType>& setMainSprite(CustomSpriteConfig& sprite) {
+        mainSprite = sprite; return *this;
     }
 
     /**
@@ -219,6 +223,10 @@ public:
         return setDetailSprite(frame, 0, 0, 0, 0);
     }
 
+    CustomObjectConfig<ObjectType>& setDetailSprite(CustomSpriteConfig& sprite) {
+        detailSprite = sprite; return *this;
+    }
+
     /**
      * Sets the glow sprite for the custom object.
      * The sprite is automatically registered with a custom size and NO custom offset.
@@ -253,6 +261,10 @@ public:
      */
     inline CustomObjectConfig<ObjectType>& setGlowSprite(std::string frame) {
         return setGlowSprite(frame, 0, 0, 0, 0);
+    }
+
+    CustomObjectConfig<ObjectType>& setGlowSprite(CustomSpriteConfig& sprite) {
+        glowSprite = sprite; return *this;
     }
 
     /**
