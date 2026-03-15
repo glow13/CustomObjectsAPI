@@ -26,7 +26,7 @@ protected:
     bool particleBlending;
     int editorPriority;
 
-    template <class ObjectType, class ObjectBase>
+    template <class, class>
     friend class CustomObjectBase;
     friend class CustomObjectsManager;
     friend class CustomEditorUI;
@@ -117,40 +117,6 @@ public:
     }
 
     /**
-     * Sets the detail sprite for the custom object.
-     * The sprite is automatically registered with a custom size and custom offset.
-     * This sprite is added at the same position as the main sprite and uses the object's detail color by default.
-     * 
-     * @param frame The name of the sprite frame to use.
-     * @param offsetX The custom horizontal offset of the sprite.
-     * @param offsetY The custom vertical offset of the sprite.
-     * @param width The custom width of the sprite.
-     * @param height The custom height of the sprite.
-     */
-    CustomObjectConfig<ObjectType>& setDetailSprite(
-        std::string frame, int offsetX, int offsetY, int width, int height
-    ) {
-        detailSprite.set(frame, offsetX, offsetY, width, height); return *this;
-    }
-
-    /**
-     * Sets the glow sprite for the custom object.
-     * The sprite is automatically registered with a custom size and custom offset.
-     * This sprite is not visible in the editor and is rendered with blending by default. 
-     * 
-     * @param frame The name of the sprite frame to use.
-     * @param offsetX The custom horizontal offset of the sprite.
-     * @param offsetY The custom vertical offset of the sprite.
-     * @param width The custom width of the sprite.
-     * @param height The custom height of the sprite.
-     */
-    CustomObjectConfig<ObjectType>& setGlowSprite(
-        std::string frame, int offsetX, int offsetY, int width, int height
-    ) {
-        glowSprite.set(frame, offsetX, offsetY, width, height); return *this;
-    }
-
-    /**
      * Sets the main sprite for the custom object.
      * The sprite is automatically registered with a custom size and NO custom offset.
      * 
@@ -183,8 +149,33 @@ public:
         return setMainSprite(frame, 0, 0, 0, 0);
     }
 
-    CustomObjectConfig<ObjectType>& setMainSprite(CustomSpriteConfig& sprite) {
+    /**
+     * Sets the main sprite for the custom object.
+     * You can use this to set the main sprite to an already registered sprite.
+     * 
+     * You can register a new sprite using CustomObjectsAPI::registerCustomSprite(...), or you can use one from a previously registered object.
+     * 
+     * @param sprite The CustomSpriteConfig to use as this object's main sprite.
+     */
+    CustomObjectConfig<ObjectType>& setMainSprite(const CustomSpriteConfig& sprite) {
         mainSprite = sprite; return *this;
+    }
+
+    /**
+     * Sets the detail sprite for the custom object.
+     * The sprite is automatically registered with a custom size and custom offset.
+     * This sprite is added at the same position as the main sprite and uses the object's detail color by default.
+     * 
+     * @param frame The name of the sprite frame to use.
+     * @param offsetX The custom horizontal offset of the sprite.
+     * @param offsetY The custom vertical offset of the sprite.
+     * @param width The custom width of the sprite.
+     * @param height The custom height of the sprite.
+     */
+    CustomObjectConfig<ObjectType>& setDetailSprite(
+        std::string frame, int offsetX, int offsetY, int width, int height
+    ) {
+        detailSprite.set(frame, offsetX, offsetY, width, height); return *this;
     }
 
     /**
@@ -223,8 +214,33 @@ public:
         return setDetailSprite(frame, 0, 0, 0, 0);
     }
 
-    CustomObjectConfig<ObjectType>& setDetailSprite(CustomSpriteConfig& sprite) {
+    /**
+     * Sets the detail sprite for the custom object.
+     * You can use this to set the detail sprite to an already registered sprite.
+     * 
+     * You can register a new sprite using CustomObjectsAPI::registerCustomSprite(...), or you can use one from a previously registered object.
+     * 
+     * @param sprite The CustomSpriteConfig to use as this object's detail sprite.
+     */
+    CustomObjectConfig<ObjectType>& setDetailSprite(const CustomSpriteConfig& sprite) {
         detailSprite = sprite; return *this;
+    }
+
+    /**
+     * Sets the glow sprite for the custom object.
+     * The sprite is automatically registered with a custom size and custom offset.
+     * This sprite is not visible in the editor and is rendered with blending by default. 
+     * 
+     * @param frame The name of the sprite frame to use.
+     * @param offsetX The custom horizontal offset of the sprite.
+     * @param offsetY The custom vertical offset of the sprite.
+     * @param width The custom width of the sprite.
+     * @param height The custom height of the sprite.
+     */
+    CustomObjectConfig<ObjectType>& setGlowSprite(
+        std::string frame, int offsetX, int offsetY, int width, int height
+    ) {
+        glowSprite.set(frame, offsetX, offsetY, width, height); return *this;
     }
 
     /**
@@ -263,7 +279,15 @@ public:
         return setGlowSprite(frame, 0, 0, 0, 0);
     }
 
-    CustomObjectConfig<ObjectType>& setGlowSprite(CustomSpriteConfig& sprite) {
+    /**
+     * Sets the glow sprite for the custom object.
+     * You can use this to set the glow sprite to an already registered sprite.
+     * 
+     * You can register a new sprite using CustomObjectsAPI::registerCustomSprite(...), or you can use one from a previously registered object.
+     * 
+     * @param sprite The CustomSpriteConfig to use as this object's glow sprite.
+     */
+    CustomObjectConfig<ObjectType>& setGlowSprite(const CustomSpriteConfig& sprite) {
         glowSprite = sprite; return *this;
     }
 
@@ -301,7 +325,8 @@ public:
 
     /**
      * Sets the offset when creating or transforming the custom object.
-     * This controls the object's center point when placing it in the editor or using the edit tab, for example how a bounce pad is placed at the bottom of its grid tile instead of the center.
+     * This controls the object's center point when placing it in the editor, and changes its pivot point when applying transformations with the edit tab.
+     * For an example look at how a bounce pad is placed at the bottom of its grid tile instead of the center.
      * 
      * @param x The horizontal offset of the object.
      * @param y The vertical offset of the object.
