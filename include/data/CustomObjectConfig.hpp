@@ -69,8 +69,8 @@ public:
  * 
  * You should never create one of these directly, to obtain a CustomObjectConfig you must first register a custom object:
  * 
- * auto config = CustomObjectsAPI::registerCustomObject(...);
- * config.setObjectProperty(...);
+ * auto object = CustomObjectsAPI::registerCustomObject(...);
+ * object.setObjectProperty(...);
  * 
  * Or you can configure your object inline:
  * 
