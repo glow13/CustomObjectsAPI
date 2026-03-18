@@ -13,8 +13,8 @@ private:
     static CustomObjectsMod* currentMod;
     static int currentOffset;
 
-    static CustomObjectsMod* getMod(geode::Mod* mod);
-    static void setCollisionOffset(geode::Mod* mod, uint8_t offset);
+    static CustomObjectsMod* getMod(geode::Mod*);
+    static void setCollisionOffset(geode::Mod*, uint8_t);
 
     friend class CustomObjectsAPI;
 };

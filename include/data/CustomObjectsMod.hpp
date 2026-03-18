@@ -24,17 +24,17 @@ public:
 private:
     CustomObjectsMod(geode::Mod* mod, uint8_t offset);
 
+    explicit CustomObjectsMod() = default;
     CustomObjectsMod(const CustomObjectsMod&) = delete;
     CustomObjectsMod& operator=(const CustomObjectsMod&) = delete;
 
     template <class ObjectType = CustomGameObject>
     CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
         int id = baseObjectID + objects.size();
-        geode::log::debug("Registered custom object with id {}", id);
-
         auto config = new CustomObjectConfig<ObjectType>(this, id);
+
         config->setMainSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
-        objects.emplace_back(static_cast<CustomObjectConfigBase*>(config));
+        objects.emplace_back(config);
         return *config;
     } // registerCustomObject
 

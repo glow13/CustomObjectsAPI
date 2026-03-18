@@ -6,6 +6,11 @@
 class CustomObjectsMod;
 
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
+public:
+    CustomSpriteConfig mainSprite;
+    CustomSpriteConfig detailSprite;
+    CustomSpriteConfig glowSprite;
+
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 protected:
     CustomObjectsMod* mod;
@@ -31,13 +36,10 @@ protected:
     friend class CustomObjectsManager;
     friend class CustomEditorUI;
 
+protected:
+    CustomObjectConfigBase(CustomObjectsMod*, int);
+
 public:
-    CustomSpriteConfig mainSprite;
-    CustomSpriteConfig detailSprite;
-    CustomSpriteConfig glowSprite;
-
-    CustomObjectConfigBase(CustomObjectsMod* mod, int id);
-
     std::string getModID() const;
     std::string getModName() const;
     int getObjectID() const;
@@ -67,7 +69,7 @@ public:
 /**
  * A struct representing a custom object. This struct can be configured to change properties of your custom object.
  * 
- * You should never create one of these directly, to obtain a CustomObjectConfig you must first register a custom object:
+ * You should never try to create one of these directly, to obtain a CustomObjectConfig you must first register a custom object:
  * 
  * auto object = CustomObjectsAPI::registerCustomObject(...);
  * object.setObjectProperty(...);
@@ -86,8 +88,11 @@ private:
     std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
+    CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
+
     template <class, class>
     friend class CustomObjectBase;
+    friend class CustomObjectsMod;
 
 public:
     bool hasEditObjectFunction() const override { return (bool)editObjectCallback; }
@@ -95,8 +100,6 @@ public:
 
     void customEditObject(GameObject* obj, cocos2d::CCArray* objs) const override { editObjectCallback(static_cast<ObjectType*>(obj), objs); }
     void customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const override { editSpecialCallback(static_cast<ObjectType*>(obj), objs); }
-
-    CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
 #endif
 public:
 
