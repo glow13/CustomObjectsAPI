@@ -8,7 +8,7 @@ class CustomSpriteConfig;
 
 struct CustomSheetSprite final {
 private:
-    CustomSpriteConfig* sprite;
+    const CustomSpriteConfig* sprite;
 
     cocos2d::CCSize size; // desired final size of the sprite in the spritesheet
     cocos2d::CCPoint offset; // user-defined offset of the sprite, seperate from the trim process

@@ -24,8 +24,11 @@ int CustomObjectsMod::getBaseObjectID() const {
     return baseObjectID;
 } // getBaseObjectID
 
+int CustomObjectsMod::getNextObjectID() const {
+    return baseObjectID + objects.size();
+} // getNextObjectID
+
 CustomSpriteConfig& CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
-    log::debug("Registered custom sprite \"{}\"", spr);
     auto config = new CustomSpriteConfig(this, nullptr, spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     sprites.emplace_back(config);
     return *config;

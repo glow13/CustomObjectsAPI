@@ -3,7 +3,7 @@
 
 #include "CustomSpriteConfig.hpp"
 
-class CustomObjectsMod;
+struct CustomObjectsMod;
 
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 public:
@@ -13,7 +13,7 @@ public:
 
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 protected:
-    CustomObjectsMod* mod;
+    const CustomObjectsMod* mod;
     int objectID;
 
     cocos2d::CCSize boxSize;
@@ -37,7 +37,7 @@ protected:
     friend class CustomEditorUI;
 
 protected:
-    CustomObjectConfigBase(CustomObjectsMod*, int);
+    CustomObjectConfigBase(CustomObjectsMod*);
 
 public:
     std::string getModID() const;
@@ -88,7 +88,7 @@ private:
     std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
-    CustomObjectConfig(CustomObjectsMod* mod, int id) : CustomObjectConfigBase(mod, id) {}
+    CustomObjectConfig(CustomObjectsMod* mod) : CustomObjectConfigBase(mod) {}
 
     template <class, class>
     friend class CustomObjectBase;

@@ -30,8 +30,8 @@ class CustomObjectConfigBase;
 struct CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 private:
-    CustomObjectsMod* mod;
-    CustomObjectConfigBase* object;
+    const CustomObjectsMod* mod;
+    const CustomObjectConfigBase* object;
 
     std::string frameName;
     std::string sourceFrame;
@@ -45,7 +45,6 @@ private:
     friend struct CustomObjectsMod;
     friend struct CustomObjectConfigBase;
 
-    CustomSpriteConfig() : frameName(""), sourceFrame(""), offset(cocos2d::CCPoint(0, 0)), size(cocos2d::CCSize(0, 0)) {}
     CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
 public:
     CustomSpriteConfig& operator=(const CustomSpriteConfig&);

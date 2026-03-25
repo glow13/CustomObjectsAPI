@@ -18,7 +18,7 @@ constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr bool PARTICLE_BLENDING_DEFAULT = true;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
-CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod, int id) : mod(mod), objectID(id),
+CustomObjectConfigBase::CustomObjectConfigBase(CustomObjectsMod* mod) : mod(mod), objectID(mod->getNextObjectID()),
     boxSize(BOX_SIZE_DEFAULT),
     boxOffset(BOX_OFFSET_DEFAULT),
     boxRadius(BOX_RADIUS_DEFAULT),
