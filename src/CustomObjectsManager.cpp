@@ -14,14 +14,15 @@ CustomObjectsManager* CustomObjectsManager::get() {
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
     auto registeredMod = new CustomObjectsMod(mod, offset);
 
-    auto& trigger = registeredMod->registerCustomObject<ModTriggerObject>("mod-trigger.png"_spr, 0, 0, 0, 0);
-    trigger.setEditorTabPriority(INT_MIN);
-    trigger.setDisableBatchRender();
+    auto trigger = new CustomObjectConfig<ModTriggerObject>(registeredMod);
+    registeredMod->registerCustomObject(trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
+    trigger->setEditorTabPriority(INT_MIN);
+    trigger->setDisableBatchRender();
 
-    auto triggerSprite = new CustomSpriteConfig(registeredMod, &trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
+    auto triggerSprite = new CustomSpriteConfig(registeredMod, trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
     registeredMod->sprites.emplace_back(triggerSprite);
 
-    trigger.onEditObjectButton([registeredMod](auto obj, auto objs) {
+    trigger->onEditObjectButton([registeredMod](auto obj, auto objs) {
         SetupModTriggerPopup::create(obj, objs, registeredMod->getModID(), registeredMod->getModName())->show();
     });
 

@@ -1,5 +1,6 @@
 #include "CustomObjectsAPI.hpp"
 #include "CustomObjectsManager.hpp"
+#include "data/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
 
@@ -33,3 +34,15 @@ void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
 
     currentOffset = offset;
 } // setCollisionOffset
+
+CustomObjectConfigBase* CustomObjectsUtils::registerCustomObject(geode::Mod* mod, CustomObjectConfigBase* config, std::string spr, int offsetX, int offsetY, int width, int height) {
+    return getMod(mod)->registerCustomObject(config, spr, offsetX, offsetY, width, height);
+} // registerCustomObject
+
+CustomSpriteConfig* CustomObjectsUtils::registerCustomSprite(geode::Mod* mod, std::string spr, int offsetX, int offsetY, int width, int height) {
+    return getMod(mod)->registerCustomSprite(spr, offsetX, offsetY, width, height);
+} // registerCustomSprite
+
+void CustomObjectsUtils::registerCustomAnimationSprites(geode::Mod* mod, std::string spr, int offsetX, int offsetY, int width, int height, int frames) {
+    return getMod(mod)->registerCustomAnimationSprites(spr, offsetX, offsetY, width, height, frames);
+} // registerCustomAnimationSprites

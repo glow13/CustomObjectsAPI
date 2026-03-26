@@ -3,8 +3,6 @@
 
 #include "CustomObjectConfig.hpp"
 
-class CustomGameObject;
-
 struct CUSTOM_OBJECTS_DLL CustomObjectsMod final {
 private:
     const geode::Mod* mod;
@@ -14,7 +12,7 @@ private:
     std::vector<CustomObjectConfigBase*> objects;
 
     friend class CustomObjectsManager;
-    friend class CustomObjectsAPI;
+    friend class CustomObjectsUtils;
 
 public:
     std::string getModID() const;
@@ -29,14 +27,7 @@ private:
     CustomObjectsMod(const CustomObjectsMod&) = delete;
     CustomObjectsMod& operator=(const CustomObjectsMod&) = delete;
 
-    template <class ObjectType = CustomGameObject>
-    CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
-        auto config = new CustomObjectConfig<ObjectType>(this);
-        config->setMainSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
-        objects.emplace_back(config);
-        return *config;
-    } // registerCustomObject
-
-    CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);
+    CustomObjectConfigBase* registerCustomObject(CustomObjectConfigBase* config, std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);
+    CustomSpriteConfig* registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight);
     void registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames);
 };

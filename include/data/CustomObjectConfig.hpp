@@ -92,7 +92,8 @@ private:
 
     template <class, class>
     friend class CustomObjectBase;
-    friend class CustomObjectsMod;
+    friend class CustomObjectsManager;
+    friend class CustomObjectsAPI;
 
 public:
     bool hasEditObjectFunction() const override { return (bool)editObjectCallback; }
