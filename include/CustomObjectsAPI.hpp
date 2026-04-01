@@ -9,13 +9,12 @@
 class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:
     static geode::Mod* currentGeodeMod;
-    static CustomObjectsMod* currentMod;
     static int currentOffset;
 
     static CustomObjectsMod* getMod(geode::Mod*);
     static void setCollisionOffset(geode::Mod*, uint8_t);
 
-    static CustomObjectConfigBase* registerCustomObject(geode::Mod*, CustomObjectConfigBase*, std::string, int, int, int, int);
+    static CustomObjectConfigBase* registerCustomObject(geode::Mod*, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string, int, int, int, int);
     static CustomSpriteConfig* registerCustomSprite(geode::Mod*, std::string, int, int, int, int);
     static void registerCustomAnimationSprites(geode::Mod*, std::string, int, int, int, int, int);
 
@@ -39,8 +38,9 @@ public:
      */
     template <class ObjectType = CustomGameObject>
     static CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
-        auto config = static_cast<CustomObjectConfigBase*>(new CustomObjectConfig<ObjectType>(CustomObjectsUtils::getMod(geode::Mod::get())));
-        return *static_cast<CustomObjectConfig<ObjectType>*>(CustomObjectsUtils::registerCustomObject(geode::Mod::get(), config, spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight));
+        auto* factory = +[](CustomObjectsMod* mod) { return static_cast<CustomObjectConfigBase*>(new CustomObjectConfig<ObjectType>(mod)); };
+        auto config = CustomObjectsUtils::registerCustomObject(geode::Mod::get(), factory, spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
+        return *static_cast<CustomObjectConfig<ObjectType>*>(config);
     }
 
     /**

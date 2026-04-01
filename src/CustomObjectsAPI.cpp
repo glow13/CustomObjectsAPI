@@ -5,10 +5,11 @@
 using namespace geode::prelude;
 
 Mod* CustomObjectsUtils::currentGeodeMod = nullptr;
-CustomObjectsMod* CustomObjectsUtils::currentMod = nullptr;
 int CustomObjectsUtils::currentOffset = 0;
 
 CustomObjectsMod* CustomObjectsUtils::getMod(Mod* mod) {
+    static CustomObjectsMod* currentMod = nullptr;
+
     if (mod != currentGeodeMod) {
         currentGeodeMod = mod;
         currentOffset = 0;
@@ -21,12 +22,13 @@ CustomObjectsMod* CustomObjectsUtils::getMod(Mod* mod) {
 } // getMod
 
 void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
+    static CustomObjectsMod* currentMod = nullptr;
+
     if (mod != currentGeodeMod) {
         currentGeodeMod = mod;
     } // if
 
-    auto id = currentMod ? currentMod->getModID() : "";
-    if (auto geodeId = currentGeodeMod->getID(); id == geodeId) {
+    if (auto geodeId = currentGeodeMod->getID(); (currentMod ? currentMod->getModID() : "") == geodeId) {
         log::error("Mod with id \"{}\" tried to incorrectly set the mod's collision offset!", geodeId);
         log::error("If you want to set the collision offset, it must be set BEFORE registering any objects!");
         throw std::logic_error("Incorrectly set collision offset");
@@ -35,8 +37,8 @@ void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
     currentOffset = offset;
 } // setCollisionOffset
 
-CustomObjectConfigBase* CustomObjectsUtils::registerCustomObject(geode::Mod* mod, CustomObjectConfigBase* config, std::string spr, int offsetX, int offsetY, int width, int height) {
-    return getMod(mod)->registerCustomObject(config, spr, offsetX, offsetY, width, height);
+CustomObjectConfigBase* CustomObjectsUtils::registerCustomObject(geode::Mod* mod, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string spr, int offsetX, int offsetY, int width, int height) {
+    return getMod(mod)->registerCustomObject(factory(getMod(mod)), spr, offsetX, offsetY, width, height);
 } // registerCustomObject
 
 CustomSpriteConfig* CustomObjectsUtils::registerCustomSprite(geode::Mod* mod, std::string spr, int offsetX, int offsetY, int width, int height) {

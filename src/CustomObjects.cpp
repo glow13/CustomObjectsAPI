@@ -1,5 +1,4 @@
 #include "CustomObjectsAPI.hpp"
-#include "data/CustomObjectsMod.hpp" // TODO how can I remove this??????????
 
 #include "object/CustomTriggerObject.hpp"
 #include "object/CustomRingObject.hpp"

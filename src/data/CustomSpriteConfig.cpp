@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-CustomSpriteConfig::CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offsetX, int offsetY, int sizeW, int sizeH) : 
+CustomSpriteConfig::CustomSpriteConfig(const CustomObjectsMod* mod, const CustomObjectConfigBase* object, std::string frame, int offsetX, int offsetY, int sizeW, int sizeH) : 
     frameName(""), sourceFrame(frame), mod(mod), object(object), offset(CCPoint(offsetX, offsetY)), size(CCSize(sizeW, sizeH)) {}
 
 CustomSpriteConfig& CustomSpriteConfig::operator=(const CustomSpriteConfig& spr) {
