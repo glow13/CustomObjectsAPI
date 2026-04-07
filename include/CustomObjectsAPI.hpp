@@ -8,10 +8,7 @@
 
 class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:
-    static geode::Mod* currentGeodeMod;
-    static int currentOffset;
-
-    static CustomObjectsMod* getMod(geode::Mod*);
+    static CustomObjectsMod* getMod(geode::Mod*, int);
     static void setCollisionOffset(geode::Mod*, uint8_t);
 
     static CustomObjectConfigBase* registerCustomObject(geode::Mod*, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string, int, int, int, int);

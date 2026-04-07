@@ -3,7 +3,7 @@
 
 #include "CustomObjectConfig.hpp"
 
-struct CUSTOM_OBJECTS_DLL CustomObjectsMod final {
+struct CustomObjectsMod final {
 private:
     const geode::Mod* mod;
     int baseObjectID;
