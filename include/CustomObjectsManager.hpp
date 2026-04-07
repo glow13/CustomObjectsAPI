@@ -1,7 +1,7 @@
 #pragma once
 
-struct CustomObjectsMod;
-struct CustomObjectConfigBase;
+class CustomObjectsMod;
+class CustomObjectConfigBase;
 
 class CustomObjectsManager final {
 private:

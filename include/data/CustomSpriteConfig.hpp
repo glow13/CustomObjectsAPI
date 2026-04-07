@@ -14,7 +14,7 @@
 #endif
 
 /**
- * A struct representing a custom sprite. This struct can be configured to change properties of your custom sprite.
+ * A class representing a custom sprite. This class can be configured to change properties of your custom sprite.
  * 
  * You can configure this through an already registered CustomObjectConfig, or you can register one yourself:
  * 
@@ -23,13 +23,13 @@
  * A registered CustomSpriteConfig is added to the custom object spritesheet.
  * Any sprite you want to use in a custom object must be added to the spritesheet so that batch rendering can work correctly.
  */
-struct CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
+class CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 private:
     friend class CustomObjectsManager;
     friend class CustomSpritesManager;
-    friend struct CustomObjectsMod;
-    friend struct CustomObjectConfigBase;
+    friend class CustomObjectsMod;
+    friend class CustomObjectConfigBase;
 
     const CustomObjectsMod* mod;
     const CustomObjectConfigBase* object;

@@ -2,7 +2,7 @@
 
 #include "CustomSpriteConfig.hpp"
 
-struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
+class CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 public:
     CustomSpriteConfig mainSprite;
     CustomSpriteConfig detailSprite;
@@ -64,7 +64,7 @@ public:
 };
 
 /**
- * A struct representing a custom object. This struct can be configured to change properties of your custom object.
+ * A class representing a custom object. This class can be configured to change properties of your custom object.
  * 
  * You should never try to create one of these directly, to obtain a CustomObjectConfig you must first register a custom object:
  * 
@@ -76,7 +76,7 @@ public:
  * CustomObjectsAPI::registerCustomObject(...).setObjectProperty1(...).setObjectProperty2(...);
  */
 template <class ObjectType>
-struct CustomObjectConfig final : public CustomObjectConfigBase {
+class CustomObjectConfig final : public CustomObjectConfigBase {
 private:
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
     std::function<void(ObjectType*)> setupCustomObjectCallback;

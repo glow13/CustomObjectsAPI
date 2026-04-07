@@ -2,8 +2,8 @@
 
 #include <rect_structs.h>
 
-struct CustomSpriteConfig;
-struct CustomSheetSprite;
+class CustomSpriteConfig;
+class CustomSheetSprite;
 
 enum Quality : int;
 

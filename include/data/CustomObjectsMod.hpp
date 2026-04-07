@@ -4,7 +4,7 @@
 
 #include "CustomObjectConfig.hpp"
 
-struct CustomObjectsMod final {
+class CustomObjectsMod final {
 private:
     const geode::Mod* mod;
     int baseObjectID;

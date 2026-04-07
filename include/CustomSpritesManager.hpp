@@ -1,6 +1,6 @@
 #pragma once
 
-struct CustomSpriteConfig;
+class CustomSpriteConfig;
 
 enum Quality : int {
     LOW = 1,
