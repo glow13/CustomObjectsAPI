@@ -14,9 +14,6 @@
     #define CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 #endif
 
-class CustomObjectsMod;
-class CustomObjectConfigBase;
-
 /**
  * A struct representing a custom sprite. This struct can be configured to change properties of your custom sprite.
  * 
@@ -30,6 +27,11 @@ class CustomObjectConfigBase;
 struct CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
 #ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 private:
+    friend class CustomObjectsManager;
+    friend class CustomSpritesManager;
+    friend struct CustomObjectsMod;
+    friend struct CustomObjectConfigBase;
+
     const CustomObjectsMod* mod;
     const CustomObjectConfigBase* object;
 
@@ -40,12 +42,7 @@ private:
 
     void generateFrame();
 
-    friend class CustomObjectsManager;
-    friend class CustomSpritesManager;
-    friend struct CustomObjectsMod;
-    friend struct CustomObjectConfigBase;
-
-    CustomSpriteConfig(CustomObjectsMod* mod, CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
+    CustomSpriteConfig(const CustomObjectsMod* mod, const CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
 public:
     CustomSpriteConfig& operator=(const CustomSpriteConfig&);
 #endif

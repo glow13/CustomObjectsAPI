@@ -3,8 +3,6 @@
 
 #include "CustomSpriteConfig.hpp"
 
-struct CustomObjectsMod;
-
 struct CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 public:
     CustomSpriteConfig mainSprite;
@@ -37,7 +35,7 @@ protected:
     friend class CustomEditorUI;
 
 protected:
-    CustomObjectConfigBase(CustomObjectsMod*);
+    CustomObjectConfigBase(const CustomObjectsMod*);
 
 public:
     std::string getModID() const;
@@ -88,11 +86,12 @@ private:
     std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
-    CustomObjectConfig(CustomObjectsMod* mod) : CustomObjectConfigBase(mod) {}
+    CustomObjectConfig(const CustomObjectsMod* mod) : CustomObjectConfigBase(mod) {}
 
     template <class, class>
     friend class CustomObjectBase;
-    friend class CustomObjectsMod;
+    friend class CustomObjectsManager;
+    friend class CustomObjectsAPI;
 
 public:
     bool hasEditObjectFunction() const override { return (bool)editObjectCallback; }

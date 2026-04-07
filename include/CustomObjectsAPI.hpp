@@ -2,19 +2,18 @@
 
 #include "data/CustomSpriteConfig.hpp"
 #include "data/CustomObjectConfig.hpp"
-#include "data/CustomObjectsMod.hpp"
 
 #include "CustomObjectBase.hpp"
 #include "object/CustomGameObject.hpp"
 
 class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:
-    static geode::Mod* currentGeodeMod;
-    static CustomObjectsMod* currentMod;
-    static int currentOffset;
-
-    static CustomObjectsMod* getMod(geode::Mod*);
+    static CustomObjectsMod* getMod(geode::Mod*, int);
     static void setCollisionOffset(geode::Mod*, uint8_t);
+
+    static CustomObjectConfigBase* registerCustomObject(geode::Mod*, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string, int, int, int, int);
+    static CustomSpriteConfig* registerCustomSprite(geode::Mod*, std::string, int, int, int, int);
+    static void registerCustomAnimationSprites(geode::Mod*, std::string, int, int, int, int, int);
 
     friend class CustomObjectsAPI;
 };
@@ -36,7 +35,9 @@ public:
      */
     template <class ObjectType = CustomGameObject>
     static CustomObjectConfig<ObjectType>& registerCustomObject(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
-        return CustomObjectsUtils::getMod(geode::Mod::get())->registerCustomObject<ObjectType>(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
+        auto* factory = +[](CustomObjectsMod* mod) { return static_cast<CustomObjectConfigBase*>(new CustomObjectConfig<ObjectType>(mod)); };
+        auto config = CustomObjectsUtils::registerCustomObject(geode::Mod::get(), factory, spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
+        return *static_cast<CustomObjectConfig<ObjectType>*>(config);
     }
 
     /**
@@ -105,7 +106,7 @@ public:
      * @return The CustomSpriteConfig for the sprite.
      */
     static CustomSpriteConfig& registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
-        return CustomObjectsUtils::getMod(geode::Mod::get())->registerCustomSprite(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
+        return *CustomObjectsUtils::registerCustomSprite(geode::Mod::get(), spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
     }
 
     /**
@@ -159,7 +160,7 @@ public:
      * @param frames The total number of frames in the animation.
      */
     static void registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames) {
-        return CustomObjectsUtils::getMod(geode::Mod::get())->registerCustomAnimationSprites(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight, frames);
+        return CustomObjectsUtils::registerCustomAnimationSprites(geode::Mod::get(), spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight, frames);
     }
 
     /**
