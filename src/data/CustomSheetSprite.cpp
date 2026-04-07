@@ -1,3 +1,5 @@
+#include <Geode/Geode.hpp>
+
 #include "data/CustomSheetSprite.hpp"
 #include "data/CustomSpriteConfig.hpp"
 #include "CustomSpritesManager.hpp"

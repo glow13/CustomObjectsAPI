@@ -1,5 +1,4 @@
 #pragma once
-#include <Geode/Geode.hpp>
 #include <rect_structs.h>
 
 enum Quality : int;

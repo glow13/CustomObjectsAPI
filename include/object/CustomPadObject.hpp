@@ -1,6 +1,9 @@
 #pragma once
-
 #include "../CustomObjectBase.hpp"
+
+#include <Geode/binding/EffectGameObject.hpp>
+#include <Geode/binding/GJEffectManager.hpp>
+#include <Geode/binding/GJSpriteColor.hpp>
 
 template <class ObjectType>
 class $base(CustomPadObject, EffectGameObject) {

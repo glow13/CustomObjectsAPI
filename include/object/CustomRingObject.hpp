@@ -1,6 +1,8 @@
 #pragma once
-
 #include "../CustomObjectBase.hpp"
+
+#include <Geode/binding/RingObject.hpp>
+#include <Geode/binding/GJSpriteColor.hpp>
 
 template <class ObjectType>
 class $base(CustomRingObject, RingObject) {

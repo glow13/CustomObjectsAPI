@@ -1,5 +1,11 @@
 #pragma once
 
+#include <Geode/loader/Mod.hpp>
+#include <Geode/utils/base64.hpp>
+
+#include <Geode/binding/PlayerObject.hpp>
+#include <Geode/binding/GJBaseGameLayer.hpp>
+
 #include "data/CustomSpriteConfig.hpp"
 #include "data/CustomObjectConfig.hpp"
 

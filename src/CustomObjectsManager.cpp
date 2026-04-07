@@ -1,3 +1,6 @@
+#include <Geode/Geode.hpp>
+#include <Geode/utils/base64.hpp>
+
 #include "CustomObjectsManager.hpp"
 #include "CustomSpritesManager.hpp"
 #include "data/CustomObjectConfig.hpp"

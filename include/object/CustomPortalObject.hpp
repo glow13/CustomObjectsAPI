@@ -1,6 +1,9 @@
 #pragma once
-
 #include "../CustomObjectBase.hpp"
+
+#include <Geode/binding/EffectGameObject.hpp>
+#include <Geode/binding/GJEffectManager.hpp>
+#include <Geode/binding/GJSpriteColor.hpp>
 
 enum GameModeType : int {
     CUBE = (int)GameObjectType::CubePortal,

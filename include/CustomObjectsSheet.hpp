@@ -1,5 +1,5 @@
 #pragma once
-#include <Geode/Geode.hpp>
+
 #include <rect_structs.h>
 
 struct CustomSpriteConfig;

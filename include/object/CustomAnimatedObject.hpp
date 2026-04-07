@@ -1,6 +1,7 @@
 #pragma once
-
 #include "../CustomObjectBase.hpp"
+
+#include <Geode/binding/EnhancedGameObject.hpp>
 
 template <class ObjectType>
 class $base(CustomAnimatedObject, EnhancedGameObject) {

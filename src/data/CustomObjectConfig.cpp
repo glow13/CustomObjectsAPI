@@ -1,3 +1,5 @@
+#include <Geode/Geode.hpp>
+
 #include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
 

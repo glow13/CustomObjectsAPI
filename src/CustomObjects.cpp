@@ -8,6 +8,8 @@
 #include "object/CustomCollectibleObject.hpp"
 #include "object/CustomAnimatedObject.hpp"
 
+#include <Geode/binding/SetupCameraModePopup.hpp>
+
 using namespace geode::prelude;
 
 /*

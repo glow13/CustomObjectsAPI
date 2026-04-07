@@ -1,6 +1,7 @@
 #pragma once
-
 #include "../CustomObjectBase.hpp"
+
+#include <Geode/binding/EffectGameObject.hpp>
 
 template <class ObjectType>
 class $base(CustomCollectibleObject, EffectGameObject) {
