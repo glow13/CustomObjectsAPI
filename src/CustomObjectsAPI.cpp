@@ -24,6 +24,8 @@ void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
     if (getMod(mod, offset)) {
         log::error("Mod with id \"{}\" tried to incorrectly set the mod's collision offset!", mod->getID());
         log::error("If you want to set the collision offset, it must be set BEFORE registering any objects!");
+
+        CustomObjectsManager::get()->removeCustomObjectsMod(mod);
         throw std::logic_error("Incorrectly set collision offset");
     } // if
 } // setCollisionOffset

@@ -33,6 +33,12 @@ CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod
     return registeredMods.back();
 } // registerCustomObjectsMod
 
+void CustomObjectsManager::removeCustomObjectsMod(geode::Mod* mod) {
+    if (auto it = std::find_if(registeredMods.begin(), registeredMods.end(), [mod](auto customMod) {
+        return customMod->getModID() == mod->getID();
+    }); it != registeredMods.end()) registeredMods.erase(it);
+} // removeCustomObjectsMod
+
 bool CustomObjectsManager::areAllRegisteredModsProcessed() {
     int registeredObjectsCount = 0;
     for (auto mod : registeredMods) registeredObjectsCount += mod->objects.size();
