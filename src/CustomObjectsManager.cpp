@@ -15,33 +15,33 @@ CustomObjectsManager* CustomObjectsManager::get() {
 } // get
 
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
-    auto registeredMod = new CustomObjectsMod(mod, offset);
+    auto registeredMod = std::make_unique<CustomObjectsMod>(mod, offset);
 
-    auto trigger = new CustomObjectConfig<ModTriggerObject>(registeredMod);
-    registeredMod->registerCustomObject(trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
+    auto trigger = std::make_unique<CustomObjectConfig<ModTriggerObject>>(registeredMod.get());
     trigger->setEditorTabPriority(INT_MIN);
     trigger->setDisableBatchRender();
 
-    auto triggerSprite = new CustomSpriteConfig(registeredMod, trigger, "mod-trigger.png"_spr, 0, 0, 0, 0);
-    registeredMod->sprites.emplace_back(triggerSprite);
+    auto triggerSprite = std::make_unique<CustomSpriteConfig>(registeredMod.get(), trigger.get(), "mod-trigger.png"_spr, 0, 0, 0, 0);
+    registeredMod->sprites.emplace_back(std::move(triggerSprite));
 
-    trigger->onEditObjectButton([registeredMod](auto obj, auto objs) {
-        SetupModTriggerPopup::create(obj, objs, registeredMod->getModID(), registeredMod->getModName())->show();
+    trigger->onEditObjectButton([mod = registeredMod.get()](auto obj, auto objs) {
+        SetupModTriggerPopup::create(obj, objs, mod->getModID(), mod->getModName())->show();
     });
 
-    registeredMods.emplace_back(registeredMod);
-    return registeredMods.back();
+    std::unique_ptr<CustomObjectConfigBase> genericConfig = std::move(trigger);
+    registeredMod->registerCustomObject(genericConfig, "mod-trigger.png"_spr, 0, 0, 0, 0);
+    return registeredMods.emplace_back(std::move(registeredMod)).get();
 } // registerCustomObjectsMod
 
 void CustomObjectsManager::removeCustomObjectsMod(geode::Mod* mod) {
-    if (auto it = std::find_if(registeredMods.begin(), registeredMods.end(), [mod](auto customMod) {
+    if (auto it = std::find_if(registeredMods.begin(), registeredMods.end(), [mod](auto& customMod) {
         return customMod->getModID() == mod->getID();
     }); it != registeredMods.end()) registeredMods.erase(it);
 } // removeCustomObjectsMod
 
 bool CustomObjectsManager::areAllRegisteredModsProcessed() {
     int registeredObjectsCount = 0;
-    for (auto mod : registeredMods) registeredObjectsCount += mod->objects.size();
+    for (auto& mod : registeredMods) registeredObjectsCount += mod->objects.size();
     return customObjectsCache.size() >= registeredObjectsCount;
 } // areAllRegisteredModsProcessed
 
@@ -49,8 +49,8 @@ void CustomObjectsManager::processRegisteredMods() {
     auto spriteManager = CustomSpritesManager::get();
     customObjectsCache.clear();
 
-    for (auto mod : registeredMods) {
-        for (auto obj : mod->objects) {
+    for (auto& mod : registeredMods) {
+        for (auto& obj : mod->objects) {
             if (!obj->isCustomBatch()) {
                 obj->mainSprite.frameName = obj->mainSprite.sourceFrame;
                 obj->detailSprite.frameName = obj->detailSprite.sourceFrame;
@@ -72,11 +72,11 @@ void CustomObjectsManager::processRegisteredMods() {
                 manager->addGameAnimation(obj->getObjectID(), obj->framesCount, obj->frameTime, mainAnimSprite, detailAnimSprite, 1);
             } // if
 
-            customObjectsCache.emplace(obj->getObjectID(), obj);
+            customObjectsCache.emplace(obj->getObjectID(), std::move(obj));
         } // for
 
-        for (auto spr : mod->sprites) {
-            spriteManager->registerCustomObjectSprite(spr);
+        for (auto& spr : mod->sprites) {
+            spriteManager->registerCustomObjectSprite(spr.get());
         } // for
     } // for
 } // processRegisteredMods
@@ -89,9 +89,9 @@ void CustomObjectsManager::printModObjectCount() {
 
 const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) {
     auto it = customObjectsCache.find(id);
-    return it != customObjectsCache.end() ? it->second : nullptr;
+    return it != customObjectsCache.end() ? it->second.get() : nullptr;
 } // getCustomObjectByID
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfigBase*)> operation) const {
-    for (auto [id, obj] : customObjectsCache) operation(obj);
+    for (auto& [id, obj] : customObjectsCache) operation(obj.get());
 } // forEachCustomObject

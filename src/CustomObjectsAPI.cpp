@@ -31,7 +31,8 @@ void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
 } // setCollisionOffset
 
 CustomObjectConfigBase* CustomObjectsUtils::registerCustomObject(geode::Mod* mod, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string spr, int offsetX, int offsetY, int width, int height) {
-    return getMod(mod)->registerCustomObject(factory(getMod(mod)), spr, offsetX, offsetY, width, height);
+    auto config = std::unique_ptr<CustomObjectConfigBase>(factory(getMod(mod)));
+    return getMod(mod)->registerCustomObject(config, spr, offsetX, offsetY, width, height);
 } // registerCustomObject
 
 CustomSpriteConfig* CustomObjectsUtils::registerCustomSprite(geode::Mod* mod, std::string spr, int offsetX, int offsetY, int width, int height) {

@@ -85,14 +85,14 @@ private:
     std::function<void(ObjectType*, cocos2d::CCArray*)> editSpecialCallback;
     std::function<void(ObjectType*, GJBaseGameLayer*, PlayerObject*)> activateCustomObjectCallback;
 
-    CustomObjectConfig(const CustomObjectsMod* mod) : CustomObjectConfigBase(mod) {}
-
     template <class, class>
     friend class CustomObjectBase;
     friend class CustomObjectsManager;
     friend class CustomObjectsAPI;
 
 public:
+    CustomObjectConfig(const CustomObjectsMod* mod) : CustomObjectConfigBase(mod) {}
+
     bool hasEditObjectFunction() const override { return (bool)editObjectCallback; }
     bool hasEditSpecialFunction() const override { return (bool)editSpecialCallback; }
 

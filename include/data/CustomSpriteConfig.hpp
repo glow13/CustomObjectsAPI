@@ -41,8 +41,9 @@ private:
 
     void generateFrame();
 
-    CustomSpriteConfig(const CustomObjectsMod* mod, const CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
 public:
+    CustomSpriteConfig(const CustomObjectsMod* mod, const CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
+
     CustomSpriteConfig& operator=(const CustomSpriteConfig&);
 #endif
 public:

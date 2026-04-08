@@ -5,8 +5,8 @@ class CustomObjectConfigBase;
 
 class CustomObjectsManager final {
 private:
-    std::vector<CustomObjectsMod*> registeredMods;
-    std::unordered_map<int, CustomObjectConfigBase*> customObjectsCache;
+    std::vector<std::unique_ptr<CustomObjectsMod>> registeredMods;
+    std::unordered_map<int, std::unique_ptr<CustomObjectConfigBase>> customObjectsCache;
 
     explicit CustomObjectsManager() = default;
     CustomObjectsManager(const CustomObjectsManager&) = delete;
