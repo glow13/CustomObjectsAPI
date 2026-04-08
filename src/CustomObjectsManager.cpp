@@ -29,8 +29,7 @@ CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod
         SetupModTriggerPopup::create(obj, objs, registeredMod->getModID(), registeredMod->getModName())->show();
     });
 
-    registeredMods.emplace_back(registeredMod);
-    return registeredMods.back();
+    return registeredMods.emplace_back(registeredMod);
 } // registerCustomObjectsMod
 
 void CustomObjectsManager::removeCustomObjectsMod(geode::Mod* mod) {

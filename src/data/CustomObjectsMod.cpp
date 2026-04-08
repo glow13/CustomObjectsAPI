@@ -30,14 +30,12 @@ int CustomObjectsMod::getNextObjectID() const {
 
 CustomObjectConfigBase* CustomObjectsMod::registerCustomObject(CustomObjectConfigBase* config, std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
     config->mainSprite.set(spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
-    objects.emplace_back(config);
-    return config;
+    return objects.emplace_back(config);
 } // registerCustomObject
 
 CustomSpriteConfig* CustomObjectsMod::registerCustomSprite(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight) {
     auto config = new CustomSpriteConfig(this, nullptr, spr, sprOffsetX, sprOffsetY, sprWidth, sprHeight);
-    sprites.emplace_back(config);
-    return config;
+    return sprites.emplace_back(config);
 } // registerCustomSprite
 
 void CustomObjectsMod::registerCustomAnimationSprites(std::string spr, int sprOffsetX, int sprOffsetY, int sprWidth, int sprHeight, int frames) {
