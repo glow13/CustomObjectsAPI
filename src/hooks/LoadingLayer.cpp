@@ -101,11 +101,6 @@ class $modify(LoadingLayer) {
         CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
         if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
 
-        auto toolbox = ObjectToolbox::sharedState();
-        CustomObjectsManager::get()->forEachCustomObject([this, toolbox](auto obj) {
-            toolbox->m_allKeys.insert(std::pair(obj->getObjectID(), obj->getMainSprite()));
-        });
-
         continueLoadAssets();
     } // loadCustomSpritesheet
 };

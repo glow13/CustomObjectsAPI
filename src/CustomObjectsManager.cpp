@@ -38,7 +38,7 @@ void CustomObjectsManager::removeCustomObjectsMod(geode::Mod* mod) {
     }); it != registeredMods.end()) registeredMods.erase(it);
 } // removeCustomObjectsMod
 
-bool CustomObjectsManager::areAllRegisteredModsProcessed() {
+bool CustomObjectsManager::areAllRegisteredModsProcessed() const {
     int registeredObjectsCount = 0;
     for (auto mod : registeredMods) registeredObjectsCount += mod->objects.size();
     return customObjectsCache.size() >= registeredObjectsCount;
@@ -46,11 +46,12 @@ bool CustomObjectsManager::areAllRegisteredModsProcessed() {
 
 void CustomObjectsManager::processRegisteredMods() {
     auto spriteManager = CustomSpritesManager::get();
+    auto toolbox = ObjectToolbox::sharedState();
     customObjectsCache.clear();
 
     for (auto mod : registeredMods) {
         for (auto obj : mod->objects) {
-            if (!obj->isCustomBatch()) {
+            if (!obj->isCustomBatch() && !obj->mainSprite.isModTrigger()) {
                 obj->mainSprite.frameName = obj->mainSprite.sourceFrame;
                 obj->detailSprite.frameName = obj->detailSprite.sourceFrame;
                 obj->glowSprite.frameName = obj->glowSprite.sourceFrame;
@@ -68,10 +69,11 @@ void CustomObjectsManager::processRegisteredMods() {
                 detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));
 
                 auto manager = GameManager::sharedState();
-                manager->addGameAnimation(obj->getObjectID(), obj->framesCount, obj->frameTime, mainAnimSprite, detailAnimSprite, 1);
+                manager->addGameAnimation(obj->objectID, obj->framesCount, obj->frameTime, mainAnimSprite, detailAnimSprite, 1);
             } // if
 
-            customObjectsCache.emplace(obj->getObjectID(), obj);
+            toolbox->m_allKeys.emplace(obj->objectID, obj->getMainSprite());
+            customObjectsCache.emplace(obj->objectID, obj);
         } // for
 
         for (auto spr : mod->sprites) {
@@ -80,17 +82,26 @@ void CustomObjectsManager::processRegisteredMods() {
     } // for
 } // processRegisteredMods
 
-void CustomObjectsManager::printModObjectCount() {
-    int modCount = registeredMods.size();
-    int objectCount = customObjectsCache.size();
-    log::info("A total of {} mods registered {} total custom objects", modCount, objectCount);
+void CustomObjectsManager::printModObjectCount() const {
+    log::info("A total of {} mods registered {} total custom objects", registeredMods.size(), customObjectsCache.size());
 } // printModObjectCount
 
-const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) {
+const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) const {
     auto it = customObjectsCache.find(id);
     return it != customObjectsCache.end() ? it->second : nullptr;
 } // getCustomObjectByID
 
-void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfigBase*)> operation) const {
-    for (auto [id, obj] : customObjectsCache) operation(obj);
-} // forEachCustomObject
+std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::getEditorTabLayout() const {
+    std::map<std::string, ModObjects> mods;
+    for (auto [id, obj] : customObjectsCache) {
+        mods[obj->getModID()].emplace_back(obj->editorPriority, id);
+    } // for
+
+    for (auto& [mod, objs] : mods) {
+        std::sort(objs.begin(), objs.end(), [](const auto& a, const auto& b) {
+            return a.first == b.first ? a.second < b.second : a.first < b.first;
+        });
+    } // for
+
+    return mods;
+} // getEditorTabLayout

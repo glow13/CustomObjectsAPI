@@ -17,10 +17,13 @@ public:
 
     CustomObjectsMod* registerCustomObjectsMod(geode::Mod* mod, char offset = 0);
     void removeCustomObjectsMod(geode::Mod* mod);
-    bool areAllRegisteredModsProcessed();
-    void processRegisteredMods();
-    void printModObjectCount();
 
-    const CustomObjectConfigBase* getCustomObjectByID(int id);
-    void forEachCustomObject(std::function<void(const CustomObjectConfigBase*)> operation) const;
+    void processRegisteredMods();
+    bool areAllRegisteredModsProcessed() const;
+    void printModObjectCount() const;
+
+    const CustomObjectConfigBase* getCustomObjectByID(int id) const;
+
+    using ModObjects = std::vector<std::pair<int, int>>;
+    std::map<std::string, ModObjects> getEditorTabLayout() const;
 };

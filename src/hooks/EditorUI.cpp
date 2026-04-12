@@ -13,23 +13,8 @@ class $modify(CustomEditorUI, EditorUI) {
 
         alpha::editor_tabs::addTab("custom-objects"_spr, alpha::editor_tabs::BUILD, [this] {
             std::vector<Ref<CCNode>> buttons;
-            auto manager = CustomObjectsManager::get();
-            manager->forEachCustomObject([this, &buttons](const CustomObjectConfigBase* obj) {
-                auto button = getCreateBtn(obj->getObjectID(), 4);
-                buttons.push_back(static_cast<CCNode*>(button));
-            });
-
-            std::sort(buttons.begin(), buttons.end(), [manager](CCNode* a, CCNode* b) {
-                auto objectIDA = static_cast<CreateMenuItem*>(a)->m_objectID;
-                auto objectIDB = static_cast<CreateMenuItem*>(b)->m_objectID;
-
-                auto priorityA = manager->getCustomObjectByID(objectIDA)->editorPriority;
-                auto priorityB = manager->getCustomObjectByID(objectIDB)->editorPriority;
-
-                if (priorityA == priorityB) return objectIDA < objectIDB;
-                else return priorityA < priorityB;
-            });
-
+            for (auto [mod, objs] : CustomObjectsManager::get()->getEditorTabLayout())
+                for (auto [p, id] : objs) buttons.push_back(static_cast<CCNode*>(getCreateBtn(id, 4)));
             return alpha::editor_tabs::createEditButtonBar(buttons);
         }, [] {
             CCLabelBMFont* textLabel = CCLabelBMFont::create("+", "bigFont.fnt");
