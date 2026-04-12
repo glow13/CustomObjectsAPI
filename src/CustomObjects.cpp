@@ -12,18 +12,6 @@
 
 using namespace geode::prelude;
 
-/*
-    m_objectType == 0x388
-    m_objectID == 0x3f4
-    m_hasNoAudioScale == 0x3b9
-    m_hasNoEffects = 0x404
-    m_classType = 0x4d0
-    m_colorSprite = 0x368
-    m_isTouchTriggered = 0x5b0
-    m_isMultiTriggered = 0x670
-    m_hasCustomAnimation = 0x55a
-*/
-
 class $object(ContainerGameObject, CustomRingObject) {
 public:
     float m_bouncePower = 1;
