@@ -169,3 +169,5 @@ private:
     std::unordered_map<uint16_t, ObjectProp> objectProps;
     std::unordered_map<uint16_t, std::string> loadedSaveValues;
 };
+
+#undef SERIALIZER_TYPE

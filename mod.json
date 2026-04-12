@@ -11,6 +11,7 @@
     "version": "v1.0.0",
     "developer": "glow12",
     "description": "Add custom objects to Geometry Dash!",
+    "early-load": true,
     "dependencies": {
         "alphalaneous.editortab_api": ">=v2.0.4"
     },
