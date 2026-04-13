@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-CustomObjectsMod* CustomObjectsUtils::getMod(Mod* mod, int offset = -1) {
+CustomObjectsMod* CustomObjectsUtils::getMod(Mod* mod, int offset) {
     static CustomObjectsMod* currentMod = nullptr;
     static Mod* currentGeodeMod = nullptr;
 
@@ -31,13 +31,13 @@ void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
 } // setCollisionOffset
 
 CustomObjectConfigBase* CustomObjectsUtils::registerCustomObject(geode::Mod* mod, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string spr, int offsetX, int offsetY, int width, int height) {
-    return getMod(mod)->registerCustomObject(factory(getMod(mod)), spr, offsetX, offsetY, width, height);
+    return getMod(mod, -1)->registerCustomObject(factory(getMod(mod, -1)), spr, offsetX, offsetY, width, height);
 } // registerCustomObject
 
 CustomSpriteConfig* CustomObjectsUtils::registerCustomSprite(geode::Mod* mod, std::string spr, int offsetX, int offsetY, int width, int height) {
-    return getMod(mod)->registerCustomSprite(spr, offsetX, offsetY, width, height);
+    return getMod(mod, -1)->registerCustomSprite(spr, offsetX, offsetY, width, height);
 } // registerCustomSprite
 
 void CustomObjectsUtils::registerCustomAnimationSprites(geode::Mod* mod, std::string spr, int offsetX, int offsetY, int width, int height, int frames) {
-    return getMod(mod)->registerCustomAnimationSprites(spr, offsetX, offsetY, width, height, frames);
+    return getMod(mod, -1)->registerCustomAnimationSprites(spr, offsetX, offsetY, width, height, frames);
 } // registerCustomAnimationSprites

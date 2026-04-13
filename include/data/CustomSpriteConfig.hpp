@@ -13,6 +13,9 @@
     #define CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 #endif
 
+class CustomObjectsMod;
+class CustomObjectConfigBase;
+
 /**
  * A class representing a custom sprite. This class can be configured to change properties of your custom sprite.
  * 
