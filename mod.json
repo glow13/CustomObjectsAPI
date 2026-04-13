@@ -27,15 +27,7 @@
     "resources": {
         "sprites": [
             "resources/*.png"
-        ],
-        "spritesheets": {
-            "CustomObjects": [
-                "resources/sprites/*.png"
-            ],
-            "cat": [
-                "resources/cat/*.png"
-            ]
-        }
+        ]
     },
     "settings": {
         "debug": {
