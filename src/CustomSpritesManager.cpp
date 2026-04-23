@@ -46,11 +46,16 @@ void CustomSpritesManager::processRegisteredSprites() {
     customSpritesCache.erase(it, customSpritesCache.end());
 } // processRegisteredSprites
 
-bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() {
+int CustomSpritesManager::getTotalCustomSpritesCount() const {
+    return customSpritesCache.size();
+} // getTotalCustomSpritesCount
+
+bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() const {
     auto sheetName = getSpritesheetQualityName();
     auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(sheetName);
 
-    if (customSpritesCache.size() != cache.size()) return false;
+    if (customSpritesCache.size() == 0) return true;
+    else if (customSpritesCache.size() > cache.size()) return false;
 
     for (int i = 0; i < customSpritesCache.size(); i++) {
         if (customSpritesCache[i]->getFrameName() == cache[i]) continue;
@@ -67,13 +72,13 @@ bool CustomSpritesManager::isTheSpritesheetCacheUpToDate() {
     return true;
 } // isTheSpritesheetCacheUpToDate
 
-void CustomSpritesManager::saveSpritesheetDataToCache(std::string name) {
+void CustomSpritesManager::saveSpritesheetDataToCache(std::string name) const {
     std::vector<std::string> sprites;
     for (auto spr : customSpritesCache) sprites.emplace_back(spr->getFrameName());
     Mod::get()->setSavedValue<std::vector<std::string>>(name, sprites);
 } // saveSpritesheetDataToCache
 
-void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quality) {
+void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quality) const {
     auto qualityName = (int)quality == 4 ? "HIGH" : ((int)quality == 2 ? "MEDIUM" : "LOW");
     log::info("Generating custom objects spritesheet with {} texture quality...", qualityName);
 

@@ -15,6 +15,10 @@ CustomObjectsManager* CustomObjectsManager::get() {
 } // get
 
 CustomObjectsMod* CustomObjectsManager::registerCustomObjectsMod(geode::Mod* mod, char offset) {
+    if (auto it = std::find_if(registeredMods.begin(), registeredMods.end(), [mod](auto customMod) {
+        return customMod->getModID() == mod->getID();
+    }); it != registeredMods.end()) return nullptr;
+
     auto registeredMod = new CustomObjectsMod(mod, offset);
 
     auto trigger = new CustomObjectConfig<ModTriggerObject>(registeredMod);
@@ -85,6 +89,10 @@ void CustomObjectsManager::processRegisteredMods() {
 void CustomObjectsManager::printModObjectCount() const {
     log::info("A total of {} mods registered {} total custom objects", registeredMods.size(), customObjectsCache.size());
 } // printModObjectCount
+
+int CustomObjectsManager::getTotalCustomObjectsCount() const {
+    return customObjectsCache.size();
+} // getTotalCustomObjectsCount
 
 const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) const {
     auto it = customObjectsCache.find(id);

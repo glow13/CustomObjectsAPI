@@ -10,6 +10,7 @@ using namespace geode::prelude;
 class $modify(CustomEditorUI, EditorUI) {
     bool init(LevelEditorLayer* editorLayer) {
         if (!EditorUI::init(editorLayer)) return false;
+        if (CustomObjectsManager::get()->getTotalCustomObjectsCount() == 0) return true;
 
         alpha::editor_tabs::addTab("custom-objects"_spr, alpha::editor_tabs::BUILD, [this] {
             std::vector<Ref<CCNode>> buttons;

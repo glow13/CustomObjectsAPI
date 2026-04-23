@@ -50,7 +50,8 @@ class $modify(LoadingLayer) {
         auto cache = manager->getCacheDirectory();
         CCFileUtils::get()->addSearchPath(cache.c_str());
 
-        if (Mod::get()->getSettingValue<bool>("force-generation")) {
+        int objectCount = CustomObjectsManager::get()->getTotalCustomObjectsCount();
+        if (Mod::get()->getSettingValue<bool>("force-generation") && objectCount > 0) {
             log::info("Forced spritesheet generation is enabled!");
         } else if (manager->isTheSpritesheetCacheUpToDate()) {
             log::info("Cache is up-to-date, skipping spritesheet generation");
@@ -94,12 +95,14 @@ class $modify(LoadingLayer) {
     } // generateCustomSpritesheet
 
     void loadCustomSpritesheet() {
-        auto png = CustomSpritesManager::getSpritesheetQualityName() + ".png";
-        auto plist = CustomSpritesManager::getSpritesheetQualityName() + ".plist";
+        if (CustomObjectsManager::get()->getTotalCustomObjectsCount() > 0) {
+            auto png = CustomSpritesManager::getSpritesheetQualityName() + ".png";
+            auto plist = CustomSpritesManager::getSpritesheetQualityName() + ".plist";
 
-        auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
-        CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
-        if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
+            auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
+            CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
+            if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
+        } // if
 
         continueLoadAssets();
     } // loadCustomSpritesheet

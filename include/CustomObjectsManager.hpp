@@ -21,6 +21,7 @@ public:
     void processRegisteredMods();
     bool areAllRegisteredModsProcessed() const;
     void printModObjectCount() const;
+    int getTotalCustomObjectsCount() const;
 
     const CustomObjectConfigBase* getCustomObjectByID(int id) const;
 

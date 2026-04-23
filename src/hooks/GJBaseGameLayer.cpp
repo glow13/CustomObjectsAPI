@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
+#include "CustomObjectsManager.hpp"
 #include "CustomSpritesManager.hpp"
 
 using namespace geode::prelude;
@@ -41,6 +42,7 @@ public:
 
     void setupLayers() {
         GJBaseGameLayer::setupLayers();
+        if (CustomObjectsManager::get()->getTotalCustomObjectsCount() == 0) return;
 
         auto path = CustomSpritesManager::getCacheDirectory() + CustomSpritesManager::getSpritesheetQualityName() + ".png";
         auto sheet = CCTextureCache::get()->textureForKey(path.c_str());
