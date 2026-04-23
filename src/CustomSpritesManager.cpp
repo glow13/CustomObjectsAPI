@@ -80,12 +80,12 @@ void CustomSpritesManager::saveSpritesheetDataToCache(std::string name) const {
 
 void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quality) const {
     auto qualityName = (int)quality == 4 ? "HIGH" : ((int)quality == 2 ? "MEDIUM" : "LOW");
-    log::info("Generating custom objects spritesheet with {} texture quality...", qualityName);
+    log::debug("Generating custom objects spritesheet with {} texture quality...", qualityName);
 
     auto spritesheet = CustomObjectsSheet(customSpritesCache, quality);
     if (spritesheet.sheetSize.w <= 0 || spritesheet.sheetSize.h <= 0) {
         log::error("Spritesheet generation failed, custom objects rendering may not work correctly!");
-    } else log::info("Spritesheet generation was successful, saving spritesheet to the cache...");
+    } else log::debug("Spritesheet generation was successful, saving spritesheet to the cache...");
 
     auto path = getCacheDirectory();
     bool saved = spritesheet.saveSpritesheetImage(name, path);
@@ -94,6 +94,6 @@ void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quali
     // Save the frames in the sprite cache
     if (saved) {
         saveSpritesheetDataToCache(name);
-        log::info("Saved spritesheet as \"{}\"", path + name + ".png");
+        log::info("Saved {} quality spritesheet as \"{}\"", qualityName, path + name + ".png");
     } else log::error("Failed to save the custom objects spritesheet!");
 } // addSpritesheetToCache
