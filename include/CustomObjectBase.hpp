@@ -3,11 +3,11 @@
 #define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
 #define $generic(BaseType) BaseType final : public BaseType##Base<BaseType> {}
 
-#define SERIALIZER_TYPE(type, valid, serialize, deserialize) \
-    template<> inline Serializer serializer<type> = { \
-    [](const void* v)->bool { auto val = *static_cast<const type*>(v); return valid; }, \
-    [](const void* v)->std::string { auto val = *static_cast<const type*>(v); return serialize; }, \
-    [](void* v, const std::string& val) { *static_cast<type*>(v) = deserialize; }};
+#define SERIALIZER_TYPE(type, valid, serialize, deserialize)                                        \
+    template<> inline Serializer serializer<type> = {                                               \
+    [](const void* v)->bool { auto val = *static_cast<const type*>(v); return valid; },             \
+    [](const void* v)->std::string { auto val = *static_cast<const type*>(v); return serialize; },  \
+    [](void* v, const std::string& val) { *static_cast<type*>(v) = deserialize; }};                 \
 
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
@@ -69,7 +69,7 @@ public:
         });
     } // setupObjectProperty
 
-    gd::string getSaveString(GJBaseGameLayer* p0) override final {
+    std::string getSaveString(GJBaseGameLayer* p0) override final {
         std::string saveString = ObjectBase::getSaveString(p0);
 
         for (auto [key, prop] : objectProps) if (prop.isValid()) {
@@ -79,7 +79,7 @@ public:
         return saveString;
     } // getSaveString
 
-    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
+    void customObjectSetup(std::vector<std::string>& propValues, std::vector<void*>& propIsPresent) override final {
         ObjectBase::customObjectSetup(propValues, propIsPresent);
 
         for (int key = 4; key < propValues.size(); key++) {
@@ -151,8 +151,8 @@ private:
     }();
 
     SERIALIZER_TYPE(bool, val, val ? "1" : "0", val == "1");
-    SERIALIZER_TYPE(int, true, std::to_string(val), geode::utils::numFromString<int>(val).unwrapOrDefault());
-    SERIALIZER_TYPE(float, true, std::to_string(val), geode::utils::numFromString<float>(val).unwrapOrDefault());
+    SERIALIZER_TYPE(int, true, geode::utils::numToString<int>(val), geode::utils::numFromString<int>(val).unwrapOrDefault());
+    SERIALIZER_TYPE(float, true, geode::utils::numToString<float>(val, 3), geode::utils::numFromString<float>(val).unwrapOrDefault());
     SERIALIZER_TYPE(std::string, !val.empty(), geode::utils::base64::encode(val), geode::utils::base64::decodeString(val).unwrapOr(""));
 
     struct ObjectProp final {

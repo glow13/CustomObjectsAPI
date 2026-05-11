@@ -46,9 +46,9 @@ public:
         this->activateCustomObject(level, player);
     } // activateCustomObject
 
-    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const* remaps) override final {
+    void triggerObject(GJBaseGameLayer* level, int playerID, std::vector<int> const* remaps) override final {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
-        this->activateCustomObject(level, player, remaps ? *remaps : gd::vector<int>());
+        this->activateCustomObject(level, player, remaps ? *remaps : std::vector<int>());
     } // triggerObject
 };
 
