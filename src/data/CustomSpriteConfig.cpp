@@ -60,8 +60,3 @@ void CustomSpriteConfig::generateFrame() {
     auto rectString = fmt::format("{}.{}.{}.{}", offset.x, offset.y, size.width, size.height);
     frameName = fmt::format("custom-objects/{}/{}/{}", getModID(), rectString, sourceFrameName);
 } // generateFrame
-
-void CustomSpriteConfig::deleteFrame() {
-    frameName = "";
-    sourceFrame = "geode.loader/fallback.png"; // temp solution
-} // deleteFrame

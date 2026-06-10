@@ -43,7 +43,6 @@ private:
     cocos2d::CCSize size;
 
     void generateFrame();
-    void deleteFrame();
 
     CustomSpriteConfig(const CustomObjectsMod* mod, const CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
 public:

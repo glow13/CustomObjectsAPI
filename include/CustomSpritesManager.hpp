@@ -25,10 +25,9 @@ public:
 
     void registerCustomObjectSprite(CustomSpriteConfig* spr);
     void processRegisteredSprites();
-    void deleteRegisteredSprites();
 
     int getTotalCustomSpritesCount() const;
     bool isTheSpritesheetCacheUpToDate() const;
     void saveSpritesheetDataToCache(std::string name) const;
-    bool addSpritesheetToCache(std::string name, Quality quality) const;
+    void addSpritesheetToCache(std::string name, Quality quality) const;
 };

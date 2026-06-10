@@ -3,6 +3,7 @@
 
 #include "CustomObjectsManager.hpp"
 #include "CustomSpritesManager.hpp"
+#include "data/CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 
@@ -10,16 +11,15 @@ class $modify(LoadingLayer) {
     struct Fields {
         int m_customLoadStep;
         bool m_shouldGenerateSpritesheet;
-        bool m_spritesheetGenerationFailed;
     };
 
     void continueLoadAssets() {
         m_fields->m_customLoadStep++;
-        Loader::get()->queueInMainThread([this]() { loadAssets(); });
+        Loader::get()->queueInMainThread([this]() { this->loadAssets(); });
     } // continueLoadAssets
 
     void loadAssets() {
-        if (m_loadStep == 14) {
+        if (m_loadStep == 10) {
             switch (m_fields->m_customLoadStep) {
                 case 0: processMods(); break;
                 case 1: checkGenerateCustomSpritesheet(); break;
@@ -70,26 +70,21 @@ class $modify(LoadingLayer) {
     } // checkGenerateCustomSpritesheet
 
     void generateCustomSpritesheet() {
-        if (!m_fields->m_shouldGenerateSpritesheet) {
-            continueLoadAssets();
-            return;
+        if (m_fields->m_shouldGenerateSpritesheet) {
+            auto manager = CustomSpritesManager::get();
+            switch (manager->getTextureQuality()) {
+                case Quality::HIGH:
+                    manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
+                    [[fallthrough]];
+                case Quality::MEDIUM:
+                    manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
+                    [[fallthrough]];
+                case Quality::LOW:
+                    manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
+                    [[fallthrough]];
+                default: break;
+            } // switch
         } // if
-
-        auto manager = CustomSpritesManager::get();
-        m_fields->m_spritesheetGenerationFailed = true;
-
-        switch (manager->getTextureQuality()) {
-            case Quality::HIGH:
-                if (!manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH)) break;
-                [[fallthrough]];
-            case Quality::MEDIUM:
-                if (!manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM)) break;
-                [[fallthrough]];
-            case Quality::LOW:
-                if (!manager->addSpritesheetToCache("CustomObjects", Quality::LOW)) break;
-                [[fallthrough]];
-            default: m_fields->m_spritesheetGenerationFailed = false;
-        } // switch
 
         if (auto smallLabel = getChildByID("geode-small-label")) {
             auto label = static_cast<CCLabelBMFont*>(smallLabel);
@@ -100,17 +95,6 @@ class $modify(LoadingLayer) {
     } // generateCustomSpritesheet
 
     void loadCustomSpritesheet() {
-        if (m_fields->m_spritesheetGenerationFailed) {
-            geode::Notification::create(
-                "Failed to generate custom spritesheet! Check logs for more info.",
-                geode::NotificationIcon::Error
-            )->show();
-
-            CustomSpritesManager::get()->deleteRegisteredSprites();
-            continueLoadAssets();
-            return;
-        } // if
-
         if (CustomObjectsManager::get()->getTotalCustomObjectsCount() > 0) {
             auto png = CustomSpritesManager::getSpritesheetQualityName() + ".png";
             auto plist = CustomSpritesManager::getSpritesheetQualityName() + ".plist";
