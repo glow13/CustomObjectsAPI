@@ -78,7 +78,7 @@ void CustomSpritesManager::saveSpritesheetDataToCache(std::string name) const {
     Mod::get()->setSavedValue<std::vector<std::string>>(name, sprites);
 } // saveSpritesheetDataToCache
 
-void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quality) const {
+bool CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quality) const {
     auto qualityName = (int)quality == 4 ? "HIGH" : ((int)quality == 2 ? "MEDIUM" : "LOW");
     log::debug("Generating custom objects spritesheet with {} texture quality...", qualityName);
 
@@ -96,4 +96,6 @@ void CustomSpritesManager::addSpritesheetToCache(std::string name, Quality quali
         saveSpritesheetDataToCache(name);
         log::info("Saved {} quality spritesheet as \"{}\"", qualityName, path + name + ".png");
     } else log::error("Failed to save the custom objects spritesheet!");
+
+    return saved;
 } // addSpritesheetToCache

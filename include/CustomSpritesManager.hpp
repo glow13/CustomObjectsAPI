@@ -29,5 +29,5 @@ public:
     int getTotalCustomSpritesCount() const;
     bool isTheSpritesheetCacheUpToDate() const;
     void saveSpritesheetDataToCache(std::string name) const;
-    void addSpritesheetToCache(std::string name, Quality quality) const;
+    bool addSpritesheetToCache(std::string name, Quality quality) const;
 };

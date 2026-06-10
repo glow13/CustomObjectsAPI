@@ -105,6 +105,8 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
 } // saveSpritesheetImage
 
 bool CustomObjectsSheet::saveSpritesheetPlist(std::string name, std::string path) const {
+    if (sheetSize.w <= 0 || sheetSize.h <= 0) return false;
+
     auto fullPath = path + name + ".plist";
     auto file = std::ofstream(fullPath);
 
@@ -148,7 +150,7 @@ CustomObjectsSheet::CustomObjectsSheet(const std::vector<CustomSpriteConfig*> cu
     // Initialize sprites vector and find side lengths
     for (auto sprite : customSprites) {
         auto spr = CustomSheetSprite(sprite, quality);
-        if (spr.size.isZero()) continue;
+        if (spr.size.isZero()) return;
 
         this->spritesCache.emplace_back(spr);
         totalArea += spr.rect.w * spr.rect.h;
