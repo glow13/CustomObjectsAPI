@@ -106,6 +106,7 @@ class $modify(LoadingLayer) {
                 geode::NotificationIcon::Error
             )->show();
 
+            CustomSpritesManager::get()->deleteRegisteredSprites();
             continueLoadAssets();
             return;
         } // if

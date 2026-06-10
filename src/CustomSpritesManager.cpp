@@ -46,6 +46,10 @@ void CustomSpritesManager::processRegisteredSprites() {
     customSpritesCache.erase(it, customSpritesCache.end());
 } // processRegisteredSprites
 
+void CustomSpritesManager::deleteRegisteredSprites() {
+    for (auto spr : customSpritesCache) spr->deleteFrame();
+} // deleteRegisteredSprites
+
 int CustomSpritesManager::getTotalCustomSpritesCount() const {
     return customSpritesCache.size();
 } // getTotalCustomSpritesCount

@@ -25,6 +25,7 @@ public:
 
     void registerCustomObjectSprite(CustomSpriteConfig* spr);
     void processRegisteredSprites();
+    void deleteRegisteredSprites();
 
     int getTotalCustomSpritesCount() const;
     bool isTheSpritesheetCacheUpToDate() const;
