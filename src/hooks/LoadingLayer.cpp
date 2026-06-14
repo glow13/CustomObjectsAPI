@@ -3,7 +3,6 @@
 
 #include "CustomObjectsManager.hpp"
 #include "CustomSpritesManager.hpp"
-#include "data/CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 
@@ -70,21 +69,24 @@ class $modify(LoadingLayer) {
     } // checkGenerateCustomSpritesheet
 
     void generateCustomSpritesheet() {
-        if (m_fields->m_shouldGenerateSpritesheet) {
-            auto manager = CustomSpritesManager::get();
-            switch (manager->getTextureQuality()) {
-                case Quality::HIGH:
-                    manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
-                    [[fallthrough]];
-                case Quality::MEDIUM:
-                    manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
-                    [[fallthrough]];
-                case Quality::LOW:
-                    manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
-                    [[fallthrough]];
-                default: break;
-            } // switch
+        if (!m_fields->m_shouldGenerateSpritesheet) {
+            continueLoadAssets();
+            return;
         } // if
+
+        auto manager = CustomSpritesManager::get();
+        switch (manager->getTextureQuality()) {
+            case Quality::HIGH:
+                manager->addSpritesheetToCache("CustomObjects-uhd", Quality::HIGH);
+                [[fallthrough]];
+            case Quality::MEDIUM:
+                manager->addSpritesheetToCache("CustomObjects-hd", Quality::MEDIUM);
+                [[fallthrough]];
+            case Quality::LOW:
+                manager->addSpritesheetToCache("CustomObjects", Quality::LOW);
+                [[fallthrough]];
+            default: break;
+        } // switch
 
         if (auto smallLabel = getChildByID("geode-small-label")) {
             auto label = static_cast<CCLabelBMFont*>(smallLabel);

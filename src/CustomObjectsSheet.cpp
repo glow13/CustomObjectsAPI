@@ -57,9 +57,9 @@ bool CustomObjectsSheet::saveSpritesheetImage(std::string name, std::string path
         CCSprite sprite;
         if (spr.isModTrigger()) {
             if (makeModTriggerSprite(sprite, spr.getModID()); !sprite.getTexture()) continue;
-        } else if (auto frame = CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(spr.getSourceFrame().c_str())) {
-            sprite.initWithSpriteFrame(static_cast<CCSpriteFrame*>(frame));
-        } else if (!sprite.initWithFile(spr.getSourceFrame().c_str())) continue;
+        } else if (!sprite.initWithFile(spr.getSourceFrame().c_str())) {
+            sprite.initWithSpriteFrameName(spr.getSourceFrame().c_str());
+        } // if
 
         int offsetX = spr.rect.flipped ? spr.size.height - spr.trim.h - spr.trim.y : spr.trim.x;
         int offsetY = spr.rect.flipped ? spr.trim.x : spr.trim.y;

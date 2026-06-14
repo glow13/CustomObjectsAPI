@@ -20,8 +20,13 @@ CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality
         frame = spr.displayFrame();
     } else {
         log::error("Failed to find sprite \"{}\"", sourceFrame);
-        this->size = CCSizeZero;
-        return;
+
+        // Just use the fallback sprite provided by geode
+        // There probably is a better solution to this but this works for now ig
+        frame = CCSpriteFrameCache::get()->spriteFrameByName(sourceFrame.c_str());
+        size = CCSize(30, 30);
+        // this->size = CCSizeZero;
+        // return;
     } // if
 
     float qualityScale = (float)quality / (float)CustomSpritesManager::getTextureQuality();
