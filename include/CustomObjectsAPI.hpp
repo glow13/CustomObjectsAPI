@@ -16,6 +16,7 @@ class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:
     static CustomObjectsMod* getMod(geode::Mod*, int);
     static void setCollisionOffset(geode::Mod*, uint8_t);
+    static void addIDPadding(geode::Mod*);
 
     static CustomObjectConfigBase* registerCustomObject(geode::Mod*, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string, int, int, int, int);
     static CustomSpriteConfig* registerCustomSprite(geode::Mod*, std::string, int, int, int, int);
@@ -228,6 +229,14 @@ public:
      */
     static void setCollisionOffset(uint8_t offset) {
         CustomObjectsUtils::setCollisionOffset(geode::Mod::get(), offset);
+    }
+
+    /**
+     * Registers a fake "ghost" object to act as a padding for your object IDs.
+     * This should be used when you want to remove an object from your mod without messing with the IDs of other objects.
+     */
+    static void addIDPadding() {
+        CustomObjectsUtils::addIDPadding(geode::Mod::get());
     }
 };
 

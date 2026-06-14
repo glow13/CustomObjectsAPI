@@ -564,3 +564,17 @@ public:
 
 #endif
 };
+
+// Empty config used for padding object IDs.
+class PaddingConfig : public CustomObjectConfigBase {
+public:
+    PaddingConfig(const CustomObjectsMod* mod) : CustomObjectConfigBase(mod) { objectID = -1; }
+
+    bool hasEditObjectFunction() const override { return false; }
+    bool hasEditSpecialFunction() const override { return false; }
+
+    void customEditObject(GameObject*, cocos2d::CCArray*) const override {}
+    void customEditSpecial(GameObject*, cocos2d::CCArray*) const override {}
+
+    GameObject* create() const override { return nullptr; }
+};

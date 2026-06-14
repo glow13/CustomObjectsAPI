@@ -102,6 +102,7 @@ const CustomObjectConfigBase* CustomObjectsManager::getCustomObjectByID(int id) 
 std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::getEditorTabLayout() const {
     std::map<std::string, ModObjects> mods;
     for (auto [id, obj] : customObjectsCache) {
+        if (obj->objectID < 0) continue;
         mods[obj->getModID()].emplace_back(obj->editorPriority, id);
     } // for
 

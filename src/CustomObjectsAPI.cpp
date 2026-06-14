@@ -1,5 +1,6 @@
 #include "CustomObjectsAPI.hpp"
 #include "CustomObjectsManager.hpp"
+#include "data/CustomObjectConfig.hpp"
 #include "data/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
@@ -29,6 +30,10 @@ void CustomObjectsUtils::setCollisionOffset(Mod* mod, uint8_t offset) {
         throw std::logic_error("Incorrectly set collision offset");
     } // if
 } // setCollisionOffset
+
+void CustomObjectsUtils::addIDPadding(Mod* mod) {
+    getMod(mod, -1)->registerCustomObject(static_cast<CustomObjectConfigBase*>(new PaddingConfig(getMod(mod, -1))), "", 0, 0, 0, 0);
+} // addIDPadding
 
 CustomObjectConfigBase* CustomObjectsUtils::registerCustomObject(geode::Mod* mod, CustomObjectConfigBase* (*factory)(CustomObjectsMod*), std::string spr, int offsetX, int offsetY, int width, int height) {
     return getMod(mod, -1)->registerCustomObject(factory(getMod(mod, -1)), spr, offsetX, offsetY, width, height);
