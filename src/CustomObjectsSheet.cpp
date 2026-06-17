@@ -21,7 +21,6 @@ void makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
 
     CCImage image;
     if (!image.initWithImageFile(path.c_str())) return;
-    auto size = CCSize(image.getWidth(), image.getHeight());
 
     uint32_t colorHash = geode::utils::hash(colorString);
     uint8_t colorR = (colorHash >> 8) & 0xFF;

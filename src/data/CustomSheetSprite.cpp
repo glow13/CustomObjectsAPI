@@ -23,10 +23,10 @@ CustomSheetSprite::CustomSheetSprite(CustomSpriteConfig* sprite, Quality quality
 
         // Just use the fallback sprite provided by geode
         // There probably is a better solution to this but this works for now ig
-        frame = CCSpriteFrameCache::get()->spriteFrameByName(sourceFrame.c_str());
-        size = CCSize(30, 30);
-        // this->size = CCSizeZero;
-        // return;
+        if (frame = CCSpriteFrameCache::get()->spriteFrameByName(sourceFrame.c_str()); !frame) {
+            size = CCSizeZero;
+            return;
+        } else size = CCSize(30, 30);
     } // if
 
     float qualityScale = (float)quality / (float)CustomSpritesManager::getTextureQuality();
