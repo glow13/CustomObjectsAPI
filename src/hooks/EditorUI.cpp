@@ -18,9 +18,7 @@ class $modify(CustomEditorUI, EditorUI) {
                 for (auto [p, id] : objs) buttons.push_back(static_cast<CCNode*>(getCreateBtn(id, 4)));
             return alpha::editor_tabs::createEditButtonBar(buttons);
         }, [] {
-            CCLabelBMFont* textLabel = CCLabelBMFont::create("+", "bigFont.fnt");
-            textLabel->setScale(0.5f);
-            return textLabel;
+            return CCSprite::create("tab-icon.png"_spr);
         });
 
         return true;
