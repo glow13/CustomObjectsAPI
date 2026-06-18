@@ -12,6 +12,9 @@ class $modify(CustomEditorUI, EditorUI) {
         if (!EditorUI::init(editorLayer)) return false;
         if (CustomObjectsManager::get()->getTotalCustomObjectsCount() == 0) return true;
 
+        if (!Mod::get()->getSavedValue<bool>("editortab-api-enabled")) return true;
+        if (!Mod::get()->getSettingValue<bool>("editor-tab")) return true;
+
         alpha::editor_tabs::addTab("custom-objects"_spr, alpha::editor_tabs::BUILD, [this] {
             std::vector<Ref<CCNode>> buttons;
             for (auto [mod, objs] : CustomObjectsManager::get()->getEditorTabLayout())

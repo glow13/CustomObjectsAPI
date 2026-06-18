@@ -13,7 +13,10 @@
     "description": "Add custom objects to Geometry Dash!",
     "early-load": true,
     "dependencies": {
-        "alphalaneous.editortab_api": ">=v2.1.8"
+        "alphalaneous.editortab_api": {
+            "version": ">=v2.1.10",
+            "required": false
+        }
     },
     "api": {
         "include": [
@@ -30,20 +33,32 @@
         ]
     },
     "settings": {
-        "debug": {
+        "editor": {
             "type": "title",
-            "name": "Debug"
+            "name": "Editor Tools"
+        },
+        "editor-tab": {
+            "type": "bool",
+            "name": "Enable Editor Tab",
+            "description": "Add a separate editor tab for custom objects. This is required for creating a level with custom objects, however it's not needed to play levels with custom objects, which is why it's disabled by default.",
+            "enable-if": "saved:editortab-api-enabled",
+            "enable-if-description": "The mod \"EditorTab API\" by Alphalaneous must be installed and enabled!",
+            "default": false
+        },
+        "spritesheet": {
+            "type": "title",
+            "name": "Spritesheet"
         },
         "force-generation": {
             "type": "bool",
             "name": "Force Spritesheet Generation",
-            "description": "Always generate the spritesheets on game launch, used for debugging",
+            "description": "Always generate the spritesheets on game launch and ignore the cache, useful for debugging.",
             "default": false
         },
         "disable-aa": {
             "type": "bool",
             "name": "Disable Anti-Aliasing",
-            "description": "Disables the anti-aliasing effect applied to the custom objects spritesheet",
+            "description": "Disables the anti-aliasing effect applied to the custom objects spritesheet, some textures may look better with this setting enabled.",
             "default": false
         }
     }
