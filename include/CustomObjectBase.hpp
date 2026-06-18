@@ -69,7 +69,7 @@ public:
         });
     } // setupObjectProperty
 
-    std::string getSaveString(GJBaseGameLayer* p0) override final {
+    gd::string getSaveString(GJBaseGameLayer* p0) override final {
         std::string saveString = ObjectBase::getSaveString(p0);
 
         for (auto [key, prop] : objectProps) if (prop.isValid()) {
@@ -79,7 +79,7 @@ public:
         return saveString;
     } // getSaveString
 
-    void customObjectSetup(std::vector<std::string>& propValues, std::vector<void*>& propIsPresent) override final {
+    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
         ObjectBase::customObjectSetup(propValues, propIsPresent);
 
         for (int key = 4; key < propValues.size(); key++) {
