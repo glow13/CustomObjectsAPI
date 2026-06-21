@@ -23,6 +23,7 @@ public:
         return true;
     } // init
 
+    // We can do mostly normal activation logic for the custom ring / orb object
     void activatedByPlayer(PlayerObject* player) override final {
         player->m_lastActivatedPortal = this;
         player->m_lastPortalPos = this->getPosition();

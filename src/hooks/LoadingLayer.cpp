@@ -17,6 +17,7 @@ class $modify(LoadingLayer) {
         Loader::get()->queueInMainThread([this]() { this->loadAssets(); });
     } // continueLoadAssets
 
+    // This basically just copies how geode loads its resources
     void loadAssets() {
         if (m_loadStep == 10) {
             switch (m_fields->m_customLoadStep) {

@@ -21,6 +21,7 @@ public:
         return true;
     } // init
 
+    // Kinda goofy helper function to easily update the label
     void updateObjectLabel() {
         auto lel = LevelEditorLayer::get();
         if (!lel) return;
@@ -41,6 +42,7 @@ public:
         this->m_isTrigger = true;
     } // customSetup
 
+    // This object adds another custom function to include the spawn remaps, as these can be important to have access to for triggers
     using CustomObjectBase::activateCustomObject;
     virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player, std::vector<int> remaps) {
         this->activateCustomObject(level, player);

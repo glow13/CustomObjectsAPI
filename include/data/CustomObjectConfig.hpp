@@ -2,13 +2,13 @@
 
 #include "CustomSpriteConfig.hpp"
 
+// Base class for type erasure
 class CUSTOM_OBJECTS_DLL CustomObjectConfigBase {
 public:
     CustomSpriteConfig mainSprite;
     CustomSpriteConfig detailSprite;
     CustomSpriteConfig glowSprite;
 
-#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 protected:
     const CustomObjectsMod* mod;
     int objectID;
@@ -33,7 +33,6 @@ protected:
     friend class CustomObjectsManager;
     friend class CustomEditorUI;
 
-protected:
     CustomObjectConfigBase(const CustomObjectsMod*);
 
 public:
@@ -60,7 +59,6 @@ public:
 
     void applyConfigValues(GameObject*) const;
     virtual GameObject* create() const = 0;
-#endif
 };
 
 /**
@@ -78,7 +76,6 @@ public:
 template <class ObjectType>
 class CustomObjectConfig final : public CustomObjectConfigBase {
 private:
-#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
     std::function<void(ObjectType*)> setupCustomObjectCallback;
     std::function<void(ObjectType*)> resetCustomObjectCallback;
     std::function<void(ObjectType*, cocos2d::CCArray*)> editObjectCallback;
@@ -98,8 +95,6 @@ public:
 
     void customEditObject(GameObject* obj, cocos2d::CCArray* objs) const override { editObjectCallback(static_cast<ObjectType*>(obj), objs); }
     void customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const override { editSpecialCallback(static_cast<ObjectType*>(obj), objs); }
-#endif
-public:
 
     /**
      * Sets the main sprite for the custom object.
@@ -548,8 +543,6 @@ public:
         activateCustomObjectCallback = callback; return *this;
     }
 
-#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
-
     /**
      * Create a new custom object using this config.
      * You should have no reason to do this on your own, this is only called when placing the object in a level.
@@ -561,8 +554,6 @@ public:
         applyConfigValues(static_cast<GameObject*>(obj));
         return obj;
     }
-
-#endif
 };
 
 // Empty config used for padding object IDs.

@@ -9,6 +9,9 @@
     [](const void* v)->std::string { auto val = *static_cast<const type*>(v); return serialize; },  \
     [](void* v, const std::string& val) { *static_cast<type*>(v) = deserialize; }};                 \
 
+template<class ObjectType>
+class CustomObjectConfig;
+
 template <class ObjectType, class ObjectBase>
 class CustomObjectBase : public ObjectBase {
 protected:

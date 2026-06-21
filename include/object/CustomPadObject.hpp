@@ -33,6 +33,7 @@ public:
         player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
     } // bumpPlayer
 
+    // Instead of hooking the vanilla pad logic, we treat this object as a trigger with touch enabled
     void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override final {
         auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
         level->m_effectManager->removeTriggeredID(this->m_uniqueID, player->m_uniqueID);

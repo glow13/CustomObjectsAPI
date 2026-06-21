@@ -107,7 +107,7 @@ public:
 
     void determineStartValues() override {
         SetupTriggerPopup::determineStartValues();
-        auto objs = CCArrayExt<ModTriggerObject*>(getObjects());
+        auto objs = getObjects()->asExt<ModTriggerObject*>();
 
         mode = objs[0]->mode;
         for (auto obj : objs) if (mode != obj->mode) { mode = ModTriggerMode::NONE; break; }
@@ -122,16 +122,16 @@ public:
         updateCustomToggleTrigger(1, mode == ModTriggerMode::OFF);
         updateCustomToggleTrigger(2, mode == ModTriggerMode::SPAWN);
 
-        for(auto obj : CCArrayExt<ModTriggerObject*>(getObjects())) obj->mode = mode;
+        for(auto obj : getObjects()->asExt<ModTriggerObject*>()) obj->mode = mode;
     } // onCustomToggleTriggerValue
 
     void onDisabledToggle(cocos2d::CCObject* sender) {
         disabled = !static_cast<CCMenuItemToggler*>(sender)->m_toggled;
-        for(auto obj : CCArrayExt<ModTriggerObject*>(getObjects())) obj->disabled = disabled;
+        for(auto obj : getObjects()->asExt<ModTriggerObject*>()) obj->disabled = disabled;
     } // onDisabledToggle
 
     void onClose(cocos2d::CCObject* sender) override {
-        for(auto obj : CCArrayExt<ModTriggerObject*>(getObjects())) obj->updateObjectLabel();
+        for(auto obj : getObjects()->asExt<ModTriggerObject*>()) obj->updateObjectLabel();
         SetupTriggerPopup::onClose(sender);
     } // onClose
 };

@@ -25,7 +25,7 @@ public:
         detail->setPosition(main->getPosition());
         detail->removeFromParent();
         main->addChild(detail);
-        main->setTag(1);
+        main->setTag(1); // This enables the hovering animation
 
         return true;
     } // init

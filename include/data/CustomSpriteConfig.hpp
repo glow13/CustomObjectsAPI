@@ -9,9 +9,6 @@
 #else
     #define CUSTOM_OBJECTS_DLL __attribute__((visibility("default")))
 #endif
-#if (__INTELLISENSE__ != 1 && !defined(__CLION_IDE__)) || CUSTOM_OBJECTS_EXPORTING
-    #define CUSTOM_OBJECTS_INTELLISENSE_DISABLED
-#endif
 
 class CustomObjectsMod;
 class CustomObjectConfigBase;
@@ -27,7 +24,6 @@ class CustomObjectConfigBase;
  * Any sprite you want to use in a custom object must be added to the spritesheet so that batch rendering can work correctly.
  */
 class CUSTOM_OBJECTS_DLL CustomSpriteConfig final {
-#ifdef CUSTOM_OBJECTS_INTELLISENSE_DISABLED
 private:
     friend class CustomObjectsManager;
     friend class CustomSpritesManager;
@@ -45,10 +41,9 @@ private:
     void generateFrame();
 
     CustomSpriteConfig(const CustomObjectsMod* mod, const CustomObjectConfigBase* object, std::string frame, int offX, int offY, int sizeW, int sizeH);
+
 public:
     CustomSpriteConfig& operator=(const CustomSpriteConfig&);
-#endif
-public:
 
     /**
      * Sets the frame name, custom offset, and custom size of the sprite.

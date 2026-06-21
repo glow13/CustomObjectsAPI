@@ -32,8 +32,10 @@ public:
         this->m_hasCustomRotation = true;
         this->m_rotationDelta = 360;
         this->m_rotationAngle = 360;
+
+        // These are wrong in the bindings for now, I need to do a pr probably lol
         // this->m_glowColorIsLBG = true;
-        this->m_customGlowColor = true;
+        this->m_customGlowColor = true; // m_glowColorIsLBG
 
         return true;
     } // init
