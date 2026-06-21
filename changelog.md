@@ -1,2 +1,2 @@
-# 1.0.0
-- Initial release! (its not released)
+# 1.0.0-beta.1
+- Initial release!
