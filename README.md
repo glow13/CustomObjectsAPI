@@ -49,7 +49,7 @@ $execute {
 #include <glow12.custom-objects-api/include/CustomObjectsAPI.hpp>
 #include <glow12.custom-objects-api/include/object/CustomPadObject.hpp>
 
-// Nice macro provided by the API, similar to Geode's $modify macro
+// Convenient macro provided by the API, similar to Geode's $modify macro
 class $object(MyCustomPad, CustomPadObject) {
     // Because this is your own class, you can just add a class variable normally
     // You don't have to use Geode Fields or anything more complex
@@ -58,7 +58,7 @@ class $object(MyCustomPad, CustomPadObject) {
     // Most of the config callbacks work here too
     // Simply override the class's virtual functions to use them
     void resetCustomObject() override { // called at the start of every new attempt
-        bouncePower = 0.1f;
+        bouncePower = 0.4f;
     }
 
     // This function is called when the player touches the pad
@@ -70,16 +70,16 @@ class $object(MyCustomPad, CustomPadObject) {
 
     // Because CustomPadObject fundamentally inherits from EffectGameObject
     // You can also override any EffectGameObject or GameObject virtual functions
-    void setPosition(auto p0) override {
-        CustomPadObject::setPosition(p0);
-        log::info("someone just changed my position!");
+    void selectObject(ccColor3B color) override {
+        CustomPadObject::selectObject(color);
+        log::info("someone just selected me ig!");
     }
 };
 
 // You still have to register the object
 $execute {
     // Simply provide your custom class as the template parameter
-    CustomObjectsAPI::registerCustomObject<MyCustomPad>("custom-pad.png"_spr);
+    CustomObjectsAPI::registerCustomObject<MyCustomPad>("custom-pad.png"_spr).setObjectOffset(0, -13);
 }
 ```
 
