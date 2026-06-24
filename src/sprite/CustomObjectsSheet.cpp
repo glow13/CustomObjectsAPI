@@ -2,8 +2,8 @@
 
 #include "config/CustomSpriteConfig.hpp"
 #include "sprite/CustomObjectsSheet.hpp"
-#include "sprite/CustomSpritesManager.hpp"
 #include "sprite/CustomSheetSprite.hpp"
+#include "CustomSpritesManager.hpp"
 
 #define LODEPNG_NO_COMPILE_DECODER
 #define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS

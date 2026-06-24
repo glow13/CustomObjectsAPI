@@ -2,7 +2,7 @@
 #include <Geode/modify/EditorUI.hpp>
 #include <alphalaneous.editortab_api/include/EditorTabAPI.hpp>
 
-#include "object/CustomObjectsManager.hpp"
+#include "CustomObjectsManager.hpp"
 #include "config/CustomObjectConfig.hpp"
 
 using namespace geode::prelude;

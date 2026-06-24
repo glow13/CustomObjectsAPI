@@ -1,5 +1,5 @@
 #include "CustomObjectsAPI.hpp"
-#include "object/CustomObjectsManager.hpp"
+#include "CustomObjectsManager.hpp"
 #include "config/CustomObjectConfig.hpp"
 #include "config/CustomObjectsMod.hpp"
 

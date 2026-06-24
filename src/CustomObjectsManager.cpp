@@ -1,8 +1,8 @@
 #include <Geode/Geode.hpp>
 #include <Geode/utils/base64.hpp>
 
-#include "object/CustomObjectsManager.hpp"
-#include "sprite/CustomSpritesManager.hpp"
+#include "CustomObjectsManager.hpp"
+#include "CustomSpritesManager.hpp"
 #include "config/CustomObjectConfig.hpp"
 #include "config/CustomObjectsMod.hpp"
 #include "object/ModTriggerObject.hpp"

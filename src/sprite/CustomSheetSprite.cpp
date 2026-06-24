@@ -2,7 +2,7 @@
 
 #include "config/CustomSpriteConfig.hpp"
 #include "sprite/CustomSheetSprite.hpp"
-#include "sprite/CustomSpritesManager.hpp"
+#include "CustomSpritesManager.hpp"
 
 using namespace geode::prelude;
 

@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 
-#include "sprite/CustomSpritesManager.hpp"
+#include "CustomSpritesManager.hpp"
 #include "config/CustomSpriteConfig.hpp"
 
 #include "sprite/CustomObjectsSheet.hpp"
