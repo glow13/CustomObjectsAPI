@@ -1,7 +1,7 @@
 #include <Geode/Geode.hpp>
 
-#include "data/CustomObjectConfig.hpp"
-#include "data/CustomObjectsMod.hpp"
+#include "config/CustomObjectConfig.hpp"
+#include "config/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
 

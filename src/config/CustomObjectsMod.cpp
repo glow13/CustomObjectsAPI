@@ -1,4 +1,4 @@
-#include "data/CustomObjectsMod.hpp"
+#include "config/CustomObjectsMod.hpp"
 
 using namespace geode::prelude;
 

@@ -1,11 +1,11 @@
 #include <Geode/Geode.hpp>
 #include <Geode/utils/base64.hpp>
 
-#include "CustomObjectsManager.hpp"
-#include "CustomSpritesManager.hpp"
-#include "data/CustomObjectConfig.hpp"
-#include "data/CustomObjectsMod.hpp"
-#include "ModTriggerObject.hpp"
+#include "object/CustomObjectsManager.hpp"
+#include "sprite/CustomSpritesManager.hpp"
+#include "config/CustomObjectConfig.hpp"
+#include "config/CustomObjectsMod.hpp"
+#include "object/ModTriggerObject.hpp"
 
 using namespace geode::prelude;
 

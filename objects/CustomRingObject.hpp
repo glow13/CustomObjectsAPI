@@ -1,5 +1,5 @@
 #pragma once
-#include "../CustomObjectBase.hpp"
+#include "../include/object/CustomObjectBase.hpp"
 
 #include <Geode/binding/RingObject.hpp>
 #include <Geode/binding/GJSpriteColor.hpp>

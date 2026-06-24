@@ -1,8 +1,8 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/LoadingLayer.hpp>
 
-#include "CustomObjectsManager.hpp"
-#include "CustomSpritesManager.hpp"
+#include "object/CustomObjectsManager.hpp"
+#include "sprite/CustomSpritesManager.hpp"
 
 using namespace geode::prelude;
 

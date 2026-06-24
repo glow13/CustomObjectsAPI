@@ -1,10 +1,10 @@
 #include <Geode/Geode.hpp>
 
-#include "CustomSpritesManager.hpp"
-#include "data/CustomSpriteConfig.hpp"
+#include "sprite/CustomSpritesManager.hpp"
+#include "config/CustomSpriteConfig.hpp"
 
-#include "CustomObjectsSheet.hpp"
-#include "data/CustomSheetSprite.hpp"
+#include "sprite/CustomObjectsSheet.hpp"
+#include "sprite/CustomSheetSprite.hpp"
 
 using namespace geode::prelude;
 

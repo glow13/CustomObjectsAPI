@@ -1,6 +1,6 @@
 #pragma once
 
-#include "object/CustomTriggerObject.hpp"
+#include "../../objects/CustomTriggerObject.hpp"
 
 using namespace geode::prelude;
 

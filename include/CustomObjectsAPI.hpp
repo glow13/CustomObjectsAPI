@@ -6,11 +6,11 @@
 #include <Geode/binding/PlayerObject.hpp>
 #include <Geode/binding/GJBaseGameLayer.hpp>
 
-#include "data/CustomSpriteConfig.hpp"
-#include "data/CustomObjectConfig.hpp"
+#include "config/CustomSpriteConfig.hpp"
+#include "config/CustomObjectConfig.hpp"
 
-#include "CustomObjectBase.hpp"
-#include "object/CustomGameObject.hpp"
+#include "object/CustomObjectBase.hpp"
+#include "../objects/CustomGameObject.hpp"
 
 class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
 private:

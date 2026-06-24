@@ -1,8 +1,8 @@
 #include <Geode/Geode.hpp>
 
-#include "data/CustomSheetSprite.hpp"
-#include "data/CustomSpriteConfig.hpp"
-#include "CustomSpritesManager.hpp"
+#include "config/CustomSpriteConfig.hpp"
+#include "sprite/CustomSheetSprite.hpp"
+#include "sprite/CustomSpritesManager.hpp"
 
 using namespace geode::prelude;
 
