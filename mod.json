@@ -39,10 +39,11 @@
         "gameplay"
     ],
     "links": {
-        "source": "https://github.com/glow13/CustomObjectsAPI"
+        "source": "https://github.com/glow13/CustomObjectsAPI",
+        "homepage": "https://github.com/glow13/CustomObjectsAPI/wiki"
     },
     "issues": {
-        "info": "Please submit any issues / requests to the mod's GitHub page!",
+        "info": "Please submit any issues / feature requests to the mod's GitHub page!",
         "url": "https://github.com/glow13/CustomObjectsAPI/issues"
     },
     "settings": {
@@ -71,7 +72,7 @@
         "disable-aa": {
             "type": "bool",
             "name": "Disable Anti-Aliasing",
-            "description": "Disables the anti-aliasing effect applied to the custom objects spritesheet, some textures may look better with this setting enabled.",
+            "description": "Disables the anti-aliasing effect applied to the custom objects spritesheet. Some textures may look better with this setting enabled.",
             "default": false
         }
     }

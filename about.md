@@ -1,20 +1,24 @@
 # Custom Objects API
 
-### Add new custom objects to Geometry Dash!
+### ***Add new custom objects to Geometry Dash!***
 
-This mod aims to be the universal solution for any developers wanting to add their own custom objects to the game, with a focus on compatability and ease of use. The API features a class-based approach to object creation, where instead of hooking vanilla objects to do what you want, you create completely new classes that inherit from GameObject and that you have complete control over. The goal is to give developers a much higher level of freedom in what they can implement, while also eliminating the problem of having too many hooks that may conflict with other custom objects from other mods.
+This mod aims to be the <cy>universal solution</c> for any developers wanting to add their own <cl>custom objects</c> to the game, with a focus on compatability and ease of use. The API features a class-based approach to object creation, where instead of <cr>hooking vanilla objects</c> to do what you want, you <cg>create completely new classes</c> that inherit from GameObject and that you have complete control over. The goal is to give developers a much <cp>higher level of freedom</c> in what they can implement, while also eliminating the problem of having too many hooks that may conflict with other custom objects from other mods.
 
-# For Creators / Players
+***
 
-Any objects added with this API can be used and uploaded in any level just like vanilla GD objects. To play a level with custom objects on the servers, you will need to have this API installed and whatever mods that add the custom objects used in the level. This API was designed to have ZERO REQUIRED DEPENDENCIES, so you don't have to install 47 mods just to play a single level. The API is also completely invisible and doesn't modify (or lag (I think)) the rest of the game in any way.
+## For Creators / Players
 
-If you are a creator looking to use custom objects in your level, you must have the mod [EditorTab API by Alphalaneous](mod:alphalaneous.editortab_api) installed, and you need to enable the editor tab in this mod's settings page. This API was made with compatability in mind, so every mod you install comes with a custom trigger that you can use in your level to detect if the player has that specific mod installed. This helps your level adapt if the custom objects don't exist, or you can let the player know that the level won't work and that they need the mod installed to continue.
+Any objects added with this API can be used and uploaded in any level just like vanilla GD objects. To play a level with custom objects on the servers, you will need to have this API installed and whatever mods that add the custom objects used in the level. This API was designed to have <cr>ZERO REQUIRED DEPENDENCIES</c>, so you shouldn't have to install 47 mods just to play a single level. The API is also completely invisible and doesn't modify (or lag) the rest of the game in any other way.
 
-##### <c-999>(Please note that I cannot guarantee that your level will still be rated if you upload a level that uses custom objects, this will likely depend on how you use them and will ultimately be decided by RobTop. Most custom objects are probably just made for fun lol)</c>
+If you are a creator looking to use custom objects in your level, you must have the mod [EditorTab API by Alphalaneous](mod:alphalaneous.editortab_api) installed, and you need to enable the editor tab in this mod's settings page. This API was made with compatability in mind, so every mod you install comes with a <cp>custom trigger</c> that you can use in your level to detect if the player has that specific mod installed.
 
-# For Developers
+##### <c-999>(Please note that I cannot guarantee that your level will still be rated if you upload a level that uses custom objects, this will likely depend on how you use them and will ultimately be decided by RobTop. Most custom objects are probably just made for fun anyways lol)</c>
 
-This API comes with several pre-made object classes for you to use and inherit from (made by me)! You have several options on how to register a custom object, including an easy-ish-to-use config object that you can configure inline.
+***
+
+## For Developers
+
+This API comes with several <co>pre-made object classes</c> for you to use and inherit from (made by me)! You have several options on how to register a custom object, including an easy-ish-to-use config object that you can configure inline.
 
 #### Here is an example of one of the simplest ways to register an object:
 
@@ -41,7 +45,7 @@ $execute {
     auto customOrb = CustomObjectsAPI::registerCustomObject<CustomRingObject>("my-custom-orb.png"_spr, 36, 36)
         .setGlowSprite("custom-orb-glow.png"_spr).setGlowColor(255, 255, 0).setParticleColor(200, 150, 0);
 
-    // You can also assign the config to a variable reference and use it elsewhere
+    // You can also assign the config to a reference variable and use it elsewhere
     customOrb.onSetupCustomObject([](CustomRingObject* obj) { // callback for object setup
         log::info("yo this object just got set up ig {}", obj->m_objectID);
     });
@@ -93,4 +97,10 @@ $execute {
 }
 ```
 
-Please visit the mod's [GitHub](https://github.com/glow13/CustomObjectsAPI) page for more in-depth documentation.
+***
+
+## GitHub Repository
+
+Please visit the mod's [GitHub](https://github.com/glow13/CustomObjectsAPI) page to report bugs / request features!
+
+There is also more in-depth documentation available on the GitHub [wiki page](https://github.com/glow13/CustomObjectsAPI/wiki)! It's still incomplete and probably doesn't cover everything, but hopefully it makes this API a little easier to use :)
