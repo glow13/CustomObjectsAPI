@@ -10,7 +10,7 @@ This mod aims to be the <cy>universal solution</c> for any developers wanting to
 
 Any objects added with this API can be used and uploaded in any level just like vanilla GD objects. To play a level with custom objects on the servers, you will need to have this API installed and whatever mods that add the custom objects used in the level. This API was designed to have <cr>ZERO REQUIRED DEPENDENCIES</c>, so you shouldn't have to install 47 mods just to play a single level. The API is also completely invisible and doesn't modify (or lag) the rest of the game in any other way.
 
-If you are a creator looking to use custom objects in your level, you must have the mod [EditorTab API by Alphalaneous](mod:alphalaneous.editortab_api) installed, and you need to enable the editor tab in this mod's settings page. This API was made with compatability in mind, so every mod you install comes with a <cp>custom trigger</c> that you can use in your level to detect if the player has that specific mod installed.
+If you are a creator looking to use custom objects in your level, you must have the mod [EditorTab API by Alphalaneous](mod:alphalaneous.editortab_api) installed, and you need to <cg>enable the editor tab</c> in this mod's settings page. This API was made with compatability in mind, so every mod you install comes with a <cp>custom trigger</c> that you can use in your level to detect if the player has that specific mod installed.
 
 ##### <c-999>(Please note that I cannot guarantee that your level will still be rated if you upload a level that uses custom objects, this will likely depend on how you use them and will ultimately be decided by RobTop. Most custom objects are probably just made for fun anyways lol)</c>
 
