@@ -32,7 +32,7 @@ public:
         this->m_objectID = objectID;
     } // updateObjectLabel
 
-    void customSetup() override final {
+    void customSetup() override {
         auto ignoreDuration = this->m_dontIgnoreDuration;
         CustomObjectBase::customSetup();
 

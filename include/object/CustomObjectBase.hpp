@@ -1,4 +1,5 @@
 #pragma once
+#include <Geode/utils/base64.hpp>
 
 #define $base(BaseType, ObjectBase) BaseType##Base : public CustomObjectBase<ObjectType, ObjectBase>
 #define $generic(BaseType) BaseType final : public BaseType##Base<BaseType> {}

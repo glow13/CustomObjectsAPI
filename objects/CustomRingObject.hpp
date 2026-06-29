@@ -31,7 +31,7 @@ public:
         this->activateCustomObject(player->m_gameLayer, player);
     } // activatedByPlayer
 
-    void customSetup() override final {
+    void customSetup() override {
         if (!this->m_editorEnabled && !this->m_hasNoParticles) {
             this->createAndAddParticle(36, "ringEffect.plist", 4, cocos2d::tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();

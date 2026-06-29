@@ -46,7 +46,7 @@ public:
         } // if
     } // triggerObject
 
-    void customSetup() override final {
+    void customSetup() override {
         if (!this->m_editorEnabled && !this->m_hasNoParticles) {
             this->createAndAddParticle(9, "bumpEffect.plist", 4, cocos2d::tCCPositionType::kCCPositionTypeGrouped);
             this->claimParticle();
