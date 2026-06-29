@@ -86,3 +86,10 @@ $execute {
     CustomObjectsAPI::registerCustomObject<MyCustomPad>("custom-pad.png"_spr).setObjectOffset(0, -13);
 }
 ```
+
+***
+
+# Libraries Used
+
+- [rectpack2D](https://github.com/TeamHypersomnia/rectpack2D) by [TeamHypersomnia](https://github.com/TeamHypersomnia) for sprite sheet generation
+- [lodepng](https://github.com/lvandeve/lodepng) by [lvandeve](https://github.com/lvandeve) for saving the sprite sheet as a PNG image
