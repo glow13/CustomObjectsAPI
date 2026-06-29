@@ -4,6 +4,13 @@
 #include <Geode/binding/RingObject.hpp>
 #include <Geode/binding/GJSpriteColor.hpp>
 
+/**
+ * This class is a custom object that can interact with the player's icon when the player clicks on this object.
+ * Some vanilla examples include the pink, yellow, and red jump orbs, as well as the Toggle Orb.
+ * 
+ * This class adds support for the `CustomObjectConfig::onActivateCustomObject` callback.
+ * The callback is called whenever the player clicks when their icon is touching this object.
+ */
 template <class ObjectType>
 class $base(CustomRingObject, RingObject) {
 protected:

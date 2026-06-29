@@ -3,6 +3,12 @@
 
 #include <Geode/binding/GameObject.hpp>
 
+/**
+ * The most basic custom object class with no extra features.
+ * Some vanilla examples include LITERALLY every single object lol.
+ * 
+ * This is the default class that `CustomObjectsAPI::registerCustomObject` uses.
+ */
 template <class ObjectType>
 class $base(CustomGameObject, GameObject) {
 protected:

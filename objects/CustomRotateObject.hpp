@@ -3,6 +3,13 @@
 
 #include <Geode/binding/EnhancedGameObject.hpp>
 
+/**
+ * This class is a custom object that has a rotating main sprite.
+ * Some vanilla examples include the Saw and Gear hazard objects.
+ * 
+ * Use `CustomObjectConfig::setBoxRadius` to change the size of this object's hitbox.
+ * This object only works properly as a `GameObjectType::Decoration` or `GameObjectType::Hazard` object!
+ */
 template <class ObjectType>
 class $base(CustomRotateObject, EnhancedGameObject) {
 protected:

@@ -5,6 +5,16 @@
 #include <Geode/binding/GJEffectManager.hpp>
 #include <Geode/binding/GJSpriteColor.hpp>
 
+/**
+ * This class is a custom pad object that can interact with the player's icon when it touches this object.
+ * Some vanilla examples include the pink, yellow, and red bounce pads.
+ * 
+ * This class adds support for the `CustomObjectConfig::onActivateCustomObject` callback.
+ * The callback is called whenever the player touches the custom pad object.
+ *
+ * Even though this object is made to act like a vanilla bounce pad, it can obviously
+ * do whatever you want when the player touches it, feel free to be creative!
+ */
 template <class ObjectType>
 class $base(CustomPadObject, EffectGameObject) {
 protected:

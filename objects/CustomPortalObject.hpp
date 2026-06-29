@@ -16,6 +16,16 @@ enum GameModeType : int {
     SWING = (int)GameObjectType::SwingPortal,
 };
 
+/**
+ * This class is a custom portal object that can interact with the player's icon when it touches this object.
+ * Some vanilla examples include the Gravity Portals and Gamemode Portals.
+ * 
+ * This class adds support for the `CustomObjectConfig::onActivateCustomObject` callback.
+ * The callback is called whenever the player touches the custom portal object.
+ * 
+ * This object is designed to specifically be a custom portal and can't easily be made to do anything else unfortunately.
+ * However you can reference this as a good example of a complex custom object that adds many extra features.
+ */
 template <class ObjectType>
 class $base(CustomPortalObject, EffectGameObject) {
 protected:

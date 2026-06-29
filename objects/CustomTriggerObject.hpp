@@ -3,6 +3,16 @@
 
 #include <Geode/binding/EffectGameObject.hpp>
 
+/**
+ * This class is a custom object that can run a callback when it is "triggered".
+ * Some vanilla examples include the Move or Spawn triggers, or just any trigger object.
+ * 
+ * This class adds support for the `CustomObjectConfig::onActivateCustomObject` callback.
+ * The callback is called whenever this object is "triggered", either when the player icon
+ * passes this object in classic mode, touches this object, or when this object is spawned.
+ * 
+ * The callback also provides the spawn remap keys so that you can accurately spawn other trigger objects through code.
+ */
 template <class ObjectType>
 class $base(CustomTriggerObject, EffectGameObject) {
 protected:

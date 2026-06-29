@@ -154,7 +154,7 @@ public:
     }
 
     /**
-     * An easy way to register multiple sprites used in an animation, intended to be used for a custom animated object.
+     * An easy way to register multiple sprites used in an animation, intended to be used for the `CustomAnimatedObject` class.
      * The sprites for the animation must all have the correct naming scheme for Geometry Dash to handle them correctly: 
      * they must all start with the same name, and have the frame number appended to the end, for example "cat_001.png", "cat_002.png", etc.
      * Pass the name of the first sprite of the animation into this function, ie "cat_001.png", and it will automatically register the rest.
@@ -171,7 +171,7 @@ public:
     }
 
     /**
-     * An easy way to register multiple sprites used in an animation, intended to be used for a custom animated object.
+     * An easy way to register multiple sprites used in an animation, intended to be used for the `CustomAnimatedObject` class.
      * The sprites for the animation must all have the correct naming scheme for Geometry Dash to handle them correctly: 
      * they must all start with the same name, and have the frame number appended to the end, for example "cat_001.png", "cat_002.png", etc.
      * Pass the name of the first sprite of the animation into this function, ie "cat_001.png", and it will automatically register the rest.
@@ -188,7 +188,7 @@ public:
     }
 
     /**
-     * An easy way to register multiple sprites used in an animation, intended to be used for a custom animated object.
+     * An easy way to register multiple sprites used in an animation, intended to be used for the `CustomAnimatedObject` class.
      * The sprites for the animation must all have the correct naming scheme for Geometry Dash to handle them correctly: 
      * they must all start with the same name, and have the frame number appended to the end, for example "cat_001.png", "cat_002.png", etc.
      * Pass the name of the first sprite of the animation into this function, ie "cat_001.png", and it will automatically register the rest.
@@ -204,9 +204,9 @@ public:
     }
 
     /**
-     * An easy way to register multiple sprites used in an animation, intended to be used for a custom animated object.
+     * An easy way to register multiple sprites used in an animation, intended to be used for the `CustomAnimatedObject` class.
      * The sprites for the animation must all have the correct naming scheme for Geometry Dash to handle them correctly: 
-     * they must all start with the same name, and have the frame number appended to the end, for example "cat_001.png", "cat_002.png", etc.
+     * They must all start with the same name, and have the frame number appended to the end, for example "cat_001.png", "cat_002.png", etc.
      * Pass the name of the first sprite of the animation into this function, ie "cat_001.png", and it will automatically register the rest.
      * 
      * This function applies no custom offset to the animation, and each frame is registered using the actual size of the sprite.

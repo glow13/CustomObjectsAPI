@@ -3,6 +3,14 @@
 
 #include <Geode/binding/EffectGameObject.hpp>
 
+/**
+ * This class is a custom object that can be "collected" when touched by the player.
+ * Some vanilla examples include the Key object from Deadlocked and the Potion
+ * objects from Dash that can be collected and trigger certain events.
+ * 
+ * This class adds support for the `CustomObjectConfig::onActivateCustomObject` callback.
+ * The callback gets called when the player touches and collects the custom collectible object.
+ */
 template <class ObjectType>
 class $base(CustomCollectibleObject, EffectGameObject) {
 protected:

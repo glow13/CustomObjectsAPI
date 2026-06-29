@@ -59,6 +59,7 @@ public:
         (config->activateCustomObjectCallback)(static_cast<ObjectType*>(this), level, player);
     } // activateCustomObject
 
+    // Stores additional object data in the object's save string
     template <class ValueType>
     void setupObjectProperty(int key, ValueType& value, std::function<bool()> cond = nullptr) {
         if (auto it = loadedSaveValues.find(key); it != loadedSaveValues.end()) {
