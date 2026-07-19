@@ -1,5 +1,14 @@
 # Custom Objects API
 
+> #### UPDATE 6/28/2026:
+> So apparently this mod idea is \**so good*\* that someone on the Geode staff is already developing a "custom objects API" that I didn't know about when I was developing this mod. I was told that their version of the API will be officially endorsed by the Geode team when it eventually releases, and therefore my mod will never be accepted to the official index. This means that this API is effectively worthless and the many hours of work I put into this project were completely wasted.  
+> #### FUTURE PLANS:
+> While the official API was the main reason my mod will never be accepted, I also recieved some feedback and was shown that there were several critical issues with my code that I didn't know about. I am currently planning to spend some time making a *full rewrite* of this API, reusing a lot of the code but fixing many of the design flaws in my original mod. I want to create a good and usable version of this mod that is consistent with my original vision for a custom obects API, even if it will never be officially accepted or used by anyone. And who knows, maybe if I don't prefer the official API I can revive this in some capacity for my own personal mods, I'll see whenever that happens I guess.  
+> 
+> Thanks for reading if you actually read all of that lol, please look forward to the official version of the API whenever it releases, and hopefully I can come back soon with another cool mod idea :D
+
+***
+
 ### ***Add new custom objects to Geometry Dash!***
 
 This mod aims to be the universal solution for any developers wanting to add their own custom objects to the game, with a focus on compatability and ease of use. The API features a class-based approach to object creation, where instead of hooking vanilla objects to do what you want, you create completely new classes that inherit from GameObject and that you have complete control over. The goal is to give developers a much higher level of freedom in what they can implement, while also eliminating the problem of having too many hooks that may conflict with other custom objects from other mods.
