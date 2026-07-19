@@ -1,5 +1,5 @@
 {
-    "geode": "5.7.1",
+    "geode": "5.8.2",
     "gd": {
         "win": "2.2081",
         "android": "2.2081",
@@ -8,7 +8,7 @@
     },
     "id": "glow12.custom-objects-api",
     "name": "Custom Objects API",
-    "version": "v1.0.0-beta.1",
+    "version": "v1.0.0-beta.2",
     "developer": "glow12",
     "description": "Add new custom objects to Geometry Dash!",
     "early-load": true,
@@ -20,11 +20,7 @@
     },
     "api": {
         "include": [
-            "include/CustomObjectsAPI.hpp",
-            "include/object/CustomObjectBase.hpp",
-            "include/config/CustomSpriteConfig.hpp",
-            "include/config/CustomObjectConfig.hpp",
-            "objects/*.hpp"
+            "include/*.hpp"
         ]
     },
     "resources": {
