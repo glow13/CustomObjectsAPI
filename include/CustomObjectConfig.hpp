@@ -2,11 +2,11 @@
 #include <memory>
 
 using geode::geode_internal::StringConcatModIDSlash;
-using ObjectCreator = GameObject*(*)();
 
 class CustomObjectConfig final {
 public:
-    CustomObjectConfig(int, ObjectCreator);
+    using ObjectConstructor = GameObject*(*)();
+    CustomObjectConfig(int, ObjectConstructor);
     ~CustomObjectConfig();
 
     int getObjectID() const;
@@ -16,7 +16,7 @@ private:
     std::unique_ptr<Impl> impl;
 
     GameObject* createCustomObject() const;
-    static std::shared_ptr<CustomObjectConfig> registerConfig(std::string_view, ObjectCreator);
+    static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
     template <class Object> static GameObject* objectFactory() { return new Object(); }
 
     template <class, StringConcatModIDSlash> friend class ConfigObject;
@@ -25,8 +25,12 @@ private:
 
 template <class ObjectType, StringConcatModIDSlash StringID>
 class ConfigObject {
-    static inline auto config = CustomObjectConfig::registerConfig(StringID.buffer, &CustomObjectConfig::objectFactory<ObjectType>);
-    static inline auto configRef = &config;
+    static inline struct {
+        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, &CustomObjectConfig::objectFactory<ObjectType>);
+        bool initialized = +[](){ ObjectType::onLoad(); return true; }();
+    } data;
+    static inline auto dataRef = &data;
 protected:
-    const CustomObjectConfig* getConfig() const { return config; }
+    static CustomObjectConfig* getConfig() { return data.config; }
+    static bool isInitialized() { return data.initialized; }
 };

@@ -5,12 +5,12 @@
 using namespace geode::prelude;
 
 struct CustomObjectConfig::Impl {
-    ObjectCreator ctor;
+    ObjectConstructor ctor;
     int objectID;
 };
 
 CustomObjectConfig::~CustomObjectConfig() = default;
-CustomObjectConfig::CustomObjectConfig(int objectID, ObjectCreator ctor) : impl(std::make_unique<CustomObjectConfig::Impl>()) {
+CustomObjectConfig::CustomObjectConfig(int objectID, ObjectConstructor ctor) : impl(std::make_unique<CustomObjectConfig::Impl>()) {
     impl->objectID = objectID;
     impl->ctor = ctor;
 }
@@ -28,6 +28,6 @@ int CustomObjectConfig::getObjectID() const {
     return impl->objectID;
 }
 
-std::shared_ptr<CustomObjectConfig> CustomObjectConfig::registerConfig(std::string_view stringID, ObjectCreator ctor) {
+CustomObjectConfig* CustomObjectConfig::registerConfig(std::string_view stringID, ObjectConstructor ctor) {
     return CustomObjectsManager::get()->registerObjectConfig(stringID, ctor);
 }

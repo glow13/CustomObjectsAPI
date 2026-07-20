@@ -2,13 +2,13 @@
 #include <memory>
 
 class CustomObjectsManager {
-    std::unordered_map<int, std::shared_ptr<class CustomObjectConfig>> customObjects;
+    std::unordered_map<int, std::unique_ptr<class CustomObjectConfig>> customObjects;
 public:
     static CustomObjectsManager* get();
-    std::shared_ptr<CustomObjectConfig> registerObjectConfig(std::string_view stringID, GameObject*(*ctor)());
+    CustomObjectConfig* registerObjectConfig(std::string_view stringID, GameObject*(*ctor)());
     void forEachCustomObject(std::function<void(const CustomObjectConfig*)> callback) const;
     int getTotalCustomObjectsCount() const;
 
-    const std::shared_ptr<CustomObjectConfig> getCustomObjectByID(int id) const;
+    CustomObjectConfig* getCustomObjectByID(int id) const;
     GameObject* createCustomObjectWithID(int id) const;
 };

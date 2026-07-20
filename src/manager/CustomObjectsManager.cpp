@@ -16,22 +16,22 @@ int getHashedObjectID(std::string_view stringID) {
     return min + (hash * (max - min)) / UINT32_MAX;
 }
 
-std::shared_ptr<CustomObjectConfig> CustomObjectsManager::registerObjectConfig(std::string_view stringID, GameObject*(*ctor)()) {
+CustomObjectConfig* CustomObjectsManager::registerObjectConfig(std::string_view stringID, GameObject*(*ctor)()) {
     int objectID = getHashedObjectID(stringID);
-    return customObjects.emplace(objectID, std::make_shared<CustomObjectConfig>(objectID, ctor)).first->second;
+    return customObjects.emplace(objectID, std::make_unique<CustomObjectConfig>(objectID, ctor)).first->second.get();
 }
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig*)> callback) const {
-    for (auto [id, config] : customObjects) callback(config.get());
+    for (const auto& [id, config] : customObjects) callback(config.get());
 }
 
 int CustomObjectsManager::getTotalCustomObjectsCount() const {
     return customObjects.size();
 }
 
-const std::shared_ptr<CustomObjectConfig> CustomObjectsManager::getCustomObjectByID(int id) const {
+CustomObjectConfig* CustomObjectsManager::getCustomObjectByID(int id) const {
     auto it = customObjects.find(id);
-    return it != customObjects.end() ? it->second : nullptr;
+    return it != customObjects.end() ? it->second.get() : nullptr;
 }
 
 GameObject* CustomObjectsManager::createCustomObjectWithID(int id) const {
