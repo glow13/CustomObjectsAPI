@@ -13,7 +13,7 @@ public:
 
 private:
     struct Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> m_impl;
 
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
