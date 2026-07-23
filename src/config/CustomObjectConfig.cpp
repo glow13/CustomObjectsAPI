@@ -17,15 +17,7 @@ CustomObjectConfig::CustomObjectConfig(int objectID, ObjectConstructor ctor) : m
 
 GameObject* CustomObjectConfig::createCustomObject() const {
     if (!m_impl->m_ctor) return nullptr;
-
-    auto obj = m_impl->m_ctor();
-    if (obj->init("")) {
-        obj->autorelease();
-        return obj;
-    }
-
-    delete obj;
-    return nullptr;
+    return m_impl->m_ctor(this);
 }
 
 int CustomObjectConfig::getObjectID() const {
