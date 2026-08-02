@@ -18,19 +18,20 @@ private:
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
-    template <class, StringConcatModIDSlash> friend class ConfigObject;
+    template <class, StringConcatModIDSlash> friend class ConfigGameObject;
     friend class CustomObjectsManager;
 };
 
 template <class ObjectType, StringConcatModIDSlash StringID>
-class ConfigObject {
+class ConfigGameObject {
     static inline struct {
         CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer,
             +[](const CustomObjectConfig* config) -> GameObject* { return createWithConfig(config); });
-        bool initialized = +[](){ ObjectType::onLoad(); return true; }();
+        bool initialized = +[](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*data.config); return true; }();
     } data;
     static inline auto dataRef = &data;
 protected:
+    static void onRegisterConfig(CustomObjectConfig&&) {}
     static const CustomObjectConfig* getConfig() { return data.config; }
     static bool isInitialized() { return data.initialized; }
 public:

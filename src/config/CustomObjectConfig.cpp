@@ -1,4 +1,3 @@
-#include <Geode/Geode.hpp>
 #include "CustomObjectConfig.hpp"
 #include "../manager/CustomObjectsManager.hpp"
 

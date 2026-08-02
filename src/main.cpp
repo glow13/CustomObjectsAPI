@@ -1,11 +1,10 @@
-#include <Geode/Geode.hpp>
 #include "CustomObjectBase.hpp"
 #include "CustomObjectConfig.hpp"
 #include "manager/CustomObjectsManager.hpp"
 
 using namespace geode::prelude;
 
-#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, ConfigObject<NAME, #NAME>
+#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, public ConfigGameObject<NAME, #NAME>
 
 class $object(TestGameObject, GameObject) {};
 class $object(TestEffectObject, EffectGameObject) {};
