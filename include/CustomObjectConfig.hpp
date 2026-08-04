@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 
 using geode::geode_internal::StringConcatModIDSlash;
 
@@ -8,13 +7,38 @@ public:
     using ObjectConstructor = GameObject*(*)(const CustomObjectConfig*);
     using EditObjectCallback = void(*)(GameObject*, cocos2d::CCArray*);
 
-    CustomObjectConfig(int, ObjectConstructor);
+    CustomObjectConfig(std::string_view, int, ObjectConstructor);
     ~CustomObjectConfig();
 
+    std::string getID() const;
+    std::string getModID() const;
     int getObjectID() const;
 
-    void onEditObjectButton(EditObjectCallback);
-    void onEditSpecialButton(EditObjectCallback);
+    std::string getMainSprite() const;
+    std::string getDetailSprite() const;
+    std::string getGlowSprite() const;
+
+    bool hasMainSprite() const;
+    bool hasDetailSprite() const;
+    bool hasGlowSprite() const;
+
+    CustomObjectConfig&& setMainSprite(std::string frame, int offsetX, int offsetY, int width, int height);
+    CustomObjectConfig&& setMainSprite(std::string frame, int width, int height);
+    CustomObjectConfig&& setMainSprite(std::string frame, int size);
+    CustomObjectConfig&& setMainSprite(std::string frame, bool sheet = true);
+
+    CustomObjectConfig&& setDetailSprite(std::string frame, int offsetX, int offsetY, int width, int height);
+    CustomObjectConfig&& setDetailSprite(std::string frame, int width, int height);
+    CustomObjectConfig&& setDetailSprite(std::string frame, int size);
+    CustomObjectConfig&& setDetailSprite(std::string frame, bool sheet = true);
+
+    CustomObjectConfig&& setGlowSprite(std::string frame, int offsetX, int offsetY, int width, int height);
+    CustomObjectConfig&& setGlowSprite(std::string frame, int width, int height);
+    CustomObjectConfig&& setGlowSprite(std::string frame, int size);
+    CustomObjectConfig&& setGlowSprite(std::string frame, bool sheet = true);
+
+    CustomObjectConfig&& onEditObjectButton(EditObjectCallback);
+    CustomObjectConfig&& onEditSpecialButton(EditObjectCallback);
 
     bool hasEditObjectCallback() const;
     bool hasEditSpecialCallback() const;

@@ -16,7 +16,7 @@ int getHashedObjectID(std::string_view stringID) {
 
 CustomObjectConfig* CustomObjectsManager::registerObjectConfig(std::string_view stringID, ObjectConstructor ctor) {
     int objectID = getHashedObjectID(stringID);
-    return customObjects.emplace(objectID, std::make_unique<CustomObjectConfig>(objectID, ctor)).first->second.get();
+    return customObjects.emplace(objectID, std::make_unique<CustomObjectConfig>(stringID, objectID, ctor)).first->second.get();
 }
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig*)> callback) const {
