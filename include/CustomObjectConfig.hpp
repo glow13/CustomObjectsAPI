@@ -12,6 +12,21 @@ public:
     CustomObjectConfig(std::string_view, int, ObjectConstructor);
     ~CustomObjectConfig();
 
+    CONFIG_OPTION(BoxSize, cocos2d::CCSize, int w, int h);
+    CONFIG_OPTION(BoxOffset, cocos2d::CCPoint, int x, int y);
+    CONFIG_OPTION(BoxRadius, int, int radius);
+    CONFIG_OPTION(ObjectOffset, cocos2d::CCPoint, int x, int y);
+    CONFIG_OPTION(ObjectType, GameObjectType, GameObjectType type);
+    CONFIG_OPTION(BatchMode, int, int mode);
+    CONFIG_OPTION(DisableBatchRender, bool);
+    CONFIG_OPTION(FramesCount, int, int frames);
+    CONFIG_OPTION(FrameTime, float, float time);
+    CONFIG_OPTION(GlowColor, cocos2d::ccColor3B, GLubyte r, GLubyte g, GLubyte b);
+    CONFIG_OPTION(ParticleColor, cocos2d::ccColor3B, GLubyte r, GLubyte g, GLubyte b);
+    CONFIG_OPTION(ParticleOpacity, GLubyte, GLubyte opacity);
+    CONFIG_OPTION(ParticleBlending, bool, bool blending);
+    CONFIG_OPTION(EditorPriority, int, int priority);
+
     std::string getID() const;
     std::string getModID() const;
     int getObjectID() const;
