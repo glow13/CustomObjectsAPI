@@ -13,4 +13,7 @@ public:
 
     CustomObjectConfig* getCustomObjectByID(int) const;
     GameObject* createCustomObjectWithID(int) const;
+
+    using ModObjects = std::vector<std::pair<int, int>>;
+    std::map<std::string, ModObjects> getEditorTabLayout() const;
 };

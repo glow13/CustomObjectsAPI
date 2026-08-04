@@ -36,3 +36,19 @@ GameObject* CustomObjectsManager::createCustomObjectWithID(int id) const {
     auto it = customObjects.find(id);
     return it != customObjects.end() ? it->second->createCustomObject() : nullptr;
 }
+
+std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::getEditorTabLayout() const {
+    std::map<std::string, ModObjects> mods;
+    for (auto& [id, obj] : customObjects) {
+        if (obj->getObjectID() < 0) continue;
+        mods[obj->getModID()].emplace_back(obj->getEditorPriority(), id);
+    }
+
+    for (auto& [mod, objs] : mods) {
+        std::sort(objs.begin(), objs.end(), [](const auto& a, const auto& b) {
+            return a.first == b.first ? a.second < b.second : a.first < b.first;
+        });
+    }
+
+    return mods;
+}
