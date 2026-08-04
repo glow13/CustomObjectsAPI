@@ -36,11 +36,32 @@ private:
 template <class ObjectType, StringConcatModIDSlash StringID>
 class ConfigGameObject {
     static inline struct {
-        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer,
-            +[](const CustomObjectConfig* config) -> GameObject* { return createWithConfig(config); });
-        bool initialized = +[](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*data.config); return true; }();
+        CustomObjectConfig* config = registerConfig();
+        bool initialized = initializeConfigObject();
     } data;
     static inline auto dataRef = &data;
+
+    static CustomObjectConfig* registerConfig() {
+        using EditObjectCallback = CustomObjectConfig::EditObjectCallback;
+        auto config = CustomObjectConfig::registerConfig(StringID.buffer,
+            (CustomObjectConfig::ObjectConstructor)ObjectType::createWithConfig);
+
+        if constexpr (requires(ObjectType* obj, cocos2d::CCArray* objs) {
+            { ObjectType::onEditObjectButton(obj, objs) } -> std::same_as<void>;
+        }) config->onEditObjectButton((EditObjectCallback)ObjectType::onEditObjectButton);
+
+        if constexpr (requires(ObjectType* obj, cocos2d::CCArray* objs) {
+            { ObjectType::onEditSpecialButton(obj, objs) } -> std::same_as<void>;
+        }) config->onEditSpecialButton((EditObjectCallback)ObjectType::onEditSpecialButton);
+
+        return config;
+    }
+
+    static bool initializeConfigObject() {
+        ObjectType::onRegisterConfig((CustomObjectConfig&&)*data.config);
+        return true;
+    }
+
 protected:
     static void onRegisterConfig(CustomObjectConfig&&) { /* do nothing by default */ }
     static const CustomObjectConfig* getConfig() { return data.config; }
