@@ -67,10 +67,8 @@ private:
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
-    public: // TODO move to CustomObjectsManager
     void customEditObject(GameObject*, cocos2d::CCArray*) const;
     void customEditSpecial(GameObject*, cocos2d::CCArray*) const;
-    private:
 
     template <class, StringConcatModIDSlash> friend class ConfigGameObject;
     friend class CustomObjectsManager;

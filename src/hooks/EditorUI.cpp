@@ -9,7 +9,7 @@ using namespace geode::prelude;
 
 constexpr int BASE_OBJECT_ID = 10000;
 
-class $modify(CustomEditorUI, EditorUI) {
+class $modify(EditorUI) {
     bool init(LevelEditorLayer* editorLayer) {
         if (!EditorUI::init(editorLayer)) return false;
         if (CustomObjectsManager::get()->getTotalCustomObjectsCount() == 0) return true;
@@ -58,21 +58,15 @@ class $modify(CustomEditorUI, EditorUI) {
     }
 
     void editObject(CCObject* p0) {
-        if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID) {
-            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
-            if (obj && obj->hasEditObjectCallback()) {
-                obj->customEditObject(m_selectedObject, m_selectedObjects);
-            } else EditorUI::editObject(p0);
-        } else EditorUI::editObject(p0);
+        if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID)
+            if (CustomObjectsManager::get()->customEditObjectForID(objectID, m_selectedObject, m_selectedObjects)) return;
+        EditorUI::editObject(p0);
     }
 
     void editObjectSpecial(int p0) {
-       if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID) {
-            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
-            if (obj && obj->hasEditSpecialCallback()) {
-                obj->customEditSpecial(m_selectedObject, m_selectedObjects);
-            } else EditorUI::editObjectSpecial(p0);
-        } else EditorUI::editObjectSpecial(p0);
+       if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID)
+            if (CustomObjectsManager::get()->customEditSpecialForID(objectID, m_selectedObject, m_selectedObjects)) return;
+        EditorUI::editObjectSpecial(p0);
     }
 
     // CCPoint offsetForKey(int id) {

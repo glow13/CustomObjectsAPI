@@ -14,6 +14,9 @@ public:
     CustomObjectConfig* getCustomObjectByID(int) const;
     GameObject* createCustomObjectWithID(int) const;
 
+    bool customEditObjectForID(int, GameObject*, cocos2d::CCArray*) const;
+    bool customEditSpecialForID(int, GameObject*, cocos2d::CCArray*) const;
+
     using ModObjects = std::vector<std::pair<int, int>>;
     std::map<std::string, ModObjects> getEditorTabLayout() const;
 };

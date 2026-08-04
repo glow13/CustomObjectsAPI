@@ -37,6 +37,22 @@ GameObject* CustomObjectsManager::createCustomObjectWithID(int id) const {
     return it != customObjects.end() ? it->second->createCustomObject() : nullptr;
 }
 
+bool CustomObjectsManager::customEditObjectForID(int id, GameObject* obj, CCArray* objs) const {
+    auto config = CustomObjectsManager::get()->getCustomObjectByID(id);
+    if (config && config->hasEditObjectCallback()) {
+        config->customEditObject(obj, objs);
+        return true;
+    } else return false;
+}
+
+bool CustomObjectsManager::customEditSpecialForID(int id, GameObject* obj, CCArray* objs) const {
+    auto config = CustomObjectsManager::get()->getCustomObjectByID(id);
+    if (config && config->hasEditSpecialCallback()) {
+        config->customEditSpecial(obj, objs);
+        return true;
+    } else return false;
+}
+
 std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::getEditorTabLayout() const {
     std::map<std::string, ModObjects> mods;
     for (auto& [id, obj] : customObjects) {
