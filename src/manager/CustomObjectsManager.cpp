@@ -1,5 +1,4 @@
 #include "CustomObjectsManager.hpp"
-#include "CustomObjectConfig.hpp"
 
 using namespace geode::prelude;
 

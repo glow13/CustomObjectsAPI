@@ -1,8 +1,8 @@
 #pragma once
-#include <memory>
+#include "CustomObjectConfig.hpp"
 
 class CustomObjectsManager {
-    using ObjectConstructor = GameObject*(*)(const class CustomObjectConfig*);
+    using ObjectConstructor = GameObject*(*)(const CustomObjectConfig*);
     std::unordered_map<int, std::unique_ptr<CustomObjectConfig>> customObjects;
 public:
     static CustomObjectsManager* get();
