@@ -7,8 +7,6 @@
 
 using namespace geode::prelude;
 
-constexpr int BASE_OBJECT_ID = 10000;
-
 class $modify(EditorUI) {
     bool init(LevelEditorLayer* editorLayer) {
         if (!EditorUI::init(editorLayer)) return false;

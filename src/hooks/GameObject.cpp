@@ -6,8 +6,6 @@
 
 using namespace geode::prelude;
 
-constexpr int BASE_OBJECT_ID = 10000;
-
 class $modify(GameObject) {
 public:
     static GameObject* createWithKey(int key) {

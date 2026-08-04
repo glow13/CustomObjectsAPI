@@ -8,10 +8,9 @@ CustomObjectsManager* CustomObjectsManager::get() {
 }
 
 int getHashedObjectID(std::string_view stringID) {
-    constexpr uint32_t min = 10000;
-    constexpr uint32_t max = INT32_MAX;
-    uint64_t hash = geode::utils::hash(stringID);
-    return min + (hash * (max - min)) / UINT32_MAX;
+    uint32_t hash = geode::utils::hash(stringID);
+    constexpr uint32_t range = INT32_MAX - BASE_OBJECT_ID + 1;
+    return int(BASE_OBJECT_ID + static_cast<uint32_t>((static_cast<uint64_t>(hash) * range) >> 32));
 }
 
 CustomObjectConfig* CustomObjectsManager::registerObjectConfig(std::string_view stringID, ObjectConstructor ctor) {
