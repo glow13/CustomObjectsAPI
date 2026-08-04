@@ -26,10 +26,6 @@ CustomObjectConfig::CustomObjectConfig(std::string_view id, int objectID, Object
     m_impl->m_ctor = ctor;
 }
 
-GameObject* CustomObjectConfig::createCustomObject() const {
-    if (!m_impl->m_ctor) return nullptr;
-    return m_impl->m_ctor(this);
-}
 
 std::string CustomObjectConfig::getID() const
     { return m_impl->m_id; }
@@ -39,11 +35,11 @@ int CustomObjectConfig::getObjectID() const
     { return m_impl->m_objectID; }
 
 std::string CustomObjectConfig::getMainSprite() const
-    { return m_impl->m_mainSprite ? m_impl->m_mainSprite->getFrameName() : ""; }
+    { return hasMainSprite() ? m_impl->m_mainSprite->getFrameName() : ""; }
 std::string CustomObjectConfig::getDetailSprite() const
-    { return m_impl->m_detailSprite ? m_impl->m_detailSprite->getFrameName() : ""; }
+    { return hasDetailSprite() ? m_impl->m_detailSprite->getFrameName() : ""; }
 std::string CustomObjectConfig::getGlowSprite() const
-    { return m_impl->m_glowSprite ? m_impl->m_glowSprite->getFrameName() : ""; }
+    { return hasGlowSprite() ? m_impl->m_glowSprite->getFrameName() : ""; }
 
 bool CustomObjectConfig::hasMainSprite() const
     { return m_impl->m_mainSprite != nullptr; }
@@ -93,6 +89,15 @@ void CustomObjectConfig::customEditObject(GameObject* obj, cocos2d::CCArray* obj
     { if (m_impl->m_editObject != nullptr) m_impl->m_editObject(obj, objs); }
 void CustomObjectConfig::customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const
     { if (m_impl->m_editSpecial != nullptr) m_impl->m_editSpecial(obj, objs); }
+
+GameObject* CustomObjectConfig::createCustomObject() const {
+    if (!m_impl->m_ctor) return nullptr;
+
+    GameObject* obj = m_impl->m_ctor(this);
+    obj->m_objectID = m_impl->m_objectID;
+
+    return obj;
+}
 
 CustomObjectConfig* CustomObjectConfig::registerConfig(std::string_view stringID, ObjectConstructor ctor) {
     return CustomObjectsManager::get()->registerObjectConfig(stringID, ctor);

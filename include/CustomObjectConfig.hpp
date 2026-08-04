@@ -1,5 +1,7 @@
 #pragma once
 
+#define CONFIG_OPTION(name, type, ...) type get##name() const; CustomObjectConfig&& set##name(__VA_ARGS__);
+
 using geode::geode_internal::StringConcatModIDSlash;
 
 class CustomObjectConfig final {
@@ -50,8 +52,10 @@ private:
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
+    public: // TODO move to CustomObjectsManager
     void customEditObject(GameObject*, cocos2d::CCArray*) const;
     void customEditSpecial(GameObject*, cocos2d::CCArray*) const;
+    private:
 
     template <class, StringConcatModIDSlash> friend class ConfigGameObject;
     friend class CustomObjectsManager;
@@ -81,19 +85,19 @@ class ConfigGameObject {
         return config;
     }
 
+    static void onRegisterConfig(CustomObjectConfig&&) { /* do nothing by default */ }
     static bool initializeConfigObject() {
         ObjectType::onRegisterConfig((CustomObjectConfig&&)*data.config);
         return true;
     }
 
 protected:
-    static void onRegisterConfig(CustomObjectConfig&&) { /* do nothing by default */ }
     static const CustomObjectConfig* getConfig() { return data.config; }
     static bool isInitialized() { return data.initialized; }
 public:
     static ObjectType* createWithConfig(const CustomObjectConfig* config) {
         auto obj = new ObjectType();
-        if (obj->init(config)) {
+        if (obj->ObjectType::init(config)) {
             obj->autorelease();
             return obj;
         }
@@ -101,3 +105,5 @@ public:
         return nullptr;
     }
 };
+
+#undef CONFIG_OPTION
