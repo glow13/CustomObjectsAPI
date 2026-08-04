@@ -159,6 +159,14 @@ GameObject* CustomObjectConfig::createCustomObject() const {
     GameObject* obj = m_impl->m_ctor(this);
     obj->m_objectID = m_impl->m_objectID;
 
+    if (m_impl->m_boxSize != BOX_SIZE_DEFAULT) { obj->m_width = m_impl->m_boxSize.width; obj->m_height = m_impl->m_boxSize.height; }
+    if (m_impl->m_boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = m_impl->m_boxOffset;
+    if (m_impl->m_boxRadius != BOX_RADIUS_DEFAULT) obj->m_objectRadius = m_impl->m_boxRadius;
+    if (m_impl->m_objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = m_impl->m_objectType;
+    if (m_impl->m_batchMode != BATCH_MODE_DEFAULT) obj->m_parentMode = m_impl->m_batchMode;
+    if (m_impl->m_disableBatch) { obj->m_parentMode = 4; obj->m_addToNodeContainer = true; }
+    if (m_impl->m_glowColor != GLOW_COLOR_DEFAULT) obj->setGlowColor(m_impl->m_glowColor);
+
     return obj;
 }
 
