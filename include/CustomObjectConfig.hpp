@@ -54,8 +54,8 @@ public:
     CustomObjectConfig&& setGlowSprite(std::string frame, int size);
     CustomObjectConfig&& setGlowSprite(std::string frame, bool sheet = true);
 
-    CustomObjectConfig&& onEditObjectButton(EditObjectCallback);
-    CustomObjectConfig&& onEditSpecialButton(EditObjectCallback);
+    CustomObjectConfig&& onEditObject(EditObjectCallback);
+    CustomObjectConfig&& onEditSpecial(EditObjectCallback);
 
     bool hasEditObjectCallback() const;
     bool hasEditSpecialCallback() const;
@@ -70,12 +70,12 @@ private:
     void customEditObject(GameObject*, cocos2d::CCArray*) const;
     void customEditSpecial(GameObject*, cocos2d::CCArray*) const;
 
-    template <class, StringConcatModIDSlash> friend class ConfigGameObject;
+    template <class, StringConcatModIDSlash> friend class RegisterCustomObject;
     friend class CustomObjectsManager;
 };
 
 template <class ObjectType, StringConcatModIDSlash StringID>
-class ConfigGameObject {
+class RegisterCustomObject {
     static inline struct {
         CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, (ObjectConstructor)ObjectType::createWithConfig);
         bool initialized = [](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*registration.config); return true; }();

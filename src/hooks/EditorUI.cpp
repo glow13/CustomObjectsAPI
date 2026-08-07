@@ -33,10 +33,10 @@ class $modify(EditorUI) {
             int id = static_cast<GameObject*>(m_selectedObjects->firstObject())->m_objectID;
             for (int i = 1; i < m_selectedObjects->count(); i++) {
                 auto obj = static_cast<GameObject*>(m_selectedObjects->objectAtIndex(i));
-                if (!obj || id != obj->m_objectID) return 0;
+                if (!obj || id != obj->m_objectID) return -1;
             }
             return id;
-        } else return 0;
+        } else return -1;
     }
 
     bool editButtonUsable() {

@@ -138,9 +138,9 @@ CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int s)
 CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, bool sheet)
     { m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet); return (CustomObjectConfig&&)*this; }
 
-CustomObjectConfig&& CustomObjectConfig::onEditObjectButton(EditObjectCallback callback)
+CustomObjectConfig&& CustomObjectConfig::onEditObject(EditObjectCallback callback)
     { m_impl->m_editObject = callback; return (CustomObjectConfig&&)*this; }
-CustomObjectConfig&& CustomObjectConfig::onEditSpecialButton(EditObjectCallback callback)
+CustomObjectConfig&& CustomObjectConfig::onEditSpecial(EditObjectCallback callback)
     { m_impl->m_editSpecial = callback; return (CustomObjectConfig&&)*this; }
 
 bool CustomObjectConfig::hasEditObjectCallback() const
