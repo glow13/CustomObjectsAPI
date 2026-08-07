@@ -39,6 +39,9 @@ public:
     bool hasDetailSprite() const;
     bool hasGlowSprite() const;
 
+    bool isCustomBatch() const;
+    bool hasCustomAnimation() const;
+
     CustomObjectConfig&& setMainSprite(std::string frame, int offsetX, int offsetY, int width, int height);
     CustomObjectConfig&& setMainSprite(std::string frame, int width, int height);
     CustomObjectConfig&& setMainSprite(std::string frame, int size);

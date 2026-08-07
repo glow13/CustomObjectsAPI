@@ -10,10 +10,10 @@ using namespace geode::prelude;
 class $modify(EditorUI) {
     bool init(LevelEditorLayer* editorLayer) {
         if (!EditorUI::init(editorLayer)) return false;
-        if (CustomObjectsManager::get()->getTotalCustomObjectsCount() == 0) return true;
+        if (CustomObjectsManager::get()->getCustomObjectsCount() == 0) return true;
 
-        // if (!Mod::get()->getSavedValue<bool>("editortab-api-enabled")) return true;
-        // if (!Mod::get()->getSettingValue<bool>("editor-tab")) return true;
+        if (!Mod::get()->getSavedValue<bool>("editortab-api-enabled")) return true;
+        if (!Mod::get()->getSettingValue<bool>("editor-tab")) return true;
 
         alpha::editor_tabs::addTab("custom-objects"_spr, alpha::editor_tabs::BUILD, [this] {
             std::vector<Ref<CCNode>> buttons;
@@ -41,7 +41,7 @@ class $modify(EditorUI) {
 
     bool editButtonUsable() {
         if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID) {
-            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
+            auto obj = CustomObjectsManager::get()->getCustomObjectWithID(objectID);
             if (obj && obj->hasEditObjectCallback()) return true;
         }
         return EditorUI::editButtonUsable();
@@ -49,7 +49,7 @@ class $modify(EditorUI) {
 
     bool editButton2Usable() {
         if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID) {
-            auto obj = CustomObjectsManager::get()->getCustomObjectByID(objectID);
+            auto obj = CustomObjectsManager::get()->getCustomObjectWithID(objectID);
             if (obj && obj->hasEditSpecialCallback()) return true;
         }
         return EditorUI::editButton2Usable();
@@ -67,8 +67,8 @@ class $modify(EditorUI) {
         EditorUI::editObjectSpecial(p0);
     }
 
-    // CCPoint offsetForKey(int id) {
-    //     if (id < 10000) return EditorUI::offsetForKey(id);
-    //     return CustomObjectsManager::get()->getCustomObjectByID(id)->objectOffset;
-    // } // offsetForKey
+    CCPoint offsetForKey(int id) {
+        if (id < BASE_OBJECT_ID) return EditorUI::offsetForKey(id);
+        return CustomObjectsManager::get()->getCustomObjectWithID(id)->getObjectOffset();
+    }
 };

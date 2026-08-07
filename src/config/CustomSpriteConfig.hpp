@@ -1,6 +1,12 @@
 #pragma once
 #include <rect_structs.h>
 
+enum Quality : int {
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 4
+};
+
 class CustomSpriteConfig final {
     struct SheetInfo final {
     private:

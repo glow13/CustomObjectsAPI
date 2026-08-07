@@ -111,6 +111,11 @@ bool CustomObjectConfig::hasDetailSprite() const
 bool CustomObjectConfig::hasGlowSprite() const
     { return m_impl->m_glowSprite != nullptr; }
 
+bool CustomObjectConfig::isCustomBatch() const
+    { return !m_impl->m_disableBatch && m_impl->m_batchMode == BATCH_MODE_DEFAULT; }
+bool CustomObjectConfig::hasCustomAnimation() const
+    { return m_impl->m_framesCount != FRAMES_COUNT_DEFAULT && m_impl->m_mainSprite->isAnimationFrame(); }
+
 CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int x, int y, int w, int h)
     { m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true); return (CustomObjectConfig&&)*this; }
 CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int w, int h)

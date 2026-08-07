@@ -5,19 +5,25 @@ constexpr int BASE_OBJECT_ID = 100000;
 
 class CustomObjectsManager {
     using ObjectConstructor = GameObject*(*)(const CustomObjectConfig*);
-    std::unordered_map<int, std::unique_ptr<CustomObjectConfig>> customObjects;
-    std::vector<class CustomSpriteConfig*> customSprites;
+    std::unordered_map<int, std::unique_ptr<CustomObjectConfig>> m_customObjects;
+    std::vector<class CustomSpriteConfig*> m_customSprites;
 public:
     static CustomObjectsManager* get();
-    CustomObjectConfig* registerObjectConfig(std::string_view, ObjectConstructor);
-    void forEachCustomObject(std::function<void(const CustomObjectConfig*)>) const;
-    int getTotalCustomObjectsCount() const;
 
-    CustomObjectConfig* getCustomObjectByID(int) const;
+    CustomObjectConfig* registerObjectConfig(std::string_view, ObjectConstructor);
+    void registerSprite(CustomSpriteConfig*);
+
+    int getCustomObjectsCount() const;
+    int getCustomSpritesCount() const;
+
+    CustomObjectConfig* getCustomObjectWithID(int) const;
     GameObject* createCustomObjectWithID(int) const;
 
     bool customEditObjectForID(int, GameObject*, cocos2d::CCArray*) const;
     bool customEditSpecialForID(int, GameObject*, cocos2d::CCArray*) const;
+
+    void forEachCustomObject(std::function<void(const CustomObjectConfig*)>) const;
+    void forEachCustomSprite(std::function<void(const CustomSpriteConfig*)>) const;
 
     using ModObjects = std::vector<std::pair<int, int>>;
     std::map<std::string, ModObjects> getEditorTabLayout() const;

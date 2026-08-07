@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include "CustomSpriteConfig.hpp"
 #include "CustomObjectConfig.hpp"
+#include "../manager/CustomObjectsManager.hpp"
 
 using namespace geode::prelude;
 using namespace rectpack2D;
@@ -58,6 +59,7 @@ CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string f
 
     m_impl->m_frameName = formatSpriteFrameName(frameName, object->getModID(), x, y, w, h);
     m_impl->m_sheet = std::make_unique<SheetInfo>(x, y, w, h);
+    CustomObjectsManager::get()->registerSprite(this);
 }
 
 std::string CustomSpriteConfig::getModID() const {
