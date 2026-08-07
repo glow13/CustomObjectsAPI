@@ -77,36 +77,17 @@ private:
 template <class ObjectType, StringConcatModIDSlash StringID>
 class ConfigGameObject {
     static inline struct {
-        CustomObjectConfig* config = registerConfig();
-        bool initialized = initializeConfigObject();
-    } data;
-    static inline auto dataRef = &data;
-
-    static CustomObjectConfig* registerConfig() {
-        using EditObjectCallback = CustomObjectConfig::EditObjectCallback;
-        auto config = CustomObjectConfig::registerConfig(StringID.buffer,
-            (CustomObjectConfig::ObjectConstructor)ObjectType::createWithConfig);
-
-        if constexpr (requires(ObjectType* obj, cocos2d::CCArray* objs) {
-            { ObjectType::onEditObjectButton(obj, objs) } -> std::same_as<void>;
-        }) config->onEditObjectButton((EditObjectCallback)ObjectType::onEditObjectButton);
-
-        if constexpr (requires(ObjectType* obj, cocos2d::CCArray* objs) {
-            { ObjectType::onEditSpecialButton(obj, objs) } -> std::same_as<void>;
-        }) config->onEditSpecialButton((EditObjectCallback)ObjectType::onEditSpecialButton);
-
-        return config;
-    }
-
-    static void onRegisterConfig(CustomObjectConfig&&) { /* do nothing by default */ }
-    static bool initializeConfigObject() {
-        ObjectType::onRegisterConfig((CustomObjectConfig&&)*data.config);
-        return true;
-    }
-
+        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, (ObjectConstructor)ObjectType::createWithConfig);
+        bool initialized = [](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*registration.config); return true; }();
+    } registration;
+    static inline auto registrationRef = &registration;
+    static void onRegisterConfig(CustomObjectConfig&&) {}
 protected:
-    static const CustomObjectConfig* getConfig() { return data.config; }
-    static bool isInitialized() { return data.initialized; }
+    using ObjectConstructor = CustomObjectConfig::ObjectConstructor;
+    using EditObjectCallback = CustomObjectConfig::EditObjectCallback;
+
+    static const CustomObjectConfig* getConfig() { return registration.config; }
+    static bool isInitialized() { return registration.initialized; }
 public:
     static ObjectType* createWithConfig(const CustomObjectConfig* config) {
         auto obj = new ObjectType();
