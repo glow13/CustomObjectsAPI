@@ -69,6 +69,7 @@ struct CustomObjectConfig::Impl {
         m_particleOpacity(PARTICLE_OPACITY_DEFUALT),
         m_particleBlending(PARTICLE_BLENDING_DEFAULT),
         m_editorPriority(EDITOR_PRIORITY_DEFAULT),
+        m_editObject(nullptr), m_editSpecial(nullptr),
         m_mainSprite(nullptr), m_detailSprite(nullptr), m_glowSprite(nullptr) {}
 };
 

@@ -25,6 +25,13 @@ public:
     void forEachCustomObject(std::function<void(const CustomObjectConfig*)>) const;
     void forEachCustomSprite(std::function<void(const CustomSpriteConfig*)>) const;
 
+    void processRegisteredObjects();
+    void printModObjectCount() const;
+
+    bool isTheSpritesheetCacheUpToDate() const;
+    void generateCustomSpritesheets() const;
+    cocos2d::CCTexture2D* getCustomSpritesheet() const;
+
     using ModObjects = std::vector<std::pair<int, int>>;
     std::map<std::string, ModObjects> getEditorTabLayout() const;
 };

@@ -1,7 +1,31 @@
 #include <Geode/Geode.hpp>
 #include "CustomObjectsManager.hpp"
+#include "../config/CustomSpriteConfig.hpp"
 
 using namespace geode::prelude;
+
+// Spritesheet helper functions
+namespace CustomObjectsSheet {
+    inline std::string getCacheDirectory() {
+        auto path = geode::Mod::get()->getSaveDir().string() + "/cache/";
+        if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
+        return geode::utils::string::pathToString(path);
+    }
+
+    inline Quality getTextureQuality() {
+        int quality = (int)cocos2d::CCDirector::get()->getLoadedTextureQuality();
+        return (quality == 3) ? Quality::HIGH : (Quality)quality;
+    }
+
+    inline std::string getSpritesheetQualityName() {
+        switch (getTextureQuality()) {
+            case Quality::LOW: return "CustomObjects";
+            case Quality::MEDIUM: return "CustomObjects-hd";
+            case Quality::HIGH: return "CustomObjects-uhd";
+            default: return "CustomObjects-uhd";
+        }
+    }
+}
 
 CustomObjectsManager* CustomObjectsManager::get() {
     static CustomObjectsManager manager;
@@ -67,6 +91,30 @@ std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::ge
     }
 
     return mods;
+}
+
+void CustomObjectsManager::processRegisteredObjects() {
+    auto toolbox = ObjectToolbox::sharedState();
+    for (auto& [id, obj] : m_customObjects) {
+        toolbox->m_allKeys.emplace(obj->getObjectID(), obj->getMainSprite());
+        if (obj->hasCustomAnimation()) {
+            auto mainAnimSprite = obj->getMainSprite();
+            auto detailAnimSprite = obj->hasDetailSprite() ? obj->getDetailSprite() : obj->getMainSprite();
+
+            mainAnimSprite = mainAnimSprite.substr(0, mainAnimSprite.find("_001"));
+            detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));
+
+            auto manager = GameManager::sharedState();
+            manager->addGameAnimation(obj->getObjectID(), obj->getFramesCount(), obj->getFrameTime(), mainAnimSprite, detailAnimSprite, 1);
+        }
+    }
+}
+
+void CustomObjectsManager::printModObjectCount() const {
+    std::map<std::string, int> mods;
+    for (const auto& [id, obj] : m_customObjects) mods[obj->getModID()]++;
+    log::info("A total of {} mods registered {} total custom objects", mods.size(), m_customObjects.size());
+}
 
 void CustomObjectsManager::registerSprite(CustomSpriteConfig* config) {
     m_customSprites.push_back(config);
@@ -79,4 +127,48 @@ int CustomObjectsManager::getCustomSpritesCount() const {
 void CustomObjectsManager::forEachCustomSprite(std::function<void(const CustomSpriteConfig*)> callback) const {
     for (const auto config : m_customSprites) callback(config);
 }
+
+bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() const {
+    auto sheetName = CustomObjectsSheet::getSpritesheetQualityName();
+    auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(sheetName);
+
+    if (m_customSprites.size() == 0) return true;
+    else if (m_customSprites.size() > cache.size()) return false;
+
+    for (int i = 0; i < m_customSprites.size(); i++) {
+        if (m_customSprites[i]->getFrameName() == cache[i]) continue;
+        if (std::find(cache.begin(), cache.end(), m_customSprites[i]->getFrameName()) != cache.end()) continue;
+        return false;
+    }
+
+    auto png = sheetName + ".png";
+    if (png == CCFileUtils::get()->fullPathForFilename(png.c_str(), false)) return false;
+
+    auto plist = sheetName + ".plist";
+    if (plist == CCFileUtils::get()->fullPathForFilename(plist.c_str(), false)) return false;
+
+    return true;
+}
+
+void CustomObjectsManager::generateCustomSpritesheets() const {
+    log::info("yo i am generating the spritesheets rn trust me bro");
+}
+
+cocos2d::CCTexture2D* CustomObjectsManager::getCustomSpritesheet() const {
+    if (getCustomObjectsCount() == 0) return nullptr;
+
+    static CCTexture2D* texture = nullptr;
+    if (texture) return texture;
+
+    auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
+    auto plist = CustomObjectsSheet::getSpritesheetQualityName() + ".plist";
+
+    CCFileUtils::get()->addSearchPath(CustomObjectsSheet::getCacheDirectory().c_str());
+    texture = CCTextureCache::get()->addImage(png.c_str(), false);
+    if (!texture) return nullptr;
+
+    CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str(), texture);
+    if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
+
+    return texture;
 }
