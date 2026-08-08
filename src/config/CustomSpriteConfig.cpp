@@ -51,7 +51,6 @@ std::string formatSpriteFrameName(std::string frame, std::string mod, int x, int
     return fmt::format("custom-objects/{}/{}.{}.{}.{}/{}", mod, x, y, w, h, frame.substr(frame.find("/") + 1));
 }
 
-CustomSpriteConfig::~CustomSpriteConfig() = default;
 CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string frameName, int x, int y, int w, int h, bool sheet) : m_impl(std::make_unique<Impl>()) {
     m_impl->m_object = object;
     m_impl->m_sourceFrame = frameName;
@@ -60,6 +59,10 @@ CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string f
     m_impl->m_frameName = formatSpriteFrameName(frameName, object->getModID(), x, y, w, h);
     m_impl->m_sheet = std::make_unique<SheetInfo>(x, y, w, h);
     CustomObjectsManager::get()->registerSprite(this);
+}
+
+CustomSpriteConfig::~CustomSpriteConfig() {
+    if (isCustomSprite()) CustomObjectsManager::get()->unregisterSprite(this);
 }
 
 std::string CustomSpriteConfig::getModID() const {

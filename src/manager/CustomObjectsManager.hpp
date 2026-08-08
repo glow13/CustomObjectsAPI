@@ -12,6 +12,7 @@ public:
 
     CustomObjectConfig* registerObjectConfig(std::string_view, ObjectConstructor);
     void registerSprite(CustomSpriteConfig*);
+    void unregisterSprite(CustomSpriteConfig*);
 
     int getCustomObjectsCount() const;
     int getCustomSpritesCount() const;

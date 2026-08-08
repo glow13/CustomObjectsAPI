@@ -40,7 +40,13 @@ int getHashedObjectID(std::string_view stringID) {
 
 CustomObjectConfig* CustomObjectsManager::registerObjectConfig(std::string_view stringID, ObjectConstructor ctor) {
     int objectID = getHashedObjectID(stringID);
-    return m_customObjects.emplace(objectID, std::make_unique<CustomObjectConfig>(stringID, objectID, ctor)).first->second.get();
+    auto it = m_customObjects.try_emplace(objectID, std::make_unique<CustomObjectConfig>(stringID, objectID, ctor));
+
+    if (!it.second) {
+        log::error("Duplicate object ID \"{}\"!", stringID);
+        return nullptr;
+    }
+    return it.first->second.get();
 }
 
 void CustomObjectsManager::forEachCustomObject(std::function<void(const CustomObjectConfig*)> callback) const {
@@ -118,6 +124,10 @@ void CustomObjectsManager::printModObjectCount() const {
 
 void CustomObjectsManager::registerSprite(CustomSpriteConfig* config) {
     m_customSprites.push_back(config);
+}
+
+void CustomObjectsManager::unregisterSprite(CustomSpriteConfig* config) {
+    std::erase(m_customSprites, config);
 }
 
 int CustomObjectsManager::getCustomSpritesCount() const {
