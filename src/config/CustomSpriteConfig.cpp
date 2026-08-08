@@ -6,32 +6,11 @@
 using namespace geode::prelude;
 using namespace rectpack2D;
 
-CustomSpriteConfig::SheetInfo::SheetInfo(int x, int y, int w, int h) : m_offset(x, y), m_size(w, h), m_trim(0, 0, w, h), m_rect(0, 0, w, h, false) {}
-CustomSpriteConfig::SheetInfo::SheetInfo(const rect_xywhf& rect) : m_rect(rect) {}
+CustomSpriteConfig::SheetInfo::SheetInfo(int x, int y, int w, int h) :
+    m_offset(x, y), m_size(w, h), m_trim(0, 0, w, h), m_rect(0, 0, w, h, false) {}
 
-std::string CustomSpriteConfig::SheetInfo::offString() const {
-    int offsetX = (m_trim.x + m_trim.w * 0.5f) - (m_size.w * 0.5f) + m_offset.w;
-    int offsetY = (m_size.h * 0.5f) - (m_trim.y + m_trim.h * 0.5f) + m_offset.h;
-    return "{" + fmt::format("{},{}", offsetX, offsetY) + "}";
-} // offString
-
-std::string CustomSpriteConfig::SheetInfo::sizeString() const {
-    int width = m_rect.flipped ? m_rect.h : m_rect.w;
-    int height = m_rect.flipped ? m_rect.w : m_rect.h;
-    return "{" + fmt::format("{},{}", width, height) + "}";
-} // sizeString
-
-std::string CustomSpriteConfig::SheetInfo::rectString() const {
-    return "{{" + fmt::format("{},{}", m_rect.x, m_rect.y) + "}," + sizeString() + "}";
-} // rectString
-
-std::string CustomSpriteConfig::SheetInfo::sourceString() const {
-    return "{" + fmt::format("{},{}", m_size.w, m_size.h) + "}";
-} // sourceString
-
-std::string CustomSpriteConfig::SheetInfo::rotatedString() const {
-    return m_rect.flipped ? "<true/>" : "<false/>";
-} // rotatedString
+auto& CustomSpriteConfig::SheetInfo::get_rect() { return m_rect; }
+const auto& CustomSpriteConfig::SheetInfo::get_rect() const { return m_rect; }
 
 struct CustomSpriteConfig::Impl {
     CustomObjectConfig* m_object;
@@ -58,11 +37,11 @@ CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string f
 
     m_impl->m_frameName = formatSpriteFrameName(frameName, object->getModID(), x, y, w, h);
     m_impl->m_sheet = std::make_unique<SheetInfo>(x, y, w, h);
-    CustomObjectsManager::get()->registerSprite(this);
+    CustomObjectsManager::get()->registerCustomSprite(this);
 }
 
 CustomSpriteConfig::~CustomSpriteConfig() {
-    if (isCustomSprite()) CustomObjectsManager::get()->unregisterSprite(this);
+    if (isCustomSprite()) CustomObjectsManager::get()->unregisterCustomSprite(this);
 }
 
 std::string CustomSpriteConfig::getModID() const {

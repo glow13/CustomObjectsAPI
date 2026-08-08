@@ -15,18 +15,10 @@ class CustomSpriteConfig final {
         rectpack2D::rect_xywh m_trim;
         rectpack2D::rect_xywhf m_rect;
     public:
-        std::string offString() const;
-        std::string sizeString() const;
-        std::string rectString() const;
-        std::string sourceString() const;
-        std::string rotatedString() const;
-
-        friend CustomSpriteConfig;
+        auto& get_rect();
+        const auto& get_rect() const;
         SheetInfo(int, int, int, int);
-        SheetInfo(const rectpack2D::rect_xywhf&);
-
-        inline auto& get_rect() { return m_rect; }
-        inline const auto& get_rect() const { return m_rect; }
+        friend CustomSpriteConfig;
     };
 
     struct Impl;

@@ -122,11 +122,11 @@ void CustomObjectsManager::printModObjectCount() const {
     log::info("A total of {} mods registered {} total custom objects", mods.size(), m_customObjects.size());
 }
 
-void CustomObjectsManager::registerSprite(CustomSpriteConfig* config) {
+void CustomObjectsManager::registerCustomSprite(CustomSpriteConfig* config) {
     m_customSprites.push_back(config);
 }
 
-void CustomObjectsManager::unregisterSprite(CustomSpriteConfig* config) {
+void CustomObjectsManager::unregisterCustomSprite(CustomSpriteConfig* config) {
     std::erase(m_customSprites, config);
 }
 

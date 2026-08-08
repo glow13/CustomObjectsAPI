@@ -11,8 +11,8 @@ public:
     static CustomObjectsManager* get();
 
     CustomObjectConfig* registerObjectConfig(std::string_view, ObjectConstructor);
-    void registerSprite(CustomSpriteConfig*);
-    void unregisterSprite(CustomSpriteConfig*);
+    void registerCustomSprite(CustomSpriteConfig*);
+    void unregisterCustomSprite(CustomSpriteConfig*);
 
     int getCustomObjectsCount() const;
     int getCustomSpritesCount() const;
