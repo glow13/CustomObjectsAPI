@@ -14,7 +14,7 @@ constexpr CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
 constexpr int BOX_RADIUS_DEFAULT = 0;
 constexpr CCPoint OBJECT_OFFSET_DEFAULT = CCPointZero;
 constexpr GameObjectType OBJECT_TYPE_DEFAULT = (GameObjectType)(-1);
-constexpr int BATCH_MODE_DEFAULT = 10;
+constexpr int BATCH_MODE_DEFAULT = CUSTOM_PARENT_MODE;
 constexpr bool DISABLE_BATCH_DEFAULT = false;
 constexpr int FRAMES_COUNT_DEFAULT = 1;
 constexpr float FRAME_TIME_DEFAULT = 1.0f;
@@ -164,6 +164,7 @@ GameObject* CustomObjectConfig::createCustomObject() const {
 
     GameObject* obj = m_impl->m_ctor(this);
     obj->m_objectID = m_impl->m_objectID;
+    obj->m_parentMode = BATCH_MODE_DEFAULT;
 
     if (m_impl->m_boxSize != BOX_SIZE_DEFAULT) { obj->m_width = m_impl->m_boxSize.width; obj->m_height = m_impl->m_boxSize.height; }
     if (m_impl->m_boxOffset != BOX_OFFSET_DEFAULT) obj->m_customBoxOffset = m_impl->m_boxOffset;

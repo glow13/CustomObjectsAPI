@@ -2,6 +2,7 @@
 #include "CustomObjectConfig.hpp"
 
 constexpr int BASE_OBJECT_ID = 100000;
+constexpr int CUSTOM_PARENT_MODE = 10;
 
 class CustomObjectsManager {
     using ObjectConstructor = GameObject*(*)(const CustomObjectConfig*);
