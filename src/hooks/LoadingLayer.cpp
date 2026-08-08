@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/LoadingLayer.hpp>
 #include "../manager/CustomObjectsManager.hpp"
+#include "../manager/CustomObjectsSheet.hpp"
 
 using namespace geode::prelude;
 
@@ -29,17 +30,29 @@ class $modify(LoadingLayer) {
     }
 
     void processMods() {
-        auto manager = CustomObjectsManager::get();
-        manager->processRegisteredObjects();
-        manager->printModObjectCount();
+        CustomObjectsManager::get()->processRegisteredObjects();
+        CustomObjectsManager::get()->printModObjectCount();
         continueLoadAssets();
     }
 
     void checkGenerateCustomSpritesheet() {
-        bool upToDate = CustomObjectsManager::get()->isTheSpritesheetCacheUpToDate();
-        if (auto smallLabel = getChildByID("geode-small-label"); !upToDate && smallLabel)
-            static_cast<CCLabelBMFont*>(smallLabel)->setString("Generating custom spritesheet");
-        m_fields->m_shouldGenerateSpritesheet = !upToDate;
+        m_fields->m_shouldGenerateSpritesheet = false;
+        int objectCount = CustomObjectsManager::get()->getCustomObjectsCount();
+
+        if (Mod::get()->getSettingValue<bool>("force-generation") && objectCount > 0) {
+            log::info("Forced spritesheet generation is enabled!");
+        } else if (CustomObjectsManager::get()->isTheSpritesheetCacheUpToDate()) {
+            log::info("Cache is up-to-date, skipping spritesheet generation");
+            continueLoadAssets();
+            return;
+        }
+
+        if (auto smallLabel = getChildByID("geode-small-label")) {
+            auto label = static_cast<CCLabelBMFont*>(smallLabel);
+            label->setString("Generating custom spritesheet");
+        }
+
+        m_fields->m_shouldGenerateSpritesheet = true;
         continueLoadAssets();
     }
 
@@ -50,13 +63,25 @@ class $modify(LoadingLayer) {
         }
 
         CustomObjectsManager::get()->generateCustomSpritesheets();
-        if (auto smallLabel = getChildByID("geode-small-label"))
-            static_cast<CCLabelBMFont*>(smallLabel)->setString("Loading game resources");
+
+        if (auto smallLabel = getChildByID("geode-small-label")) {
+            auto label = static_cast<CCLabelBMFont*>(smallLabel);
+            label->setString("Loading game resources");
+        }
+
         continueLoadAssets();
     }
 
     void loadCustomSpritesheet() {
-        log::info("{}", CustomObjectsManager::get()->getCustomSpritesheet());
+        if (CustomObjectsManager::get()->getCustomObjectsCount() > 0) {
+            auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
+            auto plist = CustomObjectsSheet::getSpritesheetQualityName() + ".plist";
+
+            auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
+            CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
+            if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
+        }
+
         continueLoadAssets();
     }
 };

@@ -1,31 +1,9 @@
 #include <Geode/Geode.hpp>
 #include "CustomObjectsManager.hpp"
+#include "CustomObjectsSheet.hpp"
 #include "../config/CustomSpriteConfig.hpp"
 
 using namespace geode::prelude;
-
-// Spritesheet helper functions
-namespace CustomObjectsSheet {
-    inline std::string getCacheDirectory() {
-        auto path = geode::Mod::get()->getSaveDir().string() + "/cache/";
-        if (!std::filesystem::exists(path)) std::filesystem::create_directory(path);
-        return geode::utils::string::pathToString(path);
-    }
-
-    inline Quality getTextureQuality() {
-        int quality = (int)cocos2d::CCDirector::get()->getLoadedTextureQuality();
-        return (quality == 3) ? Quality::HIGH : (Quality)quality;
-    }
-
-    inline std::string getSpritesheetQualityName() {
-        switch (getTextureQuality()) {
-            case Quality::LOW: return "CustomObjects";
-            case Quality::MEDIUM: return "CustomObjects-hd";
-            case Quality::HIGH: return "CustomObjects-uhd";
-            default: return "CustomObjects-uhd";
-        }
-    }
-}
 
 CustomObjectsManager* CustomObjectsManager::get() {
     static CustomObjectsManager manager;
@@ -141,6 +119,7 @@ void CustomObjectsManager::forEachCustomSprite(std::function<void(const CustomSp
 bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() const {
     auto sheetName = CustomObjectsSheet::getSpritesheetQualityName();
     auto cache = Mod::get()->getSavedValue<std::vector<std::string>>(sheetName);
+    CCFileUtils::get()->addSearchPath(CustomObjectsSheet::getCacheDirectory().c_str());
 
     if (m_customSprites.size() == 0) return true;
     else if (m_customSprites.size() > cache.size()) return false;
@@ -161,24 +140,28 @@ bool CustomObjectsManager::isTheSpritesheetCacheUpToDate() const {
 }
 
 void CustomObjectsManager::generateCustomSpritesheets() const {
-    log::info("yo i am generating the spritesheets rn trust me bro");
+    switch (CustomObjectsSheet::getTextureQuality()) {
+        case Quality::HIGH:
+            CustomObjectsSheet::addSpritesheetToCache(m_customSprites, Quality::HIGH);
+            [[fallthrough]];
+        case Quality::MEDIUM:
+            CustomObjectsSheet::addSpritesheetToCache(m_customSprites, Quality::MEDIUM);
+            [[fallthrough]];
+        case Quality::LOW:
+            CustomObjectsSheet::addSpritesheetToCache(m_customSprites, Quality::LOW);
+            [[fallthrough]];
+        default: return;
+    }
 }
 
-cocos2d::CCTexture2D* CustomObjectsManager::getCustomSpritesheet() const {
+cocos2d::CCTexture2D* CustomObjectsManager::getCustomSpritesheetTexture() const {
     if (getCustomObjectsCount() == 0) return nullptr;
 
     static CCTexture2D* texture = nullptr;
     if (texture) return texture;
 
-    auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
-    auto plist = CustomObjectsSheet::getSpritesheetQualityName() + ".plist";
-
     CCFileUtils::get()->addSearchPath(CustomObjectsSheet::getCacheDirectory().c_str());
+    auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
     texture = CCTextureCache::get()->addImage(png.c_str(), false);
-    if (!texture) return nullptr;
-
-    CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str(), texture);
-    if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
-
     return texture;
 }
