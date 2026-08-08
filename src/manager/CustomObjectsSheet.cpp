@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include "CustomObjectsSheet.hpp"
+#include "CustomObjectsManager.hpp"
 #include "../config/CustomSpriteConfig.hpp"
 
 #define LODEPNG_NO_COMPILE_DECODER
@@ -245,4 +246,16 @@ void CustomObjectsSheet::addSpritesheetToCache(const std::vector<CustomSpriteCon
         saveSpritesheetDataToCache(customSprites, name);
         log::info("Saved {} quality spritesheet as \"{}\"", qualityString, path + name + ".png");
     } else log::error("Failed to save the custom objects spritesheet!");
+}
+
+CCTexture2D* CustomObjectsSheet::getCustomSpritesheetTexture() {
+    if (CustomObjectsManager::get()->getCustomObjectsCount() == 0) return nullptr;
+
+    static CCTexture2D* texture = nullptr;
+    if (texture) return texture;
+
+    CCFileUtils::get()->addSearchPath(CustomObjectsSheet::getCacheDirectory().c_str());
+    auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
+    texture = CCTextureCache::get()->addImage(png.c_str(), false);
+    return texture;
 }

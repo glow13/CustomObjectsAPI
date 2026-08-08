@@ -9,4 +9,5 @@ namespace CustomObjectsSheet {
     Quality getTextureQuality();
     std::string getSpritesheetQualityName(Quality = getTextureQuality());
     void addSpritesheetToCache(const std::vector<CustomSpriteConfig*>&, Quality);
+    cocos2d::CCTexture2D* getCustomSpritesheetTexture();
 }

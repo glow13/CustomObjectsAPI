@@ -31,7 +31,6 @@ public:
 
     bool isTheSpritesheetCacheUpToDate() const;
     void generateCustomSpritesheets() const;
-    cocos2d::CCTexture2D* getCustomSpritesheetTexture() const;
 
     using ModObjects = std::vector<std::pair<int, int>>;
     std::map<std::string, ModObjects> getEditorTabLayout() const;
