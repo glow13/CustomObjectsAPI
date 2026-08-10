@@ -27,6 +27,8 @@ protected:
     void setupCustomObject(GameObject*) const;
     void resetCustomObject(GameObject*) const;
     void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
+
+    const CustomObjectConfig&& getConfig() const;
 };
 
 template <class BaseType>
@@ -57,6 +59,59 @@ public:
 
     virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
         CustomObjectInterface::activateCustomObject(this, level, player);
+    }
+
+    void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
+        BaseType::customObjectSetup(propValues, propIsPresent);
+
+        // TODO object properties
+
+        setupCustomObject();
+    }
+
+    void addMainSpriteToParent(bool p0) override {
+        bool disableBlend = (this->m_parentMode == 4);
+        this->m_colorZLayerRelated = this->m_colorZLayerRelated || disableBlend;
+
+        BaseType::addMainSpriteToParent(p0);
+
+        this->m_shouldBlendBase = this->m_shouldBlendBase && !disableBlend;
+        this->m_shouldBlendDetail = this->m_shouldBlendDetail && !disableBlend;
+    }
+
+    void activateObject() override {
+        bool activated = this->m_isActivated;
+        BaseType::activateObject();
+
+        if (activated != this->m_isActivated && this->m_parentMode == CUSTOM_PARENT_MODE && !this->m_isInvisible && this->m_glowSprite) {
+            this->m_glowSprite->removeFromParent();
+            auto zLayer = (this->m_zLayer != ZLayer::Default) ? this->m_zLayer : this->m_defaultZLayer;
+            auto parent = this->parentForZLayer((int)zLayer, true, CUSTOM_PARENT_MODE);
+            parent->addChild(this->m_glowSprite, -1000);
+        }
+    }
+
+    void customSetup() override {
+        if (this->m_particle) return BaseType::customSetup();
+
+        this->updateParticleColor(getConfig().getParticleColor());
+        this->updateParticleOpacity(getConfig().getParticleOpacity());
+
+        if (!getConfig().getParticleBlending()) {
+            this->m_particle->setBlendFunc({GL_ONE, GL_ZERO});
+        }
+
+        BaseType::customSetup();
+    }
+
+    void firstSetup() override {
+        BaseType::firstSetup();
+        setupCustomObject();
+    }
+
+    void resetObject() override {
+        BaseType::resetObject();
+        resetCustomObject();
     }
 
     GameObject* getObject() override {

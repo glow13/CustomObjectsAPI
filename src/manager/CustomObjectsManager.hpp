@@ -1,8 +1,6 @@
 #pragma once
 #include "CustomObjectConfig.hpp"
 
-constexpr int BASE_OBJECT_ID = 100000;
-
 class CustomObjectsManager final {
     using ObjectConstructor = CustomObjectConfig::ObjectConstructor;
     std::unordered_map<int, std::unique_ptr<CustomObjectConfig>> m_customObjects;

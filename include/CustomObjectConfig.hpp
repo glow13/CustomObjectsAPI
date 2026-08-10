@@ -2,6 +2,7 @@
 
 using geode::geode_internal::StringConcatModIDSlash;
 
+constexpr int BASE_OBJECT_ID = 100000;
 constexpr int CUSTOM_PARENT_MODE = 10;
 
 class CustomObjectConfig final {

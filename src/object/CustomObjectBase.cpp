@@ -17,3 +17,7 @@ void CustomObjectInterface::resetCustomObject(GameObject* obj) const {
 void CustomObjectInterface::activateCustomObject(GameObject* obj, GJBaseGameLayer* level, PlayerObject* player) const {
     if (m_impl->m_config && m_impl->m_config->m_impl->m_activateObject) m_impl->m_config->m_impl->m_activateObject(obj, level, player);
 }
+
+const CustomObjectConfig&& CustomObjectInterface::getConfig() const {
+    return std::move(*m_impl->m_config);
+}
