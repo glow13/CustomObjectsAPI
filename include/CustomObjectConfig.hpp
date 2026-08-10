@@ -90,7 +90,7 @@ class RegisteredObjectByClass {};
 template <class ObjectType, StringConcatModIDSlash StringID>
 class RegisterCustomObject : public RegisteredObjectByClass {
     static inline struct {
-        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, (ObjectConstructor)createWithConfig);
+        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, ObjectType::template createWithConfig<ObjectType>);
         bool initialized = [](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*registration.config); return true; }();
     } registration;
     static inline auto registrationRef = &registration;
@@ -104,14 +104,4 @@ protected:
 
     static const CustomObjectConfig* getConfig() { return registration.config; }
     static bool isInitialized() { return registration.initialized; }
-public:
-    static ObjectType* createWithConfig(const CustomObjectConfig&& config) {
-        auto obj = new ObjectType();
-        if (obj->ObjectType::init(std::move(config))) {
-            obj->autorelease();
-            return obj;
-        }
-        delete obj;
-        return nullptr;
-    }
 };

@@ -24,7 +24,7 @@ public:
     template <class ObjectType>// = CustomGameObject>
     requires (!std::derived_from<ObjectType, RegisteredObjectByClass>)
     static CustomObjectConfig&& registerCustomObject(std::string objectID) {
-        return CustomObjectsUtils::registerCustomObject(objectID, (CustomObjectConfig::ObjectConstructor)ObjectType::template createWithConfig<ObjectType>);
+        return CustomObjectsUtils::registerCustomObject(objectID, ObjectType::template createWithConfig<ObjectType>);
     }
 
     /**
