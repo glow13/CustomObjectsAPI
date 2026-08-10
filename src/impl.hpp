@@ -60,6 +60,6 @@ struct CustomObjectConfig::Impl {
     int m_editorPriority;
 };
 
-struct ICustomObjectBase::Impl {
+struct CustomObjectInterface::Impl {
     const CustomObjectConfig* m_config;
 };

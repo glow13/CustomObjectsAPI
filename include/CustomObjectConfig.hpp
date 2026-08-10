@@ -6,10 +6,11 @@ constexpr int CUSTOM_PARENT_MODE = 10;
 
 class CustomObjectConfig final {
 public:
-    using ObjectConstructor = geode::Function<GameObject*(const CustomObjectConfig*)>;
     using SetupObjectCallback = geode::Function<void(GameObject*)>;
     using ResetObjectCallback = geode::Function<void(GameObject*)>;
     using ActivateObjectCallback = geode::Function<void(GameObject*, GJBaseGameLayer*, PlayerObject*)>;
+
+    using ObjectConstructor = geode::Function<class CustomObjectInterface*(const CustomObjectConfig*)>;
     using EditObjectCallback = geode::Function<void(GameObject*, cocos2d::CCArray*)>;
 
     CustomObjectConfig(std::string_view, int, ObjectConstructor);
@@ -80,7 +81,7 @@ private:
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
     template <class, StringConcatModIDSlash> friend class RegisterCustomObject;
-    friend class CustomObjectsManager, class ICustomObjectBase;
+    friend class CustomObjectsManager, class CustomObjectInterface;
 };
 
 template <class ObjectType, StringConcatModIDSlash StringID>

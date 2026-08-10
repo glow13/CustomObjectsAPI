@@ -127,7 +127,10 @@ bool CustomObjectConfig::hasEditSpecialCallback() const
 GameObject* CustomObjectConfig::createCustomObject() const {
     if (!m_impl->m_ctor) return nullptr;
 
-    GameObject* obj = m_impl->m_ctor(this);
+    auto customObj = m_impl->m_ctor(this);
+    customObj->m_impl->m_config = this;
+
+    GameObject* obj = customObj->getObject();
     obj->m_objectID = m_impl->m_objectID;
     obj->m_parentMode = BATCH_MODE_DEFAULT;
 
