@@ -127,7 +127,7 @@ bool CustomObjectConfig::hasEditSpecialCallback() const
 GameObject* CustomObjectConfig::createCustomObject() const {
     if (!m_impl->m_ctor) return nullptr;
 
-    auto customObj = m_impl->m_ctor(this);
+    auto customObj = m_impl->m_ctor(std::move(*this));
     customObj->m_impl->m_config = this;
 
     GameObject* obj = customObj->getObject();

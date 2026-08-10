@@ -10,7 +10,7 @@ public:
     using ResetObjectCallback = geode::Function<void(GameObject*)>;
     using ActivateObjectCallback = geode::Function<void(GameObject*, GJBaseGameLayer*, PlayerObject*)>;
 
-    using ObjectConstructor = geode::Function<class CustomObjectInterface*(const CustomObjectConfig*)>;
+    using ObjectConstructor = geode::Function<class CustomObjectInterface*(const CustomObjectConfig&&)>;
     using EditObjectCallback = geode::Function<void(GameObject*, cocos2d::CCArray*)>;
 
     CustomObjectConfig(std::string_view, int, ObjectConstructor);
@@ -84,8 +84,11 @@ private:
     friend class CustomObjectsManager, class CustomObjectInterface;
 };
 
+// Dummy class for determining how an object was registered
+class RegisteredObjectByClass {};
+
 template <class ObjectType, StringConcatModIDSlash StringID>
-class RegisterCustomObject {
+class RegisterCustomObject : public RegisteredObjectByClass {
     static inline struct {
         CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, (ObjectConstructor)createWithConfig);
         bool initialized = [](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*registration.config); return true; }();
@@ -102,9 +105,9 @@ protected:
     static const CustomObjectConfig* getConfig() { return registration.config; }
     static bool isInitialized() { return registration.initialized; }
 public:
-    static ObjectType* createWithConfig(const CustomObjectConfig* config) {
+    static ObjectType* createWithConfig(const CustomObjectConfig&& config) {
         auto obj = new ObjectType();
-        if (obj->ObjectType::init(std::move(*config))) {
+        if (obj->ObjectType::init(std::move(config))) {
             obj->autorelease();
             return obj;
         }

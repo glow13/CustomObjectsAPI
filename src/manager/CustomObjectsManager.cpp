@@ -105,6 +105,7 @@ void CustomObjectsManager::registerCustomSprite(CustomSpriteConfig* config) {
     m_customSprites.push_back(config);
 }
 
+// Automatically called when a CustomSpriteConfig is destroyed
 void CustomObjectsManager::unregisterCustomSprite(CustomSpriteConfig* config) {
     std::erase(m_customSprites, config);
 }

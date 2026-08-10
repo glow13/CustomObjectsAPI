@@ -18,3 +18,9 @@ public:
         config.setEditorPriority(-12).setBoxSize(6, 20).setObjectType(GameObjectType::Hazard);
     }
 };
+
+$execute {
+    CustomObjectsAPI::registerCustomObject("weird"_spr)
+        .setMainSprite("block001_01_001.png")
+        .setObjectType(GameObjectType::Decoration);
+}

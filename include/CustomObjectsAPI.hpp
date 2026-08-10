@@ -22,8 +22,9 @@ public:
      * @return The CustomObjectConfig for the new custom object.
      */
     template <class ObjectType>// = CustomGameObject>
+    requires (!std::derived_from<ObjectType, RegisteredObjectByClass>)
     static CustomObjectConfig&& registerCustomObject(std::string objectID) {
-        // TODO
+        return CustomObjectsUtils::registerCustomObject(objectID, (CustomObjectConfig::ObjectConstructor)ObjectType::template createWithConfig<ObjectType>);
     }
 
     /**
@@ -139,5 +140,3 @@ public:
         CustomObjectsUtils::registerCustomAnimationSprites(firstFrame, 0, 0, 0, 0, frames);
     }
 };
-
-#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>

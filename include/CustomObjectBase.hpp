@@ -20,6 +20,17 @@ template <class BaseType>
 requires std::derived_from<BaseType, GameObject>
 class CustomObjectBase : public CustomObjectInterface, public BaseType {
 public:
+    template <class ObjectType>
+    static ObjectType* createWithConfig(const CustomObjectConfig&& config) {
+        auto obj = new ObjectType();
+        if (obj->ObjectType::init(std::move(config))) {
+            obj->autorelease();
+            return obj;
+        }
+        delete obj;
+        return nullptr;
+    }
+
     virtual bool init(const CustomObjectConfig&& config) {
         if (!BaseType::init(config.getMainSprite().c_str())) return false;
 
@@ -50,3 +61,6 @@ public:
         return this;
     }
 };
+
+#define $base(NAME, BASE) NAME : public CustomObjectBase<BASE>
+#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>

@@ -36,7 +36,7 @@ CustomSpriteConfig::~CustomSpriteConfig() {
 }
 
 std::string CustomSpriteConfig::getModID() const {
-    return m_impl->m_object->getModID();
+    return m_impl->m_object ? m_impl->m_object->getModID() : "";
 }
 
 std::string CustomSpriteConfig::getFrameName() const {
