@@ -1,17 +1,21 @@
 #pragma once
 
-#define CONFIG_OPTION(name, type, ...) type get##name() const; CustomObjectConfig&& set##name(__VA_ARGS__);
-
 using geode::geode_internal::StringConcatModIDSlash;
+
+constexpr int CUSTOM_PARENT_MODE = 10;
 
 class CustomObjectConfig final {
 public:
-    using ObjectConstructor = GameObject*(*)(const CustomObjectConfig*);
-    using EditObjectCallback = void(*)(GameObject*, cocos2d::CCArray*);
+    using ObjectConstructor = geode::Function<GameObject*(const CustomObjectConfig*)>;
+    using SetupObjectCallback = geode::Function<void(GameObject*)>;
+    using ResetObjectCallback = geode::Function<void(GameObject*)>;
+    using ActivateObjectCallback = geode::Function<void(GameObject*, GJBaseGameLayer*, PlayerObject*)>;
+    using EditObjectCallback = geode::Function<void(GameObject*, cocos2d::CCArray*)>;
 
     CustomObjectConfig(std::string_view, int, ObjectConstructor);
     ~CustomObjectConfig();
 
+    #define CONFIG_OPTION(name, type, ...) type get##name() const; CustomObjectConfig&& set##name(__VA_ARGS__);
     CONFIG_OPTION(BoxSize, cocos2d::CCSize, int w, int h);
     CONFIG_OPTION(BoxOffset, cocos2d::CCPoint, int x, int y);
     CONFIG_OPTION(BoxRadius, int, int radius);
@@ -26,6 +30,7 @@ public:
     CONFIG_OPTION(ParticleOpacity, GLubyte, GLubyte opacity);
     CONFIG_OPTION(ParticleBlending, bool, bool blending);
     CONFIG_OPTION(EditorPriority, int, int priority);
+    #undef CONFIG_OPTION
 
     std::string getID() const;
     std::string getModID() const;
@@ -57,6 +62,10 @@ public:
     CustomObjectConfig&& setGlowSprite(std::string frame, int size);
     CustomObjectConfig&& setGlowSprite(std::string frame, bool sheet = true);
 
+    CustomObjectConfig&& onSetupCustomObject(SetupObjectCallback);
+    CustomObjectConfig&& onResetCustomObject(ResetObjectCallback);
+    CustomObjectConfig&& onActivateCustomObject(ActivateObjectCallback);
+
     CustomObjectConfig&& onEditObject(EditObjectCallback);
     CustomObjectConfig&& onEditSpecial(EditObjectCallback);
 
@@ -70,21 +79,28 @@ private:
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
+    void setupCustomObject(GameObject*) const;
+    void resetCustomObject(GameObject*) const;
+    void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
+
     void customEditObject(GameObject*, cocos2d::CCArray*) const;
     void customEditSpecial(GameObject*, cocos2d::CCArray*) const;
 
     template <class, StringConcatModIDSlash> friend class RegisterCustomObject;
-    friend class CustomObjectsManager;
+    friend class CustomObjectsManager, class ICustomObjectBase;
 };
 
 template <class ObjectType, StringConcatModIDSlash StringID>
 class RegisterCustomObject {
     static inline struct {
-        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, (ObjectConstructor)ObjectType::createWithConfig);
+        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, (ObjectConstructor)createWithConfig);
         bool initialized = [](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*registration.config); return true; }();
     } registration;
     static inline auto registrationRef = &registration;
+
     static void onRegisterConfig(CustomObjectConfig&&) {}
+    static void onEditObject(ObjectType*, cocos2d::CCArray*) {}
+    static void onEditSpecial(ObjectType*, cocos2d::CCArray*) {}
 protected:
     using ObjectConstructor = CustomObjectConfig::ObjectConstructor;
     using EditObjectCallback = CustomObjectConfig::EditObjectCallback;
@@ -94,7 +110,7 @@ protected:
 public:
     static ObjectType* createWithConfig(const CustomObjectConfig* config) {
         auto obj = new ObjectType();
-        if (obj->ObjectType::init(config)) {
+        if (obj->ObjectType::init(std::move(*config))) {
             obj->autorelease();
             return obj;
         }
@@ -102,5 +118,3 @@ public:
         return nullptr;
     }
 };
-
-#undef CONFIG_OPTION

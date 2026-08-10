@@ -74,7 +74,7 @@ struct CustomObjectConfig::Impl {
 };
 
 CustomObjectConfig::~CustomObjectConfig() = default;
-CustomObjectConfig::CustomObjectConfig(std::string_view id, int objectID, ObjectConstructor ctor) : m_impl(std::make_unique<Impl>(id, objectID, ctor)) {}
+CustomObjectConfig::CustomObjectConfig(std::string_view id, int objectID, ObjectConstructor ctor) : m_impl(std::make_unique<Impl>(id, objectID, std::move(ctor))) {}
 
 CONFIG_OPTION(BoxSize, CCSize, m_boxSize, CCSize(w, h), int w, int h);
 CONFIG_OPTION(BoxOffset, CCPoint, m_boxOffset, CCPoint(x, y), int x, int y);
@@ -145,14 +145,21 @@ CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, bool s
     { m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet); return (CustomObjectConfig&&)*this; }
 
 CustomObjectConfig&& CustomObjectConfig::onEditObject(EditObjectCallback callback)
-    { m_impl->m_editObject = callback; return (CustomObjectConfig&&)*this; }
+    { m_impl->m_editObject = std::move(callback); return (CustomObjectConfig&&)*this; }
 CustomObjectConfig&& CustomObjectConfig::onEditSpecial(EditObjectCallback callback)
-    { m_impl->m_editSpecial = callback; return (CustomObjectConfig&&)*this; }
+    { m_impl->m_editSpecial = std::move(callback); return (CustomObjectConfig&&)*this; }
 
 bool CustomObjectConfig::hasEditObjectCallback() const
     { return m_impl->m_editObject != nullptr; }
 bool CustomObjectConfig::hasEditSpecialCallback() const
     { return m_impl->m_editSpecial != nullptr; }
+
+void CustomObjectConfig::setupCustomObject(GameObject* obj) const
+    { if (m_impl->m_setupCallback) m_impl->m_setupCallback(obj); }
+void CustomObjectConfig::resetCustomObject(GameObject* obj) const
+    { if (m_impl->m_resetCallback) m_impl->m_resetCallback(obj); }
+void CustomObjectConfig::activateCustomObject(GameObject* obj, GJBaseGameLayer* level, PlayerObject* player) const
+    { if (m_impl->m_activateCallback) m_impl->m_activateCallback(obj, level, player); }
 
 void CustomObjectConfig::customEditObject(GameObject* obj, cocos2d::CCArray* objs) const
     { if (m_impl->m_editObject != nullptr) m_impl->m_editObject(obj, objs); }
@@ -178,5 +185,5 @@ GameObject* CustomObjectConfig::createCustomObject() const {
 }
 
 CustomObjectConfig* CustomObjectConfig::registerConfig(std::string_view stringID, ObjectConstructor ctor) {
-    return CustomObjectsManager::get()->registerObjectConfig(stringID, ctor);
+    return CustomObjectsManager::get()->registerObjectConfig(stringID, std::move(ctor));
 }

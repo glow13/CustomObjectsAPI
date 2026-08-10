@@ -2,10 +2,9 @@
 #include "CustomObjectConfig.hpp"
 
 constexpr int BASE_OBJECT_ID = 100000;
-constexpr int CUSTOM_PARENT_MODE = 10;
 
-class CustomObjectsManager {
-    using ObjectConstructor = GameObject*(*)(const CustomObjectConfig*);
+class CustomObjectsManager final {
+    using ObjectConstructor = CustomObjectConfig::ObjectConstructor;
     std::unordered_map<int, std::unique_ptr<CustomObjectConfig>> m_customObjects;
     std::vector<class CustomSpriteConfig*> m_customSprites;
 public:

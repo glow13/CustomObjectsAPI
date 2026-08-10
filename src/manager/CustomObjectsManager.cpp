@@ -18,7 +18,7 @@ int getHashedObjectID(std::string_view stringID) {
 
 CustomObjectConfig* CustomObjectsManager::registerObjectConfig(std::string_view stringID, ObjectConstructor ctor) {
     int objectID = getHashedObjectID(stringID);
-    auto it = m_customObjects.try_emplace(objectID, std::make_unique<CustomObjectConfig>(stringID, objectID, ctor));
+    auto it = m_customObjects.try_emplace(objectID, std::make_unique<CustomObjectConfig>(stringID, objectID, std::move(ctor)));
 
     if (!it.second) {
         log::error("Duplicate object ID \"{}\"!", stringID);
