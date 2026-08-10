@@ -1,9 +1,6 @@
-#include "CustomObjectBase.hpp"
-#include "CustomObjectConfig.hpp"
+#include "CustomObjectsAPI.hpp"
 
 using namespace geode::prelude;
-
-#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>
 
 class $object(TestGameObject, GameObject) {
 public:
