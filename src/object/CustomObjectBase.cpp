@@ -11,11 +11,11 @@ void ICustomObjectBase::addConfig(const CustomObjectConfig* config) {
 }
 
 void ICustomObjectBase::setupCustomObject(GameObject* obj) const {
-    m_impl->m_config->m_impl->m_setupCallback(obj);
+    if (m_impl->m_config->m_impl->m_setupObject) m_impl->m_config->m_impl->m_setupObject(obj);
 }
 void ICustomObjectBase::resetCustomObject(GameObject* obj) const {
-    m_impl->m_config->resetCustomObject(obj);
+    if (m_impl->m_config->m_impl->m_resetObject) m_impl->m_config->m_impl->m_resetObject(obj);
 }
 void ICustomObjectBase::activateCustomObject(GameObject* obj, GJBaseGameLayer* level, PlayerObject* player) const {
-    m_impl->m_config->activateCustomObject(obj, level, player);
+    if (m_impl->m_config->m_impl->m_activateObject) m_impl->m_config->m_impl->m_activateObject(obj, level, player);
 }

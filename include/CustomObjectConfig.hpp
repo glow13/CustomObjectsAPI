@@ -79,13 +79,6 @@ private:
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
-    void setupCustomObject(GameObject*) const;
-    void resetCustomObject(GameObject*) const;
-    void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
-
-    void customEditObject(GameObject*, cocos2d::CCArray*) const;
-    void customEditSpecial(GameObject*, cocos2d::CCArray*) const;
-
     template <class, StringConcatModIDSlash> friend class RegisterCustomObject;
     friend class CustomObjectsManager, class ICustomObjectBase;
 };

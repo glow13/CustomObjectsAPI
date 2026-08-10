@@ -1,5 +1,4 @@
 #pragma once
-#include <rect_structs.h>
 
 enum Quality : int {
     LOW = 1,

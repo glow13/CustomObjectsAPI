@@ -124,18 +124,6 @@ bool CustomObjectConfig::hasEditObjectCallback() const
 bool CustomObjectConfig::hasEditSpecialCallback() const
     { return m_impl->m_editSpecial != nullptr; }
 
-void CustomObjectConfig::setupCustomObject(GameObject* obj) const
-    { if (m_impl->m_setupCallback) m_impl->m_setupCallback(obj); }
-void CustomObjectConfig::resetCustomObject(GameObject* obj) const
-    { if (m_impl->m_resetCallback) m_impl->m_resetCallback(obj); }
-void CustomObjectConfig::activateCustomObject(GameObject* obj, GJBaseGameLayer* level, PlayerObject* player) const
-    { if (m_impl->m_activateCallback) m_impl->m_activateCallback(obj, level, player); }
-
-void CustomObjectConfig::customEditObject(GameObject* obj, cocos2d::CCArray* objs) const
-    { if (m_impl->m_editObject != nullptr) m_impl->m_editObject(obj, objs); }
-void CustomObjectConfig::customEditSpecial(GameObject* obj, cocos2d::CCArray* objs) const
-    { if (m_impl->m_editSpecial != nullptr) m_impl->m_editSpecial(obj, objs); }
-
 GameObject* CustomObjectConfig::createCustomObject() const {
     if (!m_impl->m_ctor) return nullptr;
 

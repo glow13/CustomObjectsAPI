@@ -48,16 +48,16 @@ GameObject* CustomObjectsManager::createCustomObjectWithID(int id) const {
 
 bool CustomObjectsManager::customEditObjectForID(int id, GameObject* obj, CCArray* objs) const {
     auto config = CustomObjectsManager::get()->getCustomObjectWithID(id);
-    if (config && config->hasEditObjectCallback()) {
-        config->customEditObject(obj, objs);
+    if (config && config->m_impl->m_editObject != nullptr) {
+        config->m_impl->m_editObject(obj, objs);
         return true;
     } else return false;
 }
 
 bool CustomObjectsManager::customEditSpecialForID(int id, GameObject* obj, CCArray* objs) const {
     auto config = CustomObjectsManager::get()->getCustomObjectWithID(id);
-    if (config && config->hasEditSpecialCallback()) {
-        config->customEditSpecial(obj, objs);
+    if (config && config->m_impl->m_editSpecial != nullptr) {
+        config->m_impl->m_editSpecial(obj, objs);
         return true;
     } else return false;
 }
