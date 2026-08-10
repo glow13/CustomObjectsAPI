@@ -1,7 +1,8 @@
 #include <Geode/Geode.hpp>
+#include "../impl.hpp"
+
 #include "CustomObjectsSheet.hpp"
 #include "CustomObjectsManager.hpp"
-#include "../config/CustomSpriteConfig.hpp"
 
 #define LODEPNG_NO_COMPILE_DECODER
 #define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS

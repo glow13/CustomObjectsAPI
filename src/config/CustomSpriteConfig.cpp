@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
-#include "CustomSpriteConfig.hpp"
-#include "CustomObjectConfig.hpp"
+#include "../impl.hpp"
+
 #include "../manager/CustomObjectsManager.hpp"
 #include "../manager/CustomObjectsSheet.hpp"
 
@@ -14,15 +14,6 @@ inline CCSpriteFrame* getCCSpriteFrame(std::string name) {
     else if (CCSprite spr; spr.initWithFile(name.c_str())) return spr.displayFrame();
     else return nullptr;
 }
-
-struct CustomSpriteConfig::Impl {
-    CustomObjectConfig* m_object;
-    std::string m_frameName;
-    std::string m_sourceFrame;
-    rectpack2D::rect_wh m_offset;
-    rectpack2D::rect_wh m_size;
-    bool m_customSprite;
-};
 
 std::string formatSpriteFrameName(std::string frame, std::string mod, int x, int y, int w, int h) {
     return fmt::format("custom-objects/{}/{}.{}.{}.{}/{}", mod, x, y, w, h, frame.substr(frame.find("/") + 1));

@@ -1,13 +1,14 @@
-#include "CustomObjectConfig.hpp"
-#include "CustomSpriteConfig.hpp"
+#include <Geode/Geode.hpp>
+#include "../impl.hpp"
+
 #include "../manager/CustomObjectsManager.hpp"
+
+using namespace geode::prelude;
 
 #define CONFIG_OPTION(name, type, variable, result, ...)                    \
     type CustomObjectConfig::get##name() const { return m_impl->variable; } \
     CustomObjectConfig&& CustomObjectConfig::set##name(__VA_ARGS__)         \
     { m_impl->variable = result; return (CustomObjectConfig&&)*this; }
-
-using namespace geode::prelude;
 
 constexpr CCSize BOX_SIZE_DEFAULT = CCSizeZero;
 constexpr CCPoint BOX_OFFSET_DEFAULT = CCPointZero;
@@ -24,54 +25,23 @@ constexpr GLubyte PARTICLE_OPACITY_DEFUALT = 255;
 constexpr bool PARTICLE_BLENDING_DEFAULT = true;
 constexpr int EDITOR_PRIORITY_DEFAULT = 0;
 
-struct CustomObjectConfig::Impl {
-    std::string m_id;
-    std::string m_mod;
-    int m_objectID;
-
-    ObjectConstructor m_ctor;
-    EditObjectCallback m_editObject;
-    EditObjectCallback m_editSpecial;
-
-    std::unique_ptr<CustomSpriteConfig> m_mainSprite;
-    std::unique_ptr<CustomSpriteConfig> m_detailSprite;
-    std::unique_ptr<CustomSpriteConfig> m_glowSprite;
-
-    CCSize m_boxSize;
-    CCPoint m_boxOffset;
-    int m_boxRadius;
-    CCPoint m_objectOffset;
-    GameObjectType m_objectType;
-    int m_batchMode;
-    bool m_disableBatch;
-    int m_framesCount;
-    float m_frameTime;
-    ccColor3B m_glowColor;
-    ccColor3B m_particleColor;
-    GLubyte m_particleOpacity;
-    bool m_particleBlending;
-    int m_editorPriority;
-
-    Impl(std::string_view id, int objectID, ObjectConstructor ctor) :
-        m_id(id), m_mod(id.substr(0, id.find("/"))),
-        m_objectID(objectID), m_ctor(ctor),
-        m_boxSize(BOX_SIZE_DEFAULT),
-        m_boxOffset(BOX_OFFSET_DEFAULT),
-        m_boxRadius(BOX_RADIUS_DEFAULT),
-        m_objectOffset(OBJECT_OFFSET_DEFAULT),
-        m_objectType(OBJECT_TYPE_DEFAULT),
-        m_batchMode(BATCH_MODE_DEFAULT),
-        m_disableBatch(DISABLE_BATCH_DEFAULT),
-        m_framesCount(FRAMES_COUNT_DEFAULT),
-        m_frameTime(FRAME_TIME_DEFAULT),
-        m_glowColor(GLOW_COLOR_DEFAULT),
-        m_particleColor(PARTICLE_COLOR_DEFAULT),
-        m_particleOpacity(PARTICLE_OPACITY_DEFUALT),
-        m_particleBlending(PARTICLE_BLENDING_DEFAULT),
-        m_editorPriority(EDITOR_PRIORITY_DEFAULT),
-        m_editObject(nullptr), m_editSpecial(nullptr),
-        m_mainSprite(nullptr), m_detailSprite(nullptr), m_glowSprite(nullptr) {}
-};
+CustomObjectConfig::Impl::Impl(std::string_view id, int objectID, ObjectConstructor ctor) :
+    m_id(id), m_mod(id.substr(0, id.find("/"))),
+    m_objectID(objectID), m_ctor(std::move(ctor)),
+    m_boxSize(BOX_SIZE_DEFAULT),
+    m_boxOffset(BOX_OFFSET_DEFAULT),
+    m_boxRadius(BOX_RADIUS_DEFAULT),
+    m_objectOffset(OBJECT_OFFSET_DEFAULT),
+    m_objectType(OBJECT_TYPE_DEFAULT),
+    m_batchMode(BATCH_MODE_DEFAULT),
+    m_disableBatch(DISABLE_BATCH_DEFAULT),
+    m_framesCount(FRAMES_COUNT_DEFAULT),
+    m_frameTime(FRAME_TIME_DEFAULT),
+    m_glowColor(GLOW_COLOR_DEFAULT),
+    m_particleColor(PARTICLE_COLOR_DEFAULT),
+    m_particleOpacity(PARTICLE_OPACITY_DEFUALT),
+    m_particleBlending(PARTICLE_BLENDING_DEFAULT),
+    m_editorPriority(EDITOR_PRIORITY_DEFAULT) {}
 
 CustomObjectConfig::~CustomObjectConfig() = default;
 CustomObjectConfig::CustomObjectConfig(std::string_view id, int objectID, ObjectConstructor ctor) : m_impl(std::make_unique<Impl>(id, objectID, std::move(ctor))) {}

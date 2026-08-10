@@ -1,7 +1,8 @@
 #include <Geode/Geode.hpp>
+#include "../impl.hpp"
+
 #include "CustomObjectsManager.hpp"
 #include "CustomObjectsSheet.hpp"
-#include "../config/CustomSpriteConfig.hpp"
 
 using namespace geode::prelude;
 
