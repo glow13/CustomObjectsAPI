@@ -2,10 +2,6 @@
 #include "CustomObjectConfig.hpp"
 
 class CustomObjectInterface {
-    struct Impl;
-    std::unique_ptr<Impl> m_impl;
-    virtual GameObject* getObject() = 0;
-
     template <class ObjectType>
     static CustomObjectInterface* createWithConfig(const CustomObjectConfig&& config) {
         auto obj = new ObjectType();
@@ -16,6 +12,9 @@ class CustomObjectInterface {
         delete obj;
         return nullptr;
     }
+
+    struct Impl;
+    std::unique_ptr<Impl> m_impl;
 
     template <class, StringConcatModIDSlash>
     friend class RegisterCustomObject;
@@ -29,6 +28,7 @@ protected:
     void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
 
     const CustomObjectConfig&& getConfig() const;
+    virtual GameObject* getObject() = 0;
 };
 
 template <class BaseType>

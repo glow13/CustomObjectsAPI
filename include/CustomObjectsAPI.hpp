@@ -3,6 +3,8 @@
 #include "CustomObjectConfig.hpp"
 #include "CustomObjectBase.hpp"
 
+#include "../objects/CustomGameObject.hpp"
+
 class CustomObjectsUtils final {
     static CustomObjectConfig&& registerCustomObject(std::string, CustomObjectConfig::ObjectConstructor, geode::Mod* = geode::Mod::get());
     static void registerCustomSprite(std::string, int, int, int, int, geode::Mod* = geode::Mod::get());
@@ -21,7 +23,7 @@ public:
      * @param objectID The string used to identify this custom object, should use "_spr" to include your mod's id.
      * @return The CustomObjectConfig for the new custom object.
      */
-    template <class ObjectType>// = CustomGameObject>
+    template <class ObjectType = CustomGameObject>
     requires (!std::derived_from<ObjectType, RegisteredObjectByClass>)
     static CustomObjectConfig&& registerCustomObject(std::string objectID) {
         return CustomObjectsUtils::registerCustomObject(objectID, ObjectType::template createWithConfig<ObjectType>);
