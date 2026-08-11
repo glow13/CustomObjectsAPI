@@ -2,17 +2,6 @@
 #include "CustomObjectConfig.hpp"
 
 class CustomObjectInterface {
-    template <class ObjectType>
-    static CustomObjectInterface* createWithConfig(const CustomObjectConfig&& config) {
-        auto obj = new ObjectType();
-        if (obj->ObjectType::init(std::move(config))) {
-            obj->autorelease();
-            return obj;
-        }
-        delete obj;
-        return nullptr;
-    }
-
     struct Impl;
     std::unique_ptr<Impl> m_impl;
 
@@ -21,21 +10,23 @@ class CustomObjectInterface {
     friend class CustomObjectConfig;
 public:
     CustomObjectInterface();
-    ~CustomObjectInterface();
+    virtual ~CustomObjectInterface();
+    virtual bool init() = 0;
 protected:
     void setupCustomObject(GameObject*) const;
     void resetCustomObject(GameObject*) const;
     void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
 
     const CustomObjectConfig&& getConfig() const;
-    virtual GameObject* getObject() = 0;
+    virtual GameObject* gameObject() = 0;
 };
 
 template <class BaseType>
 requires std::derived_from<BaseType, GameObject>
 class CustomObjectBase : public CustomObjectInterface, public BaseType {
 public:
-    virtual bool init(const CustomObjectConfig&& config) {
+    virtual bool init() override {
+        const CustomObjectConfig&& config = getConfig();
         if (!BaseType::init(config.getMainSprite().c_str())) return false;
 
         // Add sprites to the custom object
@@ -92,7 +83,7 @@ public:
     }
 
     void customSetup() override {
-        if (this->m_particle) return BaseType::customSetup();
+        if (!this->m_particle) return BaseType::customSetup();
 
         this->updateParticleColor(getConfig().getParticleColor());
         this->updateParticleOpacity(getConfig().getParticleOpacity());
@@ -114,7 +105,7 @@ public:
         resetCustomObject();
     }
 
-    GameObject* getObject() override {
+    GameObject* gameObject() override {
         return this;
     }
 };

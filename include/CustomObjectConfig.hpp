@@ -11,7 +11,7 @@ public:
     using ResetObjectCallback = geode::Function<void(GameObject*)>;
     using ActivateObjectCallback = geode::Function<void(GameObject*, GJBaseGameLayer*, PlayerObject*)>;
 
-    using ObjectConstructor = geode::Function<class CustomObjectInterface*(const CustomObjectConfig&&)>;
+    using ObjectConstructor = geode::Function<class CustomObjectInterface*(void)>;
     using EditObjectCallback = geode::Function<void(GameObject*, cocos2d::CCArray*)>;
 
     CustomObjectConfig(std::string_view, int, ObjectConstructor);
@@ -91,7 +91,7 @@ class RegisteredObjectByClass {};
 template <class ObjectType, StringConcatModIDSlash StringID>
 class RegisterCustomObject : public RegisteredObjectByClass {
     static inline struct {
-        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, ObjectType::template createWithConfig<ObjectType>);
+        CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, [](){ return new ObjectType(); });
         bool initialized = [](){ ObjectType::onRegisterConfig((CustomObjectConfig&&)*registration.config); return true; }();
     } registration;
     static inline auto registrationRef = &registration;

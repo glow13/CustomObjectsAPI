@@ -11,8 +11,8 @@
  */
 class $base(CustomGameObject, GameObject) {
 public:
-    bool init(const CustomObjectConfig&& config) override {
-        if (!CustomObjectBase::init(std::move(config))) return false;
+    bool init() override {
+        if (!CustomObjectBase::init()) return false;
 
         this->m_objectType = GameObjectType::Decoration;
 
