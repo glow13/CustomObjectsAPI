@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
-#include "../impl.hpp"
-
+#include "CustomObjectConfig.hpp"
+#include "../config/CustomObjectConfigImpl.hpp"
+#include "../config/CustomSpriteConfig.hpp"
 #include "CustomObjectsManager.hpp"
 #include "CustomObjectsSheet.hpp"
 
@@ -46,12 +47,22 @@ GameObject* CustomObjectsManager::createCustomObjectWithID(int id) const {
     return it != m_customObjects.end() ? it->second->createCustomObject() : nullptr;
 }
 
+bool CustomObjectsManager::hasCustomEditObjectForID(int id) const {
+    auto config = CustomObjectsManager::get()->getCustomObjectWithID(id);
+    return config && config->m_impl->m_editObject != nullptr;
+}
+
 bool CustomObjectsManager::customEditObjectForID(int id, GameObject* obj, CCArray* objs) const {
     auto config = CustomObjectsManager::get()->getCustomObjectWithID(id);
     if (config && config->m_impl->m_editObject != nullptr) {
         config->m_impl->m_editObject(obj, objs);
         return true;
     } else return false;
+}
+
+bool CustomObjectsManager::hasCustomEditSpecialForID(int id) const {
+    auto config = CustomObjectsManager::get()->getCustomObjectWithID(id);
+    return config && config->m_impl->m_editSpecial != nullptr;
 }
 
 bool CustomObjectsManager::customEditSpecialForID(int id, GameObject* obj, CCArray* objs) const {

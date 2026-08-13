@@ -5,6 +5,8 @@
 
 using namespace geode::prelude;
 
+constexpr int CUSTOM_PARENT_MODE = 10;
+
 class $modify(GJBaseGameLayer) {
 public:
     struct Fields {

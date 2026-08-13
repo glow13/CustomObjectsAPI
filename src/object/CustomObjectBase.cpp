@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
-#include "../impl.hpp"
+#include "CustomObjectBaseImpl.hpp"
+#include "../config/CustomObjectConfigImpl.hpp"
 
 using namespace geode::prelude;
 

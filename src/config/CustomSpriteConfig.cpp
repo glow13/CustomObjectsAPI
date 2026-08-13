@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
-#include "../impl.hpp"
-
+#include <rect_structs.h>
+#include "CustomSpriteConfig.hpp"
+#include "CustomObjectConfig.hpp"
 #include "../manager/CustomObjectsManager.hpp"
 #include "../manager/CustomObjectsSheet.hpp"
 
@@ -18,6 +19,15 @@ inline CCSpriteFrame* getCCSpriteFrame(std::string name) {
 std::string formatSpriteFrameName(std::string frame, std::string mod, int x, int y, int w, int h) {
     return fmt::format("custom-objects/{}/{}.{}.{}.{}/{}", mod, x, y, w, h, frame.substr(frame.find("/") + 1));
 }
+
+struct CustomSpriteConfig::Impl {
+    CustomObjectConfig* m_object;
+    std::string m_frameName;
+    std::string m_sourceFrame;
+    rectpack2D::rect_wh m_offset;
+    rectpack2D::rect_wh m_size;
+    bool m_customSprite;
+};
 
 CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string frameName, int x, int y, int w, int h, bool sheet) : m_impl(std::make_unique<Impl>()) {
     m_impl->m_object = object;

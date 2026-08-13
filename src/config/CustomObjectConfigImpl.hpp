@@ -1,29 +1,7 @@
 #pragma once
-#include <rect_structs.h>
-
-#include "config/CustomSpriteConfig.hpp"
 #include "CustomObjectConfig.hpp"
-#include "CustomObjectBase.hpp"
 
-struct SheetInfo final {
-    const class CustomSpriteConfig* m_sprite;
-    rectpack2D::rect_wh m_offset;
-    rectpack2D::rect_wh m_size;
-    rectpack2D::rect_xywh m_trim;
-    rectpack2D::rect_xywhf m_rect;
-
-    auto& get_rect() { return m_rect; }
-    const auto& get_rect() const { return m_rect; }
-};
-
-struct CustomSpriteConfig::Impl {
-    CustomObjectConfig* m_object;
-    std::string m_frameName;
-    std::string m_sourceFrame;
-    rectpack2D::rect_wh m_offset;
-    rectpack2D::rect_wh m_size;
-    bool m_customSprite;
-};
+class CustomSpriteConfig;
 
 struct CustomObjectConfig::Impl {
     Impl(std::string_view id, int objectID, ObjectConstructor ctor);
@@ -58,8 +36,4 @@ struct CustomObjectConfig::Impl {
     GLubyte m_particleOpacity;
     bool m_particleBlending;
     int m_editorPriority;
-};
-
-struct CustomObjectInterface::Impl {
-    const CustomObjectConfig* m_config;
 };

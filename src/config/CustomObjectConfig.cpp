@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
-#include "../impl.hpp"
-
+#include "CustomObjectConfigImpl.hpp"
+#include "../object/CustomObjectBaseImpl.hpp"
+#include "../config/CustomSpriteConfig.hpp"
 #include "../manager/CustomObjectsManager.hpp"
 
 using namespace geode::prelude;
@@ -125,11 +126,6 @@ CustomObjectConfig&& CustomObjectConfig::onEditObject(EditObjectCallback callbac
     { m_impl->m_editObject = std::move(callback); return std::move(*this); }
 CustomObjectConfig&& CustomObjectConfig::onEditSpecial(EditObjectCallback callback)
     { m_impl->m_editSpecial = std::move(callback); return std::move(*this); }
-
-bool CustomObjectConfig::hasEditObjectCallback() const
-    { return m_impl->m_editObject != nullptr; }
-bool CustomObjectConfig::hasEditSpecialCallback() const
-    { return m_impl->m_editSpecial != nullptr; }
 
 GameObject* CustomObjectConfig::createCustomObject() const {
     if (!m_impl->m_ctor) return nullptr;

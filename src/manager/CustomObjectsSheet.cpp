@@ -1,6 +1,5 @@
 #include <Geode/Geode.hpp>
-#include "../impl.hpp"
-
+#include "../config/CustomSpriteConfig.hpp"
 #include "CustomObjectsSheet.hpp"
 #include "CustomObjectsManager.hpp"
 
@@ -223,7 +222,7 @@ inline void saveSpritesheetDataToCache(const std::vector<CustomSpriteConfig*>& c
 
 void CustomObjectsSheet::addSpritesheetToCache(const std::vector<CustomSpriteConfig*>& customSprites, Quality quality) {
     std::vector<SheetInfo> sprites;
-    for (auto spr : customSprites) sprites.emplace_back(spr->getSheetInfo(quality));
+    for (const auto& spr : customSprites) sprites.emplace_back(spr->getSheetInfo(quality));
 
     auto qualityString = (int)quality == 4 ? "HIGH" : ((int)quality == 2 ? "MEDIUM" : "LOW");
     log::debug("Generating custom objects spritesheet with {} texture quality...", qualityString);

@@ -71,9 +71,6 @@ public:
     CustomObjectConfig&& onEditObject(EditObjectCallback);
     CustomObjectConfig&& onEditSpecial(EditObjectCallback);
 
-    bool hasEditObjectCallback() const;
-    bool hasEditSpecialCallback() const;
-
 private:
     struct Impl;
     std::unique_ptr<Impl> m_impl;
@@ -103,6 +100,6 @@ protected:
     using ObjectConstructor = CustomObjectConfig::ObjectConstructor;
     using EditObjectCallback = CustomObjectConfig::EditObjectCallback;
 
-    static const CustomObjectConfig* getConfig() { return registration.config; }
+    static const CustomObjectConfig* getStaticConfig() { return registration.config; }
     static bool isInitialized() { return registration.initialized; }
 };

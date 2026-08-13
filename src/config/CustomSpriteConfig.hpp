@@ -1,10 +1,7 @@
 #pragma once
 
-enum Quality : int {
-    LOW = 1,
-    MEDIUM = 2,
-    HIGH = 4
-};
+enum Quality : int;
+struct SheetInfo;
 
 class CustomSpriteConfig final {
     struct Impl;
@@ -16,7 +13,7 @@ public:
     std::string getModID() const;
     std::string getFrameName() const;
     std::string getSourceFrame() const;
-    struct SheetInfo getSheetInfo(Quality) const;
+    SheetInfo getSheetInfo(Quality) const;
 
     bool isCustomSprite() const;
     bool isAnimationFrame() const;

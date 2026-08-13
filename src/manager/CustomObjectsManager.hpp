@@ -1,9 +1,8 @@
 #pragma once
-#include "CustomObjectConfig.hpp"
 
 class CustomObjectsManager final {
-    using ObjectConstructor = CustomObjectConfig::ObjectConstructor;
-    std::unordered_map<int, std::unique_ptr<CustomObjectConfig>> m_customObjects;
+    using ObjectConstructor = geode::Function<class CustomObjectInterface*()>; // these should match
+    std::unordered_map<int, std::unique_ptr<class CustomObjectConfig>> m_customObjects;
     std::vector<class CustomSpriteConfig*> m_customSprites;
 public:
     static CustomObjectsManager* get();
@@ -18,7 +17,9 @@ public:
     CustomObjectConfig* getCustomObjectWithID(int) const;
     GameObject* createCustomObjectWithID(int) const;
 
+    bool hasCustomEditObjectForID(int) const;
     bool customEditObjectForID(int, GameObject*, cocos2d::CCArray*) const;
+    bool hasCustomEditSpecialForID(int) const;
     bool customEditSpecialForID(int, GameObject*, cocos2d::CCArray*) const;
 
     void forEachCustomObject(std::function<void(const CustomObjectConfig*)>) const;

@@ -25,7 +25,7 @@ template <class BaseType>
 requires std::derived_from<BaseType, GameObject>
 class CustomObjectBase : public CustomObjectInterface, public BaseType {
 public:
-    virtual bool init() override {
+    bool init() override {
         const CustomObjectConfig&& config = getConfig();
         if (!BaseType::init(config.getMainSprite().c_str())) return false;
 
@@ -105,7 +105,7 @@ public:
         resetCustomObject();
     }
 
-    GameObject* gameObject() override {
+    GameObject* gameObject() override final {
         return this;
     }
 };

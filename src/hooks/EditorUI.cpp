@@ -40,18 +40,14 @@ class $modify(EditorUI) {
     }
 
     bool editButtonUsable() {
-        if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID) {
-            auto obj = CustomObjectsManager::get()->getCustomObjectWithID(objectID);
-            if (obj && obj->hasEditObjectCallback()) return true;
-        }
+        if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID)
+            if (CustomObjectsManager::get()->hasCustomEditObjectForID(objectID)) return true;
         return EditorUI::editButtonUsable();
     }
 
     bool editButton2Usable() {
-        if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID) {
-            auto obj = CustomObjectsManager::get()->getCustomObjectWithID(objectID);
-            if (obj && obj->hasEditSpecialCallback()) return true;
-        }
+        if (int objectID = getSelectedObjectID(); objectID >= BASE_OBJECT_ID)
+            if (CustomObjectsManager::get()->hasCustomEditSpecialForID(objectID)) return true;
         return EditorUI::editButton2Usable();
     }
 
