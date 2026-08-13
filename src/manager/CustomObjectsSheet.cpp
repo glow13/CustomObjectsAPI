@@ -251,11 +251,6 @@ void CustomObjectsSheet::addSpritesheetToCache(const std::vector<CustomSpriteCon
 CCTexture2D* CustomObjectsSheet::getCustomSpritesheetTexture() {
     if (CustomObjectsManager::get()->getCustomObjectsCount() == 0) return nullptr;
 
-    static CCTexture2D* texture = nullptr;
-    if (texture) return texture;
-
-    CCFileUtils::get()->addSearchPath(CustomObjectsSheet::getCacheDirectory().c_str());
-    auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
-    texture = CCTextureCache::get()->addImage(png.c_str(), false);
-    return texture;
+    auto png = getSpritesheetQualityName() + ".png";
+    return CCTextureCache::get()->textureForKey(png.c_str());
 }

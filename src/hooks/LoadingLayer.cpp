@@ -73,14 +73,19 @@ class $modify(LoadingLayer) {
     }
 
     void loadCustomSpritesheet() {
-        if (CustomObjectsManager::get()->getCustomObjectsCount() > 0) {
-            auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
-            auto plist = CustomObjectsSheet::getSpritesheetQualityName() + ".plist";
-
-            auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
-            CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str());
-            if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
+        if (CustomObjectsManager::get()->getCustomObjectsCount() <= 0) {
+            continueLoadAssets();
+            return;
         }
+
+        auto cache = CustomObjectsSheet::getCacheDirectory();
+        auto png = CustomObjectsSheet::getSpritesheetQualityName() + ".png";
+        auto plist = CustomObjectsSheet::getSpritesheetQualityName() + ".plist";
+
+        CCFileUtils::get()->addSearchPath(cache.c_str());
+        auto texture = CCTextureCache::get()->addImage(png.c_str(), false);
+        CCSpriteFrameCache::get()->addSpriteFramesWithFile(plist.c_str(), texture);
+        if (Mod::get()->getSettingValue<bool>("disable-aa")) texture->setAliasTexParameters();
 
         continueLoadAssets();
     }
