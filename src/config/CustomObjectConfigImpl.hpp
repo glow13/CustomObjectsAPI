@@ -3,7 +3,7 @@
 
 class CustomSpriteConfig;
 
-struct CustomObjectConfig::Impl {
+struct CustomObjectConfig::Impl final {
     Impl(std::string_view id, int objectID, ObjectConstructor ctor);
 
     std::string m_id;

@@ -4,21 +4,36 @@
 class CustomObjectInterface {
     struct Impl;
     std::unique_ptr<Impl> m_impl;
-
-    template <class, StringConcatModIDSlash>
-    friend class RegisterCustomObject;
     friend class CustomObjectConfig;
-public:
-    CustomObjectInterface();
-    virtual ~CustomObjectInterface();
-    virtual bool init() = 0;
-protected:
+
+    template <class BaseType>
+    requires std::derived_from<BaseType, GameObject>
+    friend class CustomObjectBase;
+
     void setupCustomObject(GameObject*) const;
     void resetCustomObject(GameObject*) const;
     void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
 
-    const CustomObjectConfig&& getConfig() const;
+    void setupObjectProperties(std::vector<std::string>&, std::vector<void*>&);
+    std::string getCustomSaveString() const;
+
     virtual GameObject* gameObject() = 0;
+protected:
+    virtual bool init() = 0;
+    const CustomObjectConfig&& getConfig() const;
+
+    template <typename T>
+    void bindObjectProperty(int key, T& property, geode::Function<bool()> condition = nullptr) {
+        static_assert(std::same_as<T, void>, "Custom object properties currently only support bool, int, float, and std::string");
+    }
+
+    template<> void bindObjectProperty<bool>(int, bool&, geode::Function<bool()>);
+    template<> void bindObjectProperty<int>(int, int&, geode::Function<bool()>);
+    template<> void bindObjectProperty<float>(int, float&, geode::Function<bool()>);
+    template<> void bindObjectProperty<std::string>(int, std::string&, geode::Function<bool()>);
+public:
+    CustomObjectInterface();
+    virtual ~CustomObjectInterface();
 };
 
 template <class BaseType>
@@ -54,10 +69,13 @@ public:
 
     void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
         BaseType::customObjectSetup(propValues, propIsPresent);
-
-        // TODO object properties
-
+        CustomObjectInterface::setupObjectProperties(propValues, propIsPresent);
         setupCustomObject();
+    }
+
+    gd::string getSaveString(GJBaseGameLayer* p0) override final {
+        std::string saveString = BaseType::getSaveString(p0);
+        return saveString + CustomObjectInterface::getCustomSaveString();
     }
 
     void addMainSpriteToParent(bool p0) override {

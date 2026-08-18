@@ -20,7 +20,7 @@ std::string formatSpriteFrameName(std::string frame, std::string mod, int x, int
     return fmt::format("custom-objects/{}/{}.{}.{}.{}/{}", mod, x, y, w, h, frame.substr(frame.find("/") + 1));
 }
 
-struct CustomSpriteConfig::Impl {
+struct CustomSpriteConfig::Impl final {
     CustomObjectConfig* m_object;
     std::string m_frameName;
     std::string m_sourceFrame;
