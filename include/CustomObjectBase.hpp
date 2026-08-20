@@ -129,5 +129,5 @@ template <class BaseType>
 requires (std::derived_from<BaseType, GameObject> && !std::derived_from<BaseType, RegisteredObjectByClass>)
 class CustomObjectBase<BaseType, std::enable_if_t<std::is_base_of_v<CustomObjectInterface, BaseType>>> : public BaseType {};
 
-#define $base(NAME, BASE) NAME : public CustomObjectBase<BASE>
-#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>
+#define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>
+#define $registerObject(NAME, BASE) NAME final : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>

@@ -2,7 +2,7 @@
 
 using namespace geode::prelude;
 
-class $object(TestGameObject, GameObject) {
+class $registerObject(TestGameObject, GameObject) {
 public:
     static void onRegisterConfig(CustomObjectConfig&& config) {
         config.setMainSprite("square_01_001.png");
@@ -10,7 +10,7 @@ public:
     }
 };
 
-class $object(SpikeObject, GameObject) {
+class $registerObject(SpikeObject, GameObject) {
 public:
     static void onRegisterConfig(CustomObjectConfig&& config) {
         config.setMainSprite("spike_01_001.png");

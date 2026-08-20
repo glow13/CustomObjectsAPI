@@ -9,7 +9,7 @@
  * 
  * This is the default class that `CustomObjectsAPI::registerCustomObject` uses.
  */
-class $base(CustomGameObject, GameObject) {
+class $object(CustomGameObject, GameObject) {
 public:
     bool init() override {
         if (!CustomObjectBase::init()) return false;
