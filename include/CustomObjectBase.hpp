@@ -1,5 +1,6 @@
 #pragma once
 #include "CustomObjectConfig.hpp"
+#include "CustomObjectProperty.hpp"
 
 class CustomObjectInterface {
     struct Impl;
@@ -14,6 +15,7 @@ class CustomObjectInterface {
     void resetCustomObject(GameObject*) const;
     void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
 
+    void bindObjectProperty(int, std::unique_ptr<ObjectPropertyInterface>&&);
     void setupObjectProperties(std::vector<std::string>&, std::vector<void*>&);
     std::string getCustomSaveString() const;
 
@@ -21,16 +23,6 @@ class CustomObjectInterface {
 protected:
     virtual bool init() = 0;
     const CustomObjectConfig&& getConfig() const;
-
-    template <typename T>
-    void bindObjectProperty(int key, T& property, geode::Function<bool()> condition = nullptr) {
-        static_assert(std::same_as<T, void>, "Custom object properties currently only support bool, int, float, and std::string");
-    }
-
-    template<> void bindObjectProperty<bool>(int, bool&, geode::Function<bool()>);
-    template<> void bindObjectProperty<int>(int, int&, geode::Function<bool()>);
-    template<> void bindObjectProperty<float>(int, float&, geode::Function<bool()>);
-    template<> void bindObjectProperty<std::string>(int, std::string&, geode::Function<bool()>);
 public:
     CustomObjectInterface();
     virtual ~CustomObjectInterface();
@@ -65,6 +57,11 @@ public:
 
     virtual void activateCustomObject(GJBaseGameLayer* level, PlayerObject* player) {
         CustomObjectInterface::activateCustomObject(this, level, player);
+    }
+
+    template <typename T>
+    void bindObjectProperty(int key, T& value, geode::Function<bool()> cond = nullptr) {
+        CustomObjectInterface::bindObjectProperty(key, std::make_unique<ObjectProperty<T>>(value, std::move(cond)));
     }
 
     void customObjectSetup(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) override final {
