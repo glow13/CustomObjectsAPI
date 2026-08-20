@@ -21,6 +21,7 @@ public:
 
     bool isValid() override {
         if (!m_value || (m_cond && !m_cond())) return false;
+
         if constexpr (std::is_convertible_v<T, std::string>)
             return !m_value->empty();
         else if constexpr (std::is_same_v<T, bool>)
@@ -30,6 +31,7 @@ public:
 
     std::string serialize() override {
         if (!m_value) return "";
+
         if constexpr (std::is_convertible_v<T, std::string>)
             return geode::utils::base64::encode(*m_value);
         else if constexpr (std::is_same_v<T, bool>)
@@ -41,6 +43,7 @@ public:
 
     void deserialize(const std::string& str) override {
         if (!m_value || str.empty()) return;
+
         if constexpr (std::is_convertible_v<T, std::string>)
             *m_value = geode::utils::base64::decodeString(str).unwrapOrDefault();
         else if constexpr (std::is_same_v<T, bool>)

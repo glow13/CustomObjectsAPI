@@ -64,7 +64,9 @@ class $modify(EditorUI) {
     }
 
     CCPoint offsetForKey(int id) {
-        if (id < BASE_OBJECT_ID) return EditorUI::offsetForKey(id);
-        return CustomObjectsManager::get()->getCustomObjectWithID(id)->getObjectOffset();
+        if (id >= BASE_OBJECT_ID) {
+            if (auto obj = CustomObjectsManager::get()->getCustomObjectWithID(id)) return obj->getObjectOffset();
+        }
+        return EditorUI::offsetForKey(id);
     }
 };
