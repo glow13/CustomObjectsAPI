@@ -7,8 +7,8 @@ class CustomObjectInterface {
     std::unique_ptr<Impl> m_impl;
     friend class CustomObjectConfig;
 
-    template <class BaseType>
-    requires std::derived_from<BaseType, GameObject>
+    template <class BaseType, typename Enable>
+    requires (std::derived_from<BaseType, GameObject> && !std::derived_from<BaseType, RegisteredObjectByClass>)
     friend class CustomObjectBase;
 
     void setupCustomObject(GameObject*) const;
@@ -28,8 +28,8 @@ public:
     virtual ~CustomObjectInterface();
 };
 
-template <class BaseType>
-requires std::derived_from<BaseType, GameObject>
+template <class BaseType, typename Enable = void>
+requires (std::derived_from<BaseType, GameObject> && !std::derived_from<BaseType, RegisteredObjectByClass>)
 class CustomObjectBase : public CustomObjectInterface, public BaseType {
 public:
     bool init() override {
@@ -124,6 +124,10 @@ public:
         return this;
     }
 };
+
+template <class BaseType>
+requires (std::derived_from<BaseType, GameObject> && !std::derived_from<BaseType, RegisteredObjectByClass>)
+class CustomObjectBase<BaseType, std::enable_if_t<std::is_base_of_v<CustomObjectInterface, BaseType>>> : public BaseType {};
 
 #define $base(NAME, BASE) NAME : public CustomObjectBase<BASE>
 #define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>
