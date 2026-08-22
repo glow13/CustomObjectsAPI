@@ -1,0 +1,67 @@
+#pragma once
+#include "../include/CustomObjectBase.hpp"
+
+#include <Geode/binding/EffectGameObject.hpp>
+#include <Geode/binding/GJEffectManager.hpp>
+#include <Geode/binding/GJSpriteColor.hpp>
+
+/**
+ * This class is a custom pad object that can interact with the player's icon when it touches this object.
+ * Some vanilla examples include the pink, yellow, and red bounce pads.
+ * 
+ * This class adds support for the `CustomObjectConfig::onActivateCustomObject` callback.
+ * The callback is called whenever the player touches the custom pad object.
+ *
+ * Even though this object is made to act like a vanilla bounce pad, it can obviously
+ * do whatever you want when the player touches it, feel free to be creative!
+ */
+class $object(CustomPadObject, EffectGameObject) {
+public:
+    bool init() override {
+        if (!CustomObjectBase::init()) return false;
+
+        this->m_objectType = GameObjectType::Modifier;
+        this->m_baseColor->m_defaultColorID = 0;
+        this->m_greenDebugDraw = true;
+        this->m_width = 25;
+        this->m_height = 5;
+
+        this->m_isTrigger = false;
+        this->m_isSpawnTriggered = false;
+        this->m_isTouchTriggered = true;
+        this->m_isMultiTriggered = false;
+
+        return true;
+    }
+
+    // Copies the behaviour of a regular pad, with adjustable bump strength
+    void bumpPlayer(PlayerObject* player, float power, GameObjectType effectType = GameObjectType::YellowJumpPad) {
+        player->bumpPlayer(power, (int)effectType, this->m_hasNoEffects, this);
+    }
+
+    // Instead of hooking the vanilla pad logic, we treat this object as a trigger with touch enabled
+    void triggerObject(GJBaseGameLayer* level, int playerID, gd::vector<int> const*) override final {
+        auto player = (level->m_player2->m_uniqueID == playerID) ? level->m_player2 : level->m_player1;
+        level->m_effectManager->removeTriggeredID(this->m_uniqueID, player->m_uniqueID);
+
+        if (level->canBeActivatedByPlayer(player, this)) {
+            player->m_lastActivatedPortal = this;
+            player->m_lastPortalPos = this->getPosition();
+            this->activatedByPlayer(player);
+            this->activateCustomObject(level, player);
+        }
+    }
+
+    void customSetup() override {
+        if (!this->m_editorEnabled && !this->m_hasNoParticles) {
+            this->createAndAddParticle(9, "bumpEffect.plist", 4, cocos2d::tCCPositionType::kCCPositionTypeGrouped);
+            this->claimParticle();
+        }
+        CustomObjectBase::customSetup();
+        this->m_dontIgnoreDuration = false;
+    }
+
+    bool canAllowMultiActivate() override {
+        return true;
+    }
+};

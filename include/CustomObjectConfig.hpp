@@ -31,7 +31,7 @@ public:
     CONFIG_OPTION(ParticleColor, cocos2d::ccColor3B, GLubyte r, GLubyte g, GLubyte b);
     CONFIG_OPTION(ParticleOpacity, GLubyte, GLubyte opacity);
     CONFIG_OPTION(ParticleBlending, bool, bool blending);
-    CONFIG_OPTION(EditorPriority, int, int priority);
+    CONFIG_OPTION(EditorTabPriority, int, int priority);
     #undef CONFIG_OPTION
 
     std::string getID() const;

@@ -77,7 +77,7 @@ std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::ge
     std::map<std::string, ModObjects> mods;
     for (auto& [id, obj] : m_customObjects) {
         if (obj->getObjectID() < 0) continue;
-        mods[obj->getModID()].emplace_back(obj->getEditorPriority(), id);
+        mods[obj->getModID()].emplace_back(obj->getEditorTabPriority(), id);
     }
 
     for (auto& [mod, objs] : mods) {

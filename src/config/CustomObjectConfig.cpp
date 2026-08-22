@@ -60,7 +60,7 @@ CONFIG_OPTION(GlowColor, ccColor3B, m_glowColor, ccColor3B(r, g, b), GLubyte r, 
 CONFIG_OPTION(ParticleColor, ccColor3B, m_particleColor, ccColor3B(r, g, b), GLubyte r, GLubyte g, GLubyte b);
 CONFIG_OPTION(ParticleOpacity, GLubyte, m_particleOpacity, opacity, GLubyte opacity);
 CONFIG_OPTION(ParticleBlending, bool, m_particleBlending, blending, bool blending);
-CONFIG_OPTION(EditorPriority, int, m_editorPriority, priority, int priority);
+CONFIG_OPTION(EditorTabPriority, int, m_editorPriority, priority, int priority);
 
 std::string CustomObjectConfig::getID() const
     { return m_impl->m_id; }
