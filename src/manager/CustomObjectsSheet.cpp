@@ -77,34 +77,45 @@ std::string CustomObjectsSheet::getSpritesheetQualityName(Quality quality) {
 
 inline rectpack2D::rect_wh binPacking(std::vector<SheetInfo> &sprites) {
     // Buffer sprites
-    int totalWidth = 0;
+    long totalArea = 0;
     for (auto& spr : sprites) {
         spr.m_rect.w += SPRITE_BUFFER;
         spr.m_rect.h += SPRITE_BUFFER;
-        totalWidth += std::max(spr.m_rect.w, spr.m_rect.h);
+        totalArea += spr.m_rect.w * spr.m_rect.h;
     }
 
+    // These values feel fine based on some very unscientific testing
+    const int minWidth = std::sqrt(totalArea) * 2;
+    const int maxWidth = std::sqrt(totalArea) * 4;
+    const int interval = (maxWidth - minWidth) * 0.2;
+
     rect_wh size;
-    int width = totalWidth;
+    int width = minWidth;
     auto onBinPackingSuccess = [](rect_xywhf&) { return callback_result::CONTINUE_PACKING; };
-    auto onBinPackingFailure = [&size, &width, totalWidth](rect_xywhf&) {
+    auto onBinPackingFailure = [&width, interval](rect_xywhf&) {
         log::warn("Failed to generate the spritesheet at size {}, retrying...", width);
-        size = {0,0};
-        width += totalWidth; // increase width until success
+        width += interval; // increase width until success
         return callback_result::ABORT_PACKING;
     };
 
-    while ((size.w == 0 || size.h == 0) && width < totalWidth * 100) {
+    while ((size.w == 0 || size.h == 0) && width < maxWidth + 10) {
+        int startingWidth = width;
+        std::vector<SheetInfo> tempSprites = sprites;
+
         auto finderInput = make_finder_input(
             width, -4,
             onBinPackingSuccess,
             onBinPackingFailure,
             flipping_option::ENABLED
         );
+
         size = find_best_packing<empty_spaces<true>>(
-            sprites,
+            tempSprites,
             finderInput
         );
+
+        if (width > startingWidth) size = {0, 0}; // this means it failed
+        else sprites = tempSprites; // success!
     }
 
     // Remove sprite buffer
