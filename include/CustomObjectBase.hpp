@@ -2,7 +2,7 @@
 #include "CustomObjectConfig.hpp"
 #include "CustomObjectProperty.hpp"
 
-class CustomObjectInterface {
+class CUSTOM_OBJECTS_DLL CustomObjectInterface {
     struct Impl;
     std::unique_ptr<Impl> m_impl;
     friend class CustomObjectConfig;

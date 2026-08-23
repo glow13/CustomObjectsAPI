@@ -1,11 +1,21 @@
 #pragma once
 
+#ifdef GEODE_IS_WINDOWS
+    #ifdef CUSTOM_OBJECTS_EXPORTING
+        #define CUSTOM_OBJECTS_DLL __declspec(dllexport)
+    #else
+        #define CUSTOM_OBJECTS_DLL __declspec(dllimport)
+    #endif
+#else
+    #define CUSTOM_OBJECTS_DLL __attribute__((visibility("default")))
+#endif
+
 using geode::geode_internal::StringConcatModIDSlash;
 
 constexpr int BASE_OBJECT_ID = 100000;
 constexpr int CUSTOM_PARENT_MODE = 10;
 
-class CustomObjectConfig final {
+class CUSTOM_OBJECTS_DLL CustomObjectConfig final {
 public:
     using SetupObjectCallback = geode::Function<void(GameObject*)>;
     using ResetObjectCallback = geode::Function<void(GameObject*)>;

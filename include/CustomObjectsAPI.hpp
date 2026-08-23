@@ -5,7 +5,7 @@
 
 #include "../objects/CustomGameObject.hpp"
 
-class CustomObjectsUtils final {
+class CUSTOM_OBJECTS_DLL CustomObjectsUtils final {
     static CustomObjectConfig&& registerCustomObject(std::string, CustomObjectConfig::ObjectConstructor, geode::Mod* = geode::Mod::get());
     static void registerCustomSprite(std::string, int, int, int, int, geode::Mod* = geode::Mod::get());
     static void registerCustomAnimationSprites(std::string, int, int, int, int, int, geode::Mod* = geode::Mod::get());
