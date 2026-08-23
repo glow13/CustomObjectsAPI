@@ -4,6 +4,7 @@ class CustomObjectsManager final {
     using ObjectConstructor = geode::Function<class CustomObjectInterface*()>; // these should match
     std::unordered_map<int, std::unique_ptr<class CustomObjectConfig>> m_customObjects;
     std::vector<class CustomSpriteConfig*> m_customSprites;
+    std::map<std::string, int> m_mods;
 public:
     static CustomObjectsManager* get();
 

@@ -26,6 +26,8 @@ CustomObjectConfig* CustomObjectsManager::registerObjectConfig(std::string_view 
         log::error("Duplicate object ID \"{}\"!", stringID);
         return nullptr;
     }
+
+    m_mods[it.first->second->getModID()]++;
     return it.first->second.get();
 }
 
@@ -90,6 +92,13 @@ std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::ge
 }
 
 void CustomObjectsManager::processRegisteredObjects() {
+    // Remove duplicate sprites
+    std::unordered_set<std::string> sprites;
+    auto it = std::remove_if(m_customSprites.begin(), m_customSprites.end(), [&sprites](auto spr) {
+        return !sprites.insert(spr->getFrameName()).second;
+    });
+    m_customSprites.erase(it, m_customSprites.end());
+
     auto toolbox = ObjectToolbox::sharedState();
     for (auto& [id, obj] : m_customObjects) {
         toolbox->m_allKeys.emplace(obj->getObjectID(), obj->getMainSprite());
@@ -112,9 +121,7 @@ void CustomObjectsManager::processRegisteredObjects() {
 }
 
 void CustomObjectsManager::printModObjectCount() const {
-    std::map<std::string, int> mods;
-    for (const auto& [id, obj] : m_customObjects) mods[obj->getModID()]++;
-    log::info("A total of {} mods registered {} total custom objects", mods.size(), m_customObjects.size());
+    log::info("A total of {} mods registered {} total custom objects", m_mods.size(), m_customObjects.size());
 }
 
 void CustomObjectsManager::registerCustomSprite(CustomSpriteConfig* config) {
