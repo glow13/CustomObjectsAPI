@@ -8,6 +8,7 @@ class CustomSpriteConfig final {
     std::unique_ptr<Impl> m_impl;
 public:
     CustomSpriteConfig(class CustomObjectConfig*, std::string, int, int, int, int, bool);
+    CustomSpriteConfig(geode::Mod*, std::string, int, int, int, int, bool);
     ~CustomSpriteConfig();
 
     std::string getModID() const;

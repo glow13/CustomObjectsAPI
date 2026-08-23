@@ -21,6 +21,7 @@ std::string formatSpriteFrameName(std::string frame, std::string mod, int x, int
 }
 
 struct CustomSpriteConfig::Impl final {
+    geode::Mod* m_mod;
     CustomObjectConfig* m_object;
     std::string m_frameName;
     std::string m_sourceFrame;
@@ -30,6 +31,7 @@ struct CustomSpriteConfig::Impl final {
 };
 
 CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string frameName, int x, int y, int w, int h, bool sheet) : m_impl(std::make_unique<Impl>()) {
+    m_impl->m_mod = nullptr;
     m_impl->m_object = object;
     m_impl->m_sourceFrame = frameName;
     m_impl->m_offset = rect_wh(x, y);
@@ -41,12 +43,25 @@ CustomSpriteConfig::CustomSpriteConfig(CustomObjectConfig* object, std::string f
     CustomObjectsManager::get()->registerCustomSprite(this);
 }
 
+CustomSpriteConfig::CustomSpriteConfig(geode::Mod* mod, std::string frameName, int x, int y, int w, int h, bool sheet) : m_impl(std::make_unique<Impl>()) {
+    m_impl->m_mod = mod;
+    m_impl->m_object = nullptr;
+    m_impl->m_sourceFrame = frameName;
+    m_impl->m_offset = rect_wh(x, y);
+    m_impl->m_size = rect_wh(w, h);
+    m_impl->m_customSprite = sheet;
+
+    if (!sheet) return;
+    m_impl->m_frameName = formatSpriteFrameName(frameName, mod->getID(), x, y, w, h);
+    CustomObjectsManager::get()->registerCustomSprite(this);
+}
+
 CustomSpriteConfig::~CustomSpriteConfig() {
     if (isCustomSprite()) CustomObjectsManager::get()->unregisterCustomSprite(this);
 }
 
 std::string CustomSpriteConfig::getModID() const {
-    return m_impl->m_object ? m_impl->m_object->getModID() : "";
+    return m_impl->m_object ? m_impl->m_object->getModID() : (m_impl->m_mod ? static_cast<std::string>(m_impl->m_mod->getID()) : "");
 }
 
 std::string CustomSpriteConfig::getFrameName() const {

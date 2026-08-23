@@ -11,14 +11,14 @@ CustomObjectConfig&& CustomObjectsUtils::registerCustomObject(std::string object
 }
 
 void CustomObjectsUtils::registerCustomSprite(std::string frameName, int offsetX, int offsetY, int width, int height, geode::Mod* mod) {
-    CustomObjectsManager::get()->registerCustomSprite(new CustomSpriteConfig(nullptr, frameName, offsetX, offsetY, width, height, true));
+    CustomObjectsManager::get()->registerCustomSprite(new CustomSpriteConfig(mod, frameName, offsetX, offsetY, width, height, true));
 }
 
 void CustomObjectsUtils::registerCustomAnimationSprites(std::string firstFrame, int offsetX, int offsetY, int width, int height, int frames, geode::Mod* mod) {
     auto baseFrameName = firstFrame.substr(0, firstFrame.find("_001"));
     for (int i = 1; i <= frames; i++) {
         auto animFrameName = fmt::format("{}_{:03d}.png", baseFrameName, i);
-        registerCustomSprite(animFrameName, offsetX, offsetY, width, height);
+        registerCustomSprite(animFrameName, offsetX, offsetY, width, height, mod);
     }
 }
 

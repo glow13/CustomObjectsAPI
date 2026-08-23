@@ -89,7 +89,7 @@ template <class ObjectType, StringConcatModIDSlash StringID>
 class RegisterCustomObject : public RegisteredObjectByClass {
     static inline struct {
         CustomObjectConfig* config = CustomObjectConfig::registerConfig(StringID.buffer, [](){ return new ObjectType(); });
-        bool initialized = [](){ ObjectType::onRegisterConfig(std::move(*registration.config)); return true; }();
+        bool initialized = [](){ if (registration.config) ObjectType::onRegisterConfig(std::move(*registration.config)); return registration.config; }();
     } registration;
     static inline auto registrationRef = &registration;
 

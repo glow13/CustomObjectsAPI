@@ -100,8 +100,13 @@ void CustomObjectsManager::processRegisteredObjects() {
             mainAnimSprite = mainAnimSprite.substr(0, mainAnimSprite.find("_001"));
             detailAnimSprite = detailAnimSprite.substr(0, detailAnimSprite.find("_001"));
 
-            auto manager = GameManager::sharedState();
-            manager->addGameAnimation(obj->getObjectID(), obj->getFramesCount(), obj->getFrameTime(), mainAnimSprite, detailAnimSprite, 1);
+            GameManager::get()->addGameAnimation(
+                obj->getObjectID(),
+                obj->getFramesCount(),
+                obj->getFrameTime(),
+                mainAnimSprite,
+                detailAnimSprite, 1
+            );
         }
     }
 }
