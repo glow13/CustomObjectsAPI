@@ -4,6 +4,7 @@
 #include "../config/CustomSpriteConfig.hpp"
 #include "CustomObjectsManager.hpp"
 #include "CustomObjectsSheet.hpp"
+#include "../object/ModTriggerObject.hpp"
 
 using namespace geode::prelude;
 
@@ -92,6 +93,22 @@ std::map<std::string, CustomObjectsManager::ModObjects> CustomObjectsManager::ge
 }
 
 void CustomObjectsManager::processRegisteredObjects() {
+    for (const auto [modID, _] : m_mods) {
+        auto mod = Loader::get()->getInstalledMod(modID);
+
+        auto objID = fmt::format("{}/mod-trigger", modID);
+        auto trigger = registerObjectConfig(objID, [](){ return new ModTriggerObject(); });
+        trigger->m_impl->m_isModTrigger = true;
+
+        trigger->setMainSprite("mod-trigger.png"_spr);
+        trigger->setEditorTabPriority(INT_MIN);
+        trigger->setDisableBatchRender();
+
+        trigger->onEditObject([modID, modName = mod->getName()](auto obj, auto objs) {
+            SetupModTriggerPopup::create(static_cast<ModTriggerObject*>(obj), objs, modID, modName)->show();
+        });
+    }
+
     // Remove duplicate sprites
     std::unordered_set<std::string> sprites;
     auto it = std::remove_if(m_customSprites.begin(), m_customSprites.end(), [&sprites](auto spr) {

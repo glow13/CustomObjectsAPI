@@ -58,6 +58,7 @@ public:
 
     bool isCustomBatch() const;
     bool hasCustomAnimation() const;
+    bool isModTrigger() const;
 
     CustomObjectConfig&& setMainSprite(std::string frame, int offsetX, int offsetY, int width, int height);
     CustomObjectConfig&& setMainSprite(std::string frame, int width, int height);

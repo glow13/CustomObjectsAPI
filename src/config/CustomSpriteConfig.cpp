@@ -53,7 +53,6 @@ CustomSpriteConfig::CustomSpriteConfig(geode::Mod* mod, std::string frameName, i
 
     if (!sheet) return;
     m_impl->m_frameName = formatSpriteFrameName(frameName, mod->getID(), x, y, w, h);
-    CustomObjectsManager::get()->registerCustomSprite(this);
 }
 
 CustomSpriteConfig::~CustomSpriteConfig() {
@@ -119,5 +118,5 @@ bool CustomSpriteConfig::isAnimationFrame() const {
 }
 
 bool CustomSpriteConfig::isModTrigger() const {
-    return false; //m_impl->m_object && m_impl->m_object->isModTrigger();
+    return m_impl->m_object && m_impl->m_object->isModTrigger();
 }

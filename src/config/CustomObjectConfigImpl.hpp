@@ -36,4 +36,6 @@ struct CustomObjectConfig::Impl final {
     GLubyte m_particleOpacity;
     bool m_particleBlending;
     int m_editorPriority;
+
+    bool m_isModTrigger = false;
 };

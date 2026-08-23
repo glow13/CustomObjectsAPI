@@ -127,6 +127,34 @@ inline rectpack2D::rect_wh binPacking(std::vector<SheetInfo> &sprites) {
     return {size.w - SPRITE_BUFFER, size.h - SPRITE_BUFFER};
 }
 
+inline void makeModTriggerSprite(CCSprite& sprite, std::string colorString) {
+    auto path = CCFileUtils::get()->fullPathForFilename("mod-trigger.png"_spr, false);
+
+    CCImage image;
+    if (!image.initWithImageFile(path.c_str())) return;
+
+    uint32_t colorHash = geode::utils::hash(colorString);
+    uint8_t colorR = (colorHash >> 8) & 0xFF;
+    uint8_t colorG = (colorHash >> 16) & 0xFF;
+    uint8_t colorB = (colorHash >> 24) & 0xFF;
+
+    auto data = image.getData();
+    for (int i = 0; i < image.getDataLen() * 4; i += 4) {
+        if (data[i+0] || !data[i+1] || data[i+2] || !data[i+3]) continue;
+
+        float a = data[i+1] / 255.0f;
+        data[i+0] = colorR * a;
+        data[i+1] = colorG * a;
+        data[i+2] = colorB * a;
+    }
+
+    auto texture = new CCTexture2D();
+    if (!texture->initWithImage(&image)) return;
+    texture->autorelease();
+
+    sprite.initWithTexture(texture);
+}
+
 inline bool saveSpritesheetImage(std::vector<SheetInfo>& sprites, rect_wh sheetSize, std::string name, std::string path) {
     if (sheetSize.w <= 0 || sheetSize.h <= 0) return false;
 
@@ -137,10 +165,9 @@ inline bool saveSpritesheetImage(std::vector<SheetInfo>& sprites, rect_wh sheetS
     // Add each sprite to the sheet
     for (auto spr : sprites) {
         CCSprite sprite;
-        // if (spr.isModTrigger()) {
-        //     if (makeModTriggerSprite(sprite, spr.m_sprite->getModID()); !sprite.getTexture()) continue;
-        // } else
-        if (!sprite.initWithFile(spr.m_sprite->getSourceFrame().c_str())) {
+        if (spr.m_sprite->isModTrigger()) {
+            if (makeModTriggerSprite(sprite, spr.m_sprite->getModID()); !sprite.getTexture()) continue;
+        } else if (!sprite.initWithFile(spr.m_sprite->getSourceFrame().c_str())) {
             sprite.initWithSpriteFrameName(spr.m_sprite->getSourceFrame().c_str());
         }
 
