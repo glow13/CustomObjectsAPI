@@ -31,7 +31,7 @@ void CustomObjectInterface::bindObjectProperty(int key, std::unique_ptr<ObjectPr
     }
 }
 
-void CustomObjectInterface::setupObjectProperties(std::vector<std::string>& propValues, std::vector<void*>& propIsPresent) {
+void CustomObjectInterface::setupObjectProperties(gd::vector<gd::string>& propValues, gd::vector<void*>& propIsPresent) {
     for (auto& [key, prop] : m_impl->m_customProperties) {
         if (!propIsPresent[key]) continue;
         prop->deserialize(propValues[key]);

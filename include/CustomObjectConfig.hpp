@@ -88,8 +88,11 @@ private:
     GameObject* createCustomObject() const;
     static CustomObjectConfig* registerConfig(std::string_view, ObjectConstructor);
 
-    template <class, StringConcatModIDSlash> friend class RegisterCustomObject;
-    friend class CustomObjectsManager, class CustomObjectInterface;
+    template <class, StringConcatModIDSlash>
+    friend class RegisterCustomObject;
+
+    friend class CustomObjectsManager;
+    friend class CustomObjectInterface;
 };
 
 // Dummy class for determining how an object was registered

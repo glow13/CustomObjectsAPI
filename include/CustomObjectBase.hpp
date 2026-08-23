@@ -16,7 +16,7 @@ class CUSTOM_OBJECTS_DLL CustomObjectInterface {
     void activateCustomObject(GameObject*, GJBaseGameLayer*, PlayerObject*) const;
 
     void bindObjectProperty(int, std::unique_ptr<ObjectPropertyInterface>&&);
-    void setupObjectProperties(std::vector<std::string>&, std::vector<void*>&);
+    void setupObjectProperties(gd::vector<gd::string>&, gd::vector<void*>&);
     std::string getCustomSaveString() const;
 
     virtual GameObject* gameObject() = 0;
