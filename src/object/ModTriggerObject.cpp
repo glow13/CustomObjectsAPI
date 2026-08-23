@@ -88,13 +88,18 @@ bool SetupModTriggerPopup::init(ModTriggerObject* obj, cocos2d::CCArray* objs, s
 
 void SetupModTriggerPopup::determineStartValues() {
     SetupTriggerPopup::determineStartValues();
-    auto objs = getObjects()->asExt<ModTriggerObject*>();
+    auto objs = getObjects()->asExt<EffectGameObject*>();
+    auto first = static_cast<ModTriggerObject*>(objs[0]);
+    if (!first) return;
 
-    mode = objs[0]->mode;
-    for (auto obj : objs) if (mode != obj->mode) { mode = ModTriggerMode::NONE; break; }
+    mode = first->mode;
+    disabled = first->disabled;
 
-    disabled = objs[0]->disabled;
-    for (auto obj : objs) if (disabled != obj->disabled) { disabled = false; break; }
+    for (auto obj : objs) if (auto mt = static_cast<ModTriggerObject*>(obj)) {
+        if (mode != mt->mode) mode = ModTriggerMode::NONE;
+        if (disabled != mt->disabled) disabled = false;
+        if (mode == ModTriggerMode::NONE && !disabled) break;
+    }
 }
 
 void SetupModTriggerPopup::onCustomToggleTriggerValue(cocos2d::CCObject* sender) {
@@ -103,15 +108,21 @@ void SetupModTriggerPopup::onCustomToggleTriggerValue(cocos2d::CCObject* sender)
     updateCustomToggleTrigger(1, mode == ModTriggerMode::OFF);
     updateCustomToggleTrigger(2, mode == ModTriggerMode::SPAWN);
 
-    for(auto obj : getObjects()->asExt<ModTriggerObject*>()) obj->mode = mode;
+    for(auto obj : getObjects()->asExt<EffectGameObject*>()) {
+        if (auto mt = static_cast<ModTriggerObject*>(obj)) mt->mode = mode;
+    }
 }
 
 void SetupModTriggerPopup::onClose(cocos2d::CCObject* sender) {
-    for(auto obj : getObjects()->asExt<ModTriggerObject*>()) obj->updateObjectLabel();
+    for(auto obj : getObjects()->asExt<EffectGameObject*>()) {
+        if (auto mt = static_cast<ModTriggerObject*>(obj)) mt->updateObjectLabel();
+    }
     SetupTriggerPopup::onClose(sender);
 }
 
 void SetupModTriggerPopup::onDisabledToggle(cocos2d::CCObject* sender) {
     disabled = !static_cast<CCMenuItemToggler*>(sender)->m_toggled;
-    for(auto obj : getObjects()->asExt<ModTriggerObject*>()) obj->disabled = disabled;
+    for(auto obj : getObjects()->asExt<EffectGameObject*>()) {
+        if (auto mt = static_cast<ModTriggerObject*>(obj)) mt->disabled = disabled;
+    }
 }
