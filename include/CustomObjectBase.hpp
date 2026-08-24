@@ -106,8 +106,9 @@ public:
         }
     }
 
-    void customSetup() override {
-        if (!this->m_particle) return BaseType::customSetup();
+    void setVisible(bool visible) override {
+        BaseType::setVisible(visible);
+        if (!visible || !this->m_particle) return;
 
         this->updateParticleColor(getConfig().getParticleColor());
         this->updateParticleOpacity(getConfig().getParticleOpacity());
@@ -115,8 +116,6 @@ public:
         if (!getConfig().getParticleBlending()) {
             this->m_particle->setBlendFunc({GL_ONE, GL_ZERO});
         }
-
-        BaseType::customSetup();
     }
 
     void firstSetup() override {
@@ -139,4 +138,4 @@ requires (std::derived_from<BaseType, GameObject> && !std::derived_from<BaseType
 class CustomObjectBase<BaseType, std::enable_if_t<std::is_base_of_v<CustomObjectInterface, BaseType>>> : public BaseType {};
 
 #define $object(NAME, BASE) NAME : public CustomObjectBase<BASE>
-#define $registerObject(NAME, BASE) NAME final : public CustomObjectBase<BASE>, public RegisterCustomObject<NAME, #NAME>
+#define $registerObject(NAME, BASE) NAME final : public CustomObjectBase<BASE>, RegisterCustomObject<NAME, #NAME>
