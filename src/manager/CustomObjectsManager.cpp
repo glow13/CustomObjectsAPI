@@ -13,7 +13,24 @@ CustomObjectsManager* CustomObjectsManager::get() {
     return &manager;
 }
 
-int getHashedObjectID(std::string_view stringID) {
+/*
+ * This is my solution to ensuring no object has the same object ID in the editor.
+ * Just simply hashing the string ID works most of the time, however there is a very, very small chance
+ * for two strings to result in the same object ID, meaning that my solution technically isn't perfect.
+ * 
+ * Object Collab by SMJS does a lot more and actually implements the "correct" solution to this problem.
+ * It stores a small lookup table with each level and pairs each custom object with its own local object ID,
+ * starting at a base value and counting up with each new object. This means that each level can have its
+ * own localized object IDs, and each custom object doesn't need its own universal object ID.
+ * 
+ * This was implemented very well in Object Collab so I recommend checking it out if it sounds cool, however the downsides
+ * are that it adds an extra mod dependency (Level Storage API by Alphalaneous) and it adds A LOT of extra complexity.
+ * Personally this doesn't seem worth it for my project; I would just be copying something that already exists in a
+ * better mod, plus this project will never actually be put onto the index so it really doesn't matter in the end.
+ * 
+ * TLDR: Just a warning that this implementation makes several compromises and is (intentionally) incorrect lol.
+ */
+inline int getHashedObjectID(std::string_view stringID) {
     uint32_t hash = geode::utils::hash(stringID);
     constexpr uint32_t range = INT32_MAX - BASE_OBJECT_ID + 1;
     return int(BASE_OBJECT_ID + static_cast<uint32_t>((static_cast<uint64_t>(hash) * range) >> 32));
