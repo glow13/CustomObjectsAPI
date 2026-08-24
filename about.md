@@ -27,10 +27,12 @@ This API comes with several <co>pre-made object classes</c> for you to use and i
 
 // You need to register any custom objects when your mod loads
 $execute {
-    // Single line object registration
-    // Provide the main sprite and change config options inline
-    CustomObjectsAPI::registerCustomObject("my-custom-block.png"_spr)
-        .setBoxSize(20, 20).setObjectType(GameObjectType::Solid);
+    // Object registration using the config
+    // Provide the object ID using ""_spr and change any options inline
+    CustomObjectsAPI::registerCustomObject("my-custom-block"_spr)
+        .setMainSprite("custom-sprite.png"_spr)
+        .setObjectType(GameObjectType::Solid)
+        .setBoxSize(20, 20);
 }
 ```
 
@@ -42,10 +44,13 @@ $execute {
 
 $execute {
     // Advanced custom object registration using the CustomRingObject class
-    auto customOrb = CustomObjectsAPI::registerCustomObject<CustomRingObject>("my-custom-orb.png"_spr, 36, 36)
-        .setGlowSprite("custom-orb-glow.png"_spr).setGlowColor(255, 255, 0).setParticleColor(200, 150, 0);
+    auto customOrb = CustomObjectsAPI::registerCustomObject<CustomRingObject>("my-custom-orb"_spr)
+        .setMainSprite("custom-orb.png"_spr, 36, 36)
+        .setGlowSprite("custom-orb-glow.png"_spr)
+        .setGlowColor(255, 255, 0)
+        .setParticleColor(200, 150, 0);
 
-    // You can also assign the config to a reference variable and use it elsewhere
+    // You can also assign the config to a variable reference and use it elsewhere
     customOrb.onSetupCustomObject([](CustomRingObject* obj) { // callback for object setup
         log::info("yo this object just got set up ig {}", obj->m_objectID);
     });
@@ -64,10 +69,19 @@ $execute {
 #include <glow12.custom-objects-api/include/object/CustomPadObject.hpp>
 
 // Convenient macro provided by the API, similar to Geode's $modify macro
-class $object(MyCustomPad, CustomPadObject) {
+// This automatically registers your object with its own config
+class $registerObject(MyCustomPad, CustomPadObject) {
+public:
+
     // Because this is your own class, you can just add a class variable normally
     // You don't have to use Geode Fields or anything more complex
     float bouncePower;
+
+    // This function is automatically called when your mod loads
+    static void onRegisterConfig(CustomObjectConfig&& config) {
+        config.setMainSprite("custom-pad.png"_spr)
+        config.setObjectOffset(0, -13);
+    }
 
     // Most of the config callbacks work here too
     // Simply override the class's virtual functions to use them
@@ -89,12 +103,6 @@ class $object(MyCustomPad, CustomPadObject) {
         log::info("someone just selected me ig!");
     }
 };
-
-// You still have to register the object
-$execute {
-    // Simply provide your custom class as the template parameter
-    CustomObjectsAPI::registerCustomObject<MyCustomPad>("custom-pad.png"_spr).setObjectOffset(0, -13);
-}
 ```
 
 ***
@@ -102,5 +110,3 @@ $execute {
 ## GitHub Repository
 
 Please visit the mod's [GitHub](https://github.com/glow13/CustomObjectsAPI) page to report bugs / request features!
-
-There is also more in-depth documentation available on the GitHub [wiki page](https://github.com/glow13/CustomObjectsAPI/wiki)! It's still incomplete and probably doesn't cover everything, but hopefully it makes this API a little easier to use :)

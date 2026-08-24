@@ -8,13 +8,13 @@
     },
     "id": "glow12.custom-objects-api",
     "name": "Custom Objects API",
-    "version": "v1.0.0-beta.2",
+    "version": "v1.0.0",
     "developer": "glow12",
     "description": "Add new custom objects to Geometry Dash!",
     "early-load": true,
     "dependencies": {
         "alphalaneous.editortab_api": {
-            "version": ">=v2.1.10",
+            "version": ">=v2.1.13",
             "required": false
         }
     },
@@ -36,8 +36,7 @@
         "gameplay"
     ],
     "links": {
-        "source": "https://github.com/glow13/CustomObjectsAPI",
-        "homepage": "https://github.com/glow13/CustomObjectsAPI/wiki"
+        "source": "https://github.com/glow13/CustomObjectsAPI"
     },
     "issues": {
         "info": "Please submit any issues / feature requests to the mod's GitHub page!",
