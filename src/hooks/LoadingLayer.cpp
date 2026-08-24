@@ -47,6 +47,7 @@ class $modify(LoadingLayer) {
             return;
         }
 
+        log::info("Cache is outdated, generating the custom objects spritesheets...");
         if (auto smallLabel = getChildByID("geode-small-label")) {
             auto label = static_cast<CCLabelBMFont*>(smallLabel);
             label->setString("Generating custom spritesheet");

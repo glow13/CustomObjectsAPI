@@ -33,16 +33,18 @@ requires (std::derived_from<BaseType, GameObject> && !std::derived_from<BaseType
 class CustomObjectBase : public CustomObjectInterface, public BaseType {
 public:
     bool init() override {
-        const CustomObjectConfig&& config = getConfig();
+        const auto&& config = getConfig();
         if (!BaseType::init(config.getMainSprite().c_str())) return false;
 
-        // Add sprites to the custom object
-        if (!config.hasMainSprite()) this->setDontDraw(true);
-        if (config.hasDetailSprite()) this->addCustomColorChild(config.getDetailSprite());
+        // Add detail sprite
+        if (config.hasDetailSprite()) {
+            this->addCustomColorChild(config.getDetailSprite());
+        }
 
-        // Add glow to the custom object
-        if (this->m_editorEnabled || this->m_hasNoGlow) return true;
-        if (config.hasGlowSprite()) this->createGlow(config.getGlowSprite());
+        // Add object glow
+        if (!this->m_editorEnabled && !this->m_hasNoGlow && config.hasGlowSprite()) {
+            this->createGlow(config.getGlowSprite());
+        }
 
         return true;
     }
@@ -86,14 +88,21 @@ public:
     }
 
     void activateObject() override {
-        bool activated = this->m_isActivated;
-        BaseType::activateObject();
+        this->m_unk3ee = false; // idek what this is lol
+        if (!this->m_isActivated && !this->m_isDisabled) {
+            this->m_isActivated = true;
+            if (this->m_isInvisible) return;
 
-        if (activated != this->m_isActivated && this->m_parentMode == CUSTOM_PARENT_MODE && !this->m_isInvisible && this->m_glowSprite) {
-            this->m_glowSprite->removeFromParent();
-            auto zLayer = (this->m_zLayer != ZLayer::Default) ? this->m_zLayer : this->m_defaultZLayer;
-            auto parent = this->parentForZLayer((int)zLayer, true, CUSTOM_PARENT_MODE);
-            parent->addChild(this->m_glowSprite, -1000);
+            this->setVisible(true);
+            this->addMainSpriteToParent(false);
+            this->addColorSpriteToParent(false);
+
+            if (this->m_glowSprite) {
+                auto zLayer = (this->m_zLayer == ZLayer::Default) ? this->m_defaultZLayer : this->m_zLayer;
+                auto mode = (this->m_parentMode == 4 || this->m_parentMode == CUSTOM_PARENT_MODE) ? this->m_parentMode : 5;
+                auto parent = this->parentForZLayer((int)zLayer, true, mode);
+                parent->addChild(this->m_glowSprite, -1000);
+            }
         }
     }
 

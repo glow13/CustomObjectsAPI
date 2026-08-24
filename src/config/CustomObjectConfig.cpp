@@ -149,7 +149,16 @@ GameObject* CustomObjectConfig::createCustomObject() const {
     if (m_impl->m_objectType != OBJECT_TYPE_DEFAULT) obj->m_objectType = m_impl->m_objectType;
     if (m_impl->m_batchMode != BATCH_MODE_DEFAULT) obj->m_parentMode = m_impl->m_batchMode;
     if (m_impl->m_disableBatch) { obj->m_parentMode = 4; obj->m_addToNodeContainer = true; }
-    if (m_impl->m_glowColor != GLOW_COLOR_DEFAULT) obj->setGlowColor(m_impl->m_glowColor);
+
+    if (m_impl->m_glowColor != GLOW_COLOR_DEFAULT) {
+        obj->setGlowColor(m_impl->m_glowColor);
+
+        obj->m_customGlowColor = true;
+        obj->m_cantColorGlow = true;
+    } else {
+        obj->m_customGlowColor = false;
+        obj->m_cantColorGlow = false;
+    }
 
     return obj;
 }
