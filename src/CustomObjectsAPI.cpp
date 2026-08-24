@@ -7,6 +7,10 @@
 using namespace geode::prelude;
 
 CustomObjectConfig&& CustomObjectsUtils::registerCustomObject(std::string objectID, CustomObjectConfig::ObjectConstructor ctor, Mod* mod) {
+    if (objectID.substr(0, objectID.find("/")) != mod->getID() || objectID.size() == mod->getID().size() + 1) {
+        log::logImpl(Severity::Error, mod, "Invalid object ID! Must use a non-empty string followed by \"\"_spr operator!");
+        return std::move(*(new CustomObjectConfig(objectID, 0, std::move(ctor)))); // Dummy unregistered object config
+    }
     return std::move(*CustomObjectsManager::get()->registerObjectConfig(objectID, std::move(ctor)));
 }
 
