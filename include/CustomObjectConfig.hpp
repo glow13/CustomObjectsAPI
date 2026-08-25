@@ -63,17 +63,17 @@ public:
     CustomObjectConfig&& setMainSprite(std::string frame, int offsetX, int offsetY, int width, int height);
     CustomObjectConfig&& setMainSprite(std::string frame, int width, int height);
     CustomObjectConfig&& setMainSprite(std::string frame, int size);
-    CustomObjectConfig&& setMainSprite(std::string frame, bool sheet = true);
+    CustomObjectConfig&& setMainSprite(std::string frame, bool addToSpritesheet = true);
 
     CustomObjectConfig&& setDetailSprite(std::string frame, int offsetX, int offsetY, int width, int height);
     CustomObjectConfig&& setDetailSprite(std::string frame, int width, int height);
     CustomObjectConfig&& setDetailSprite(std::string frame, int size);
-    CustomObjectConfig&& setDetailSprite(std::string frame, bool sheet = true);
+    CustomObjectConfig&& setDetailSprite(std::string frame, bool addToSpritesheet = true);
 
     CustomObjectConfig&& setGlowSprite(std::string frame, int offsetX, int offsetY, int width, int height);
     CustomObjectConfig&& setGlowSprite(std::string frame, int width, int height);
     CustomObjectConfig&& setGlowSprite(std::string frame, int size);
-    CustomObjectConfig&& setGlowSprite(std::string frame, bool sheet = true);
+    CustomObjectConfig&& setGlowSprite(std::string frame, bool addToSpritesheet = true);
 
     CustomObjectConfig&& onSetupCustomObject(SetupObjectCallback);
     CustomObjectConfig&& onResetCustomObject(ResetObjectCallback);

@@ -45,7 +45,8 @@ CustomObjectConfig::Impl::Impl(std::string_view id, int objectID, ObjectConstruc
     m_editorPriority(EDITOR_PRIORITY_DEFAULT) {}
 
 CustomObjectConfig::~CustomObjectConfig() = default;
-CustomObjectConfig::CustomObjectConfig(std::string_view id, int objectID, ObjectConstructor ctor) : m_impl(std::make_unique<Impl>(id, objectID, std::move(ctor))) {}
+CustomObjectConfig::CustomObjectConfig(std::string_view id, int objectID, ObjectConstructor ctor) :
+    m_impl(std::make_unique<Impl>(id, objectID, std::move(ctor))) {}
 
 CONFIG_OPTION(BoxSize, CCSize, m_boxSize, CCSize(w, h), int w, int h);
 CONFIG_OPTION(BoxOffset, CCPoint, m_boxOffset, CCPoint(x, y), int x, int y);
@@ -62,71 +63,138 @@ CONFIG_OPTION(ParticleOpacity, GLubyte, m_particleOpacity, opacity, GLubyte opac
 CONFIG_OPTION(ParticleBlending, bool, m_particleBlending, blending, bool blending);
 CONFIG_OPTION(EditorTabPriority, int, m_editorPriority, priority, int priority);
 
-std::string CustomObjectConfig::getID() const
-    { return m_impl->m_id; }
-std::string CustomObjectConfig::getModID() const
-    { return m_impl->m_mod; }
-int CustomObjectConfig::getObjectID() const
-    { return m_impl->m_objectID; }
+std::string CustomObjectConfig::getID() const {
+    return m_impl->m_id;
+}
 
-std::string CustomObjectConfig::getMainSprite() const
-    { return hasMainSprite() ? m_impl->m_mainSprite->getFrameName() : ""; }
-std::string CustomObjectConfig::getDetailSprite() const
-    { return hasDetailSprite() ? m_impl->m_detailSprite->getFrameName() : ""; }
-std::string CustomObjectConfig::getGlowSprite() const
-    { return hasGlowSprite() ? m_impl->m_glowSprite->getFrameName() : ""; }
+std::string CustomObjectConfig::getModID() const {
+    return m_impl->m_mod;
+}
 
-bool CustomObjectConfig::hasMainSprite() const
-    { return m_impl->m_mainSprite != nullptr; }
-bool CustomObjectConfig::hasDetailSprite() const
-    { return m_impl->m_detailSprite != nullptr; }
-bool CustomObjectConfig::hasGlowSprite() const
-    { return m_impl->m_glowSprite != nullptr; }
+int CustomObjectConfig::getObjectID() const {
+    return m_impl->m_objectID;
+}
 
-bool CustomObjectConfig::isCustomBatch() const
-    { return !m_impl->m_disableBatch && m_impl->m_batchMode == BATCH_MODE_DEFAULT; }
-bool CustomObjectConfig::hasCustomAnimation() const
-    { return m_impl->m_framesCount != FRAMES_COUNT_DEFAULT && m_impl->m_mainSprite->isAnimationFrame(); }
-bool CustomObjectConfig::isModTrigger() const { return m_impl->m_isModTrigger; }
+std::string CustomObjectConfig::getMainSprite() const {
+    return hasMainSprite() ? m_impl->m_mainSprite->getFrameName() : "";
+}
 
-CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int x, int y, int w, int h)
-    { m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int w, int h)
-    { m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, w, h, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int s)
-    { m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, s, s, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, bool sheet)
-    { m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet); return std::move(*this); }
+std::string CustomObjectConfig::getDetailSprite() const {
+    return hasDetailSprite() ? m_impl->m_detailSprite->getFrameName() : "";
+}
 
-CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, int x, int y, int w, int h)
-    { m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, int w, int h)
-    { m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, w, h, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, int s)
-    { m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, s, s, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, bool sheet)
-    { m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet); return std::move(*this); }
+std::string CustomObjectConfig::getGlowSprite() const {
+    return hasGlowSprite() ? m_impl->m_glowSprite->getFrameName() : "";
+}
 
-CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int x, int y, int w, int h)
-    { m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int w, int h)
-    { m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, w, h, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int s)
-    { m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, s, s, true); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, bool sheet)
-    { m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet); return std::move(*this); }
+bool CustomObjectConfig::hasMainSprite() const {
+    return m_impl->m_mainSprite != nullptr;
+}
 
-CustomObjectConfig&& CustomObjectConfig::onSetupCustomObject(SetupObjectCallback callback)
-    { m_impl->m_setupObject = std::move(callback); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::onResetCustomObject(ResetObjectCallback callback)
-    { m_impl->m_resetObject = std::move(callback); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::onActivateCustomObject(ActivateObjectCallback callback)
-    { m_impl->m_activateObject = std::move(callback); return std::move(*this); }
+bool CustomObjectConfig::hasDetailSprite() const {
+    return m_impl->m_detailSprite != nullptr;
+}
 
-CustomObjectConfig&& CustomObjectConfig::onEditObject(EditObjectCallback callback)
-    { m_impl->m_editObject = std::move(callback); return std::move(*this); }
-CustomObjectConfig&& CustomObjectConfig::onEditSpecial(EditObjectCallback callback)
-    { m_impl->m_editSpecial = std::move(callback); return std::move(*this); }
+bool CustomObjectConfig::hasGlowSprite() const {
+    return m_impl->m_glowSprite != nullptr;
+}
+
+bool CustomObjectConfig::isCustomBatch() const {
+    return !m_impl->m_disableBatch && m_impl->m_batchMode == BATCH_MODE_DEFAULT;
+}
+
+bool CustomObjectConfig::hasCustomAnimation() const {
+    return m_impl->m_framesCount != FRAMES_COUNT_DEFAULT && m_impl->m_mainSprite->isAnimationFrame();
+}
+
+bool CustomObjectConfig::isModTrigger() const {
+    return m_impl->m_isModTrigger;
+}
+
+CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int x, int y, int w, int h) {
+    m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int w, int h) {
+    m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, w, h, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, int s) {
+    m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, s, s, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setMainSprite(std::string frame, bool sheet) {
+    m_impl->m_mainSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, int x, int y, int w, int h) {
+    m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, int w, int h) {
+    m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, w, h, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, int s) {
+    m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, s, s, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setDetailSprite(std::string frame, bool sheet) {
+    m_impl->m_detailSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int x, int y, int w, int h) {
+    m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, x, y, w, h, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int w, int h) {
+    m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, w, h, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, int s) {
+    m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, s, s, true);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::setGlowSprite(std::string frame, bool sheet) {
+    m_impl->m_glowSprite = std::make_unique<CustomSpriteConfig>(this, frame, 0, 0, 0, 0, sheet);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::onSetupCustomObject(SetupObjectCallback callback) {
+    m_impl->m_setupObject = std::move(callback);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::onResetCustomObject(ResetObjectCallback callback) {
+    m_impl->m_resetObject = std::move(callback);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::onActivateCustomObject(ActivateObjectCallback callback) {
+    m_impl->m_activateObject = std::move(callback);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::onEditObject(EditObjectCallback callback) {
+    m_impl->m_editObject = std::move(callback);
+    return std::move(*this);
+}
+
+CustomObjectConfig&& CustomObjectConfig::onEditSpecial(EditObjectCallback callback) {
+    m_impl->m_editSpecial = std::move(callback);
+    return std::move(*this);
+}
 
 GameObject* CustomObjectConfig::createCustomObject() const {
     if (!m_impl->m_ctor) return nullptr;
